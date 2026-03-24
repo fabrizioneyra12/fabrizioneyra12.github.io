@@ -1,1 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fabri | Video Editor</title>
+  <style>
+    :root {
+      --bg: #05030d;
+      --panel: rgba(255,255,255,0.05);
+      --panel-border: rgba(180, 95, 255, 0.18);
+      --text: #f5f2ff;
+      --muted: #a7a1b8;
+      --accent: #9f4dff;
+      --accent-2: #c86bff;
+      --shadow: 0 0 40px rgba(159, 77, 255, 0.18);
+      --radius: 24px;
+      --max: 1220px;
+    }
 
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(159, 77, 255, 0.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(120, 70, 255, 0.09), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0));
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.28);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      background: rgba(5, 3, 13, 0.55);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 900;
+      font-style: italic;
+      color: var(--accent);
+      text-shadow: 0 0 18px rgba(159, 77, 255, 0.45);
+      letter-spacing: -0.03em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 14px 22px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.96rem;
+      box-shadow: var(--shadow);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+    }
+
+    .pill:hover,
+    .ghost-btn:hover,
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.95;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 70px 0 30px;
+    }
+
+    .hero-inner {
+      max-width: 980px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.9rem, 7vw, 5.6rem);
+      line-height: 0.96;
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      margin-bottom: 18px;
+    }
+
+    .hero .accent-line {
+      display: block;
+      color: var(--accent);
+      text-shadow: 0 0 20px rgba(159, 77, 255, 0.38);
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      line-height: 1.55;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .ghost-btn,
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 210px;
+      padding: 16px 26px;
+      border-radius: 18px;
+      font-weight: 800;
+      transition: transform 0.25s ease, opacity 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .ghost-btn {
+      border: 1px solid rgba(159, 77, 255, 0.7);
+      background: rgba(255,255,255,0.02);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+    }
+
+    .cta-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: var(--shadow);
+    }
+
+    section {
+      padding: 80px 0;
+    }
+
+    .section-heading {
+      margin-bottom: 30px;
+      max-width: 860px;
+    }
+
+    .section-heading h2 {
+      font-size: clamp(2rem, 3.2vw, 3.2rem);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      margin-bottom: 16px;
+    }
+
+    .section-heading .line {
+      width: min(360px, 100%);
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      margin-bottom: 22px;
+      box-shadow: 0 0 18px rgba(159, 77, 255, 0.45);
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 1.06rem;
+    }
+
+    .accent-text {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .video-grid.two {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 26px;
+    }
+
+    .video-grid.four {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .video-card {
+      position: relative;
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28);
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .video-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(159, 77, 255, 0.45);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.36), 0 0 30px rgba(159, 77, 255, 0.12);
+    }
+
+    .video-frame {
+      position: relative;
+      width: 100%;
+      background: #0b0816;
+    }
+
+    .landscape {
+      aspect-ratio: 16 / 9;
+    }
+
+    .portrait {
+      aspect-ratio: 9 / 16;
+    }
+
+    .video-frame iframe,
+    .video-frame video {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    .mute-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px);
+      font-size: 1rem;
+      z-index: 2;
+    }
+
+    .card-body {
+      padding: 18px 18px 20px;
+    }
+
+    .card-body h3 {
+      font-size: 1.06rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .card-body p {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .feature-card {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 26px;
+      padding: 28px;
+      transition: transform 0.28s ease, border-color 0.28s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(159, 77, 255, 0.35);
+    }
+
+    .feature-card h3 {
+      font-size: 1.55rem;
+      font-weight: 900;
+      margin-bottom: 14px;
+      letter-spacing: -0.03em;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+    .center-cta {
+      text-align: center;
+      margin-top: 34px;
+    }
+
+    .footer {
+      margin-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 52px 0 34px;
+      text-align: center;
+    }
+
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .copyright {
+      color: #6f6885;
+      font-size: 0.95rem;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(42px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      will-change: opacity, transform;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1100px) {
+      .video-grid.four {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .features-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 820px) {
+      .video-grid.two,
+      .video-grid.four,
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        align-items: flex-start;
+        gap: 18px;
+        flex-direction: column;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 120px;
+        padding-bottom: 50px;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+      }
+
+      .container {
+        width: min(var(--max), calc(100% - 28px));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a href="#home" class="logo">Fabri</a>
+      <nav class="nav-links">
+        <a class="pill" href="#work">Work</a>
+        <a class="pill" href="#contact">Hire Me</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-inner reveal show">
+        <h1>
+          I turn your ideas into
+          <span class="accent-line">high-impact videos</span>
+        </h1>
+        <p>
+          Video editor focused on creating clean, dynamic, scroll-stopping content for creators, brands,
+          and channels. I adapt to your style and make sure every video feels polished, engaging, and built
+          to keep attention.
+        </p>
+        <div class="hero-actions">
+          <a class="ghost-btn" href="#work">Explore My Work</a>
+          <a class="cta-btn" href="#contact">Let’s Work Together</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="work">
+      <div class="container">
+        <div class="section-heading reveal">
+          <h2>Long-form videos</h2>
+          <div class="line"></div>
+          <p>
+            I edit YouTube videos and horizontal content with a <span class="accent-text">strong rhythm</span>,
+            sharp pacing, and visuals designed to hold attention. I can also turn streams or raw recordings into
+            polished long-form content with the <span class="accent-text">best moments highlighted</span>.
+          </p>
+        </div>
+
+        <div class="video-grid two">
+          <article class="video-card reveal">
+            <div class="video-frame landscape">
+              <div class="mute-badge">🔊</div>
+              <iframe
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                title="Long Form Video 1"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="card-body">
+              <h3>Long-form Showcase 01</h3>
+              <p>Use this spot for one of your best YouTube edits, podcasts, or stream highlight transformations.</p>
+            </div>
+          </article>
+
+          <article class="video-card reveal">
+            <div class="video-frame landscape">
+              <div class="mute-badge">🔊</div>
+              <iframe
+                src="https://www.youtube.com/embed/ysz5S6PUM-U"
+                title="Long Form Video 2"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="card-body">
+              <h3>Long-form Showcase 02</h3>
+              <p>Perfect for another featured project with strong storytelling, retention editing, and clean motion.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="shorts">
+      <div class="container">
+        <div class="section-heading reveal">
+          <h2>Short-form videos</h2>
+          <div class="line"></div>
+          <p>
+            I create vertical content for TikTok, Instagram Reels, and YouTube Shorts with <span class="accent-text">fast hooks</span>,
+            subtitles, dynamic motion, and edits built to stop the scroll. These are ideal for viral-style clips,
+            talking head videos, gaming edits, and social media growth content.
+          </p>
+        </div>
+
+        <div class="video-grid four">
+          <article class="video-card reveal">
+            <div class="video-frame portrait">
+              <div class="mute-badge">🔊</div>
+              <iframe
+                src="https://www.youtube.com/embed/jNQXAC9IVRw"
+                title="Short Form Video 1"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="card-body">
+              <h3>Short-form Clip 01</h3>
+              <p>Replace with your best short-form edit link.</p>
+            </div>
+          </article>
+
+          <article class="video-card reveal">
+            <div class="video-frame portrait">
+              <div class="mute-badge">🔊</div>
+              <iframe
+                src="https://www.youtube.com/embed/aqz-KE-bpKQ"
+                title="Short Form Video 2"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="card-body">
+              <h3>Short-form Clip 02</h3>
+              <p>Great for reels, gaming snippets, or creator promos.</p>
+            </div>
+          </article>
+
+          <article class="video-card reveal">
+            <div class="video-frame portrait">
+              <div class="mute-badge">🔊</div>
+              <iframe
+                src="https://www.youtube.com/embed/tgbNymZ7vqY"
+                title="Short Form Video 3"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="card-body">
+              <h3>Short-form Clip 03</h3>
+              <p>Use another strong example with subtitles and fast cuts.</p>
+            </div>
+          </article>
+
+          <article class="video-card reveal">
+            <div class="video-frame portrait">
+              <div class="mute-badge">🔊</div>
+              <iframe
+                src="https://www.youtube.com/embed/ScMzIvxBSi4"
+                title="Short Form Video 4"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="card-body">
+              <h3>Short-form Clip 04</h3>
+              <p>Add your fourth short example here.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="why-me">
+      <div class="container">
+        <div class="section-heading reveal">
+          <h2>Why work with me?</h2>
+          <div class="line"></div>
+        </div>
+
+        <div class="features-grid">
+          <article class="feature-card reveal">
+            <h3>Strong visual impact</h3>
+            <p>I build videos that feel alive through pacing, sound design, and visuals that hit with intention.</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <h3>Team-oriented workflow</h3>
+            <p>I work closely with you so the final edit reflects your style, goals, and the exact feeling you want.</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <h3>Retention-focused editing</h3>
+            <p>I shape raw footage into content that keeps viewers watching with smoother structure and cleaner flow.</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <h3>Multiple formats</h3>
+            <p>From vertical social content to horizontal YouTube videos, I edit for the platform and audience you need.</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <h3>Clean motion and polish</h3>
+            <p>Transitions, text, subtitles, and motion details come together for a professional final look.</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <h3>Fast communication</h3>
+            <p>I stay clear and responsive throughout the project so you always know where everything stands.</p>
+          </article>
+        </div>
+
+        <div class="center-cta reveal">
+          <a class="cta-btn" href="#contact">Let’s Create Together</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" id="contact">
+    <div class="container reveal">
+      <div class="socials">
+        <a class="social-link" href="https://discord.com" target="_blank" rel="noopener noreferrer">Discord: @fabri</a>
+        <a class="social-link" href="https://x.com" target="_blank" rel="noopener noreferrer">X: @fabrieditor</a>
+        <a class="social-link" href="mailto:yourmail@example.com">Email: yourmail@example.com</a>
+      </div>
+      <p class="copyright">© 2026 FABRI. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const revealElements = document.querySelectorAll('.reveal');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+        }
+      });
+    }, {
+      threshold: 0.14
+    });
+
+    revealElements.forEach((el) => {
+      if (!el.classList.contains('show')) observer.observe(el);
+    });
+  </script>
+</body>
+</html>
