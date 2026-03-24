@@ -1276,8 +1276,8 @@ if (prefersReducedMotion) {
       };
 
       const updateMuteState = () => {
-        muteBtn.innerHTML = video.muted ? || video.volume === 0 ? '&#128263;' : '&#128266;';
-      };
+  muteBtn.innerHTML = (video.muted || video.volume === 0) ? '&#128263;' : '&#128266;';
+};
 
       const updateProgress = () => {
         const value = video.duration ? (video.currentTime / video.duration) * 100 : 0;
