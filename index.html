@@ -28,15 +28,16 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     html {
       scroll-behavior: smooth;
     }
 
-    body {
+   body {
   font-family: Inter, Arial, Helvetica, sans-serif;
-  background: url("background.jpg") center/cover no-repeat fixed;
+  background: url("background.jpg") center/cover no-repeat;
   color: var(--text);
   overflow-x: hidden;
 }
@@ -633,6 +634,12 @@
         width: 72px;
       }
     }
+
+    @media (hover: none) and (pointer: coarse) {
+  .player-overlay {
+    opacity: 1;
+  }
+}
   </style>
 </head>
 <body>
@@ -689,7 +696,7 @@
           <article class="video-card reveal">
             <div class="video-frame landscape">
               <div class="custom-player">
-                <video src="longform1.mp4" playsinline preload="auto"></video>
+                <video src="longform1.mp4" playsinline preload="metadata"></video>
                 <div class="play-center"><span>▶</span></div>
                 <div class="player-overlay">
                   <div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div>
@@ -716,7 +723,7 @@
           <article class="video-card reveal">
             <div class="video-frame landscape">
               <div class="custom-player">
-                <video src="longform2.mp4" playsinline preload="auto"></video>
+                <video src="longform2.mp4" playsinline preload="metadata"></video>
                 <div class="play-center"><span>▶</span></div>
                 <div class="player-overlay">
                   <div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div>
@@ -759,7 +766,7 @@
           <article class="video-card reveal">
             <div class="video-frame portrait">
               <div class="custom-player">
-                <video src="shorts1.mp4" playsinline preload="auto"></video>
+                <video src="shorts1.mp4" playsinline preload="metadata"></video>
                 <div class="play-center"><span>▶</span></div>
                 <div class="player-overlay">
                   <div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div>
@@ -786,7 +793,7 @@
           <article class="video-card reveal">
             <div class="video-frame portrait">
               <div class="custom-player">
-                <video src="shorts2.mp4" playsinline preload="auto"></video>
+                <video src="shorts2.mp4" playsinline preload="metadata"></video>
                 <div class="play-center"><span>▶</span></div>
                 <div class="player-overlay">
                   <div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div>
@@ -813,7 +820,7 @@
           <article class="video-card reveal">
             <div class="video-frame portrait">
               <div class="custom-player">
-                <video src="shorts3.mp4" playsinline preload="auto"></video>
+               <video src="shorts3.mp4" playsinline preload="metadata"></video>
                 <div class="play-center"><span>▶</span></div>
                 <div class="player-overlay">
                   <div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div>
@@ -840,7 +847,7 @@
           <article class="video-card reveal">
             <div class="video-frame portrait">
               <div class="custom-player">
-                <video src="shorts4.mp4" playsinline preload="auto"></video>
+                <video src="shorts4.mp4" playsinline preload="metadata"></video>
                 <div class="play-center"><span>▶</span></div>
                 <div class="player-overlay">
                   <div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div>
@@ -992,10 +999,7 @@
 
       playBtn.addEventListener('click', togglePlay);
       video.addEventListener('click', togglePlay);
-      centerPlay.querySelector('span').addEventListener('click', (e) => {
-  e.stopPropagation();
-  togglePlay();
-});
+      centerPlay.addEventListener('click', togglePlay);
 
       muteBtn.addEventListener('click', () => {
         video.muted = !video.muted;
@@ -1015,14 +1019,21 @@
       });
 
       fullscreenBtn.addEventListener('click', async () => {
-        try {
-          if (!document.fullscreenElement) {
-            await player.requestFullscreen();
-          } else {
-            await document.exitFullscreen();
-          }
-        } catch (e) {}
-      });
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+      return;
+    }
+
+    if (video.requestFullscreen) {
+      await video.requestFullscreen();
+    } else if (video.webkitEnterFullscreen) {
+      video.webkitEnterFullscreen();
+    } else if (player.requestFullscreen) {
+      await player.requestFullscreen();
+    }
+  } catch (e) {}
+});
 
       video.addEventListener('loadedmetadata', updateProgress);
       video.addEventListener('timeupdate', updateProgress);
