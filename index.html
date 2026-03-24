@@ -266,6 +266,198 @@
       height: 100%;
       border: 0;
       display: block;
+      object-fit: cover;
+      background: #000;
+    }
+
+    .custom-player {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .custom-player video {
+      cursor: pointer;
+    }
+
+    .player-overlay {
+      position: absolute;
+      inset: auto 0 0 0;
+      padding: 18px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.08), transparent);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      z-index: 3;
+    }
+
+    .custom-player:hover .player-overlay,
+    .custom-player:focus-within .player-overlay,
+    .custom-player.playing .player-overlay {
+      opacity: 1;
+    }
+
+    .progress-wrap {
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .progress {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .progress::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      border: 0;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.14);
+    }
+
+    .progress::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      border: 0;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.14);
+    }
+
+    .progress::-moz-range-track {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+    }
+
+    .player-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .player-left,
+    .player-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .player-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+    }
+
+    .player-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.22);
+    }
+
+    .player-time {
+      color: #fff;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      min-width: 88px;
+    }
+
+    .volume {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 90px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      cursor: pointer;
+    }
+
+    .volume::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #fff;
+      border: 0;
+    }
+
+    .volume::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #fff;
+      border: 0;
+    }
+
+    .play-center {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      z-index: 2;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .custom-player.playing .play-center {
+      opacity: 0;
+    }
+
+    .play-center span {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.22);
+      backdrop-filter: blur(10px);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.5rem;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.24);
+    }
+
+    @media (max-width: 640px) {
+      .player-controls {
+        align-items: flex-start;
+      }
+
+      .player-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .volume {
+        width: 72px;
+      }
     }
 
     .mute-badge {
@@ -469,8 +661,24 @@
         <div class="video-grid two">
           <article class="video-card reveal">
             <div class="video-frame landscape">
-              <div class="mute-badge">🔊</div>
-              <video src="longform1.mp4" autoplay muted loop playsinline controls></video>
+              <div class="custom-player">
+                <video src="longform1.mp4" playsinline preload="metadata"></video>
+                <div class="play-center"><span>▶</span></div>
+                <div class="player-overlay">
+                  <div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div>
+                  <div class="player-controls">
+                    <div class="player-left">
+                      <button class="player-btn play-toggle" type="button">▶</button>
+                      <button class="player-btn mute-toggle" type="button">🔊</button>
+                      <span class="player-time">0:00 / 0:00</span>
+                    </div>
+                    <div class="player-right">
+                      <input class="volume" type="range" min="0" max="1" step="0.05" value="1">
+                      <button class="player-btn fullscreen-toggle" type="button">⛶</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="card-body">
               <h3>Long-form Showcase 01</h3>
@@ -480,8 +688,24 @@
 
           <article class="video-card reveal">
             <div class="video-frame landscape">
-              <div class="mute-badge">🔊</div>
-              <video src="longform2.mp4" autoplay muted loop playsinline controls></video>
+              <div class="custom-player">
+                <video src="longform2.mp4" playsinline preload="metadata"></video>
+                <div class="play-center"><span>▶</span></div>
+                <div class="player-overlay">
+                  <div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div>
+                  <div class="player-controls">
+                    <div class="player-left">
+                      <button class="player-btn play-toggle" type="button">▶</button>
+                      <button class="player-btn mute-toggle" type="button">🔊</button>
+                      <span class="player-time">0:00 / 0:00</span>
+                    </div>
+                    <div class="player-right">
+                      <input class="volume" type="range" min="0" max="1" step="0.05" value="1">
+                      <button class="player-btn fullscreen-toggle" type="button">⛶</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="card-body">
               <h3>Long-form Showcase 02</h3>
@@ -507,8 +731,24 @@
         <div class="video-grid four">
           <article class="video-card reveal">
             <div class="video-frame portrait">
-              <div class="mute-badge">🔊</div>
-              <video src="shorts1.mp4" autoplay muted loop playsinline controls></video>
+              <div class="custom-player">
+                <video src="shorts1.mp4" playsinline preload="metadata"></video>
+                <div class="play-center"><span>▶</span></div>
+                <div class="player-overlay">
+                  <div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div>
+                  <div class="player-controls">
+                    <div class="player-left">
+                      <button class="player-btn play-toggle" type="button">▶</button>
+                      <button class="player-btn mute-toggle" type="button">🔊</button>
+                      <span class="player-time">0:00 / 0:00</span>
+                    </div>
+                    <div class="player-right">
+                      <input class="volume" type="range" min="0" max="1" step="0.05" value="1">
+                      <button class="player-btn fullscreen-toggle" type="button">⛶</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="card-body">
               <h3>Short-form Clip 01</h3>
@@ -518,8 +758,24 @@
 
           <article class="video-card reveal">
             <div class="video-frame portrait">
-              <div class="mute-badge">🔊</div>
-              <video src="shorts2.mp4" autoplay muted loop playsinline controls></video>
+              <div class="custom-player">
+                <video src="shorts2.mp4" playsinline preload="metadata"></video>
+                <div class="play-center"><span>▶</span></div>
+                <div class="player-overlay">
+                  <div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div>
+                  <div class="player-controls">
+                    <div class="player-left">
+                      <button class="player-btn play-toggle" type="button">▶</button>
+                      <button class="player-btn mute-toggle" type="button">🔊</button>
+                      <span class="player-time">0:00 / 0:00</span>
+                    </div>
+                    <div class="player-right">
+                      <input class="volume" type="range" min="0" max="1" step="0.05" value="1">
+                      <button class="player-btn fullscreen-toggle" type="button">⛶</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="card-body">
               <h3>Short-form Clip 02</h3>
@@ -529,8 +785,24 @@
 
           <article class="video-card reveal">
             <div class="video-frame portrait">
-              <div class="mute-badge">🔊</div>
-              <video src="shorts3.mp4" autoplay muted loop playsinline controls></video>
+              <div class="custom-player">
+                <video src="shorts3.mp4" playsinline preload="metadata"></video>
+                <div class="play-center"><span>▶</span></div>
+                <div class="player-overlay">
+                  <div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div>
+                  <div class="player-controls">
+                    <div class="player-left">
+                      <button class="player-btn play-toggle" type="button">▶</button>
+                      <button class="player-btn mute-toggle" type="button">🔊</button>
+                      <span class="player-time">0:00 / 0:00</span>
+                    </div>
+                    <div class="player-right">
+                      <input class="volume" type="range" min="0" max="1" step="0.05" value="1">
+                      <button class="player-btn fullscreen-toggle" type="button">⛶</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="card-body">
               <h3>Short-form Clip 03</h3>
@@ -540,8 +812,24 @@
 
           <article class="video-card reveal">
             <div class="video-frame portrait">
-              <div class="mute-badge">🔊</div>
-              <video src="shorts4.mp4" autoplay muted loop playsinline controls></video>
+              <div class="custom-player">
+                <video src="shorts4.mp4" playsinline preload="metadata"></video>
+                <div class="play-center"><span>▶</span></div>
+                <div class="player-overlay">
+                  <div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div>
+                  <div class="player-controls">
+                    <div class="player-left">
+                      <button class="player-btn play-toggle" type="button">▶</button>
+                      <button class="player-btn mute-toggle" type="button">🔊</button>
+                      <span class="player-time">0:00 / 0:00</span>
+                    </div>
+                    <div class="player-right">
+                      <input class="volume" type="range" min="0" max="1" step="0.05" value="1">
+                      <button class="player-btn fullscreen-toggle" type="button">⛶</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="card-body">
               <h3>Short-form Clip 04</h3>
@@ -624,6 +912,96 @@
 
     revealElements.forEach((el) => {
       if (!el.classList.contains('show')) observer.observe(el);
+    });
+
+    const formatTime = (time) => {
+      if (!isFinite(time)) return '0:00';
+      const mins = Math.floor(time / 60);
+      const secs = Math.floor(time % 60).toString().padStart(2, '0');
+      return `${mins}:${secs}`;
+    };
+
+    document.querySelectorAll('.custom-player').forEach((player) => {
+      const video = player.querySelector('video');
+      const playBtn = player.querySelector('.play-toggle');
+      const muteBtn = player.querySelector('.mute-toggle');
+      const fullscreenBtn = player.querySelector('.fullscreen-toggle');
+      const progress = player.querySelector('.progress');
+      const volume = player.querySelector('.volume');
+      const time = player.querySelector('.player-time');
+      const centerPlay = player.querySelector('.play-center');
+
+      video.muted = true;
+      volume.value = 1;
+
+      const updatePlayState = () => {
+        const isPaused = video.paused;
+        player.classList.toggle('playing', !isPaused);
+        playBtn.textContent = isPaused ? '▶' : '❚❚';
+        centerPlay.style.opacity = isPaused ? '1' : '0';
+      };
+
+      const updateMuteState = () => {
+        muteBtn.textContent = video.muted || video.volume === 0 ? '🔇' : '🔊';
+      };
+
+      const updateProgress = () => {
+        const value = video.duration ? (video.currentTime / video.duration) * 100 : 0;
+        progress.value = value;
+        progress.style.background = `linear-gradient(to right, #ffffff 0%, #ffffff ${value}%, rgba(255,255,255,0.18) ${value}%, rgba(255,255,255,0.18) 100%)`;
+        time.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+      };
+
+      const togglePlay = () => {
+        document.querySelectorAll('.custom-player video').forEach((otherVideo) => {
+          if (otherVideo !== video) otherVideo.pause();
+        });
+        if (video.paused) {
+          video.play();
+        } else {
+          video.pause();
+        }
+      };
+
+      playBtn.addEventListener('click', togglePlay);
+      video.addEventListener('click', togglePlay);
+      centerPlay.addEventListener('click', togglePlay);
+
+      muteBtn.addEventListener('click', () => {
+        video.muted = !video.muted;
+        updateMuteState();
+      });
+
+      volume.addEventListener('input', () => {
+        video.volume = volume.value;
+        video.muted = Number(volume.value) === 0;
+        updateMuteState();
+      });
+
+      progress.addEventListener('input', () => {
+        if (video.duration) {
+          video.currentTime = (progress.value / 100) * video.duration;
+        }
+      });
+
+      fullscreenBtn.addEventListener('click', async () => {
+        if (!document.fullscreenElement) {
+          await player.requestFullscreen?.();
+        } else {
+          await document.exitFullscreen?.();
+        }
+      });
+
+      video.addEventListener('timeupdate', updateProgress);
+      video.addEventListener('loadedmetadata', updateProgress);
+      video.addEventListener('play', updatePlayState);
+      video.addEventListener('pause', updatePlayState);
+      video.addEventListener('volumechange', updateMuteState);
+      video.addEventListener('ended', updatePlayState);
+
+      updatePlayState();
+      updateMuteState();
+      updateProgress();
     });
   </script>
 </body>
