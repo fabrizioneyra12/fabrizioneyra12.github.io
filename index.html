@@ -643,6 +643,12 @@ body {
     }
 
     .reveal {
+  opacity: 1;
+  transform: none;
+  -webkit-transform: none;
+}
+
+.js .reveal {
   opacity: 0;
   transform: translate3d(0, 42px, 0);
   -webkit-transform: translate3d(0, 42px, 0);
@@ -652,7 +658,7 @@ body {
   backface-visibility: hidden;
 }
 
-.reveal.show {
+.js .reveal.show {
   opacity: 1;
   transform: translate3d(0, 0, 0);
   -webkit-transform: translate3d(0, 0, 0);
@@ -1185,6 +1191,7 @@ built to keep attention.
   </footer>
 
   <script>
+    document.documentElement.classList.add('js');
     const revealElements = document.querySelectorAll('.reveal');
 
 const showVisibleReveals = () => {
@@ -1203,6 +1210,9 @@ const showAllReveals = () => {
 const isAppleDevice = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
 const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+requestAnimationFrame(showVisibleReveals);
+setTimeout(showVisibleReveals, 100);
 
 if (prefersReducedMotion) {
   showAllReveals();
