@@ -280,14 +280,24 @@
     }
 
     .video-frame iframe,
-    .video-frame video {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
-      object-fit: cover;
-      background: #000;
-    }
+.video-frame video {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  object-fit: cover;
+  background: #000;
+}
+
+.custom-player:fullscreen video,
+.custom-player:-webkit-full-screen video,
+.custom-player:-moz-full-screen video,
+.custom-player:-ms-fullscreen video {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
 
     .custom-player {
       position: relative;
@@ -435,15 +445,15 @@
       border: 0;
     }
 
-    .play-center {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      z-index: 2;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
+   .play-center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+  pointer-events: auto;
+  transition: opacity 0.25s ease;
+}
 
     .custom-player.playing .play-center {
       opacity: 0;
