@@ -1534,34 +1534,19 @@ body {
 
     <div class="reviews-wrap">
       <div class="reviews-list" id="reviewsList">
-        <article class="review-card reveal">
-          <div class="review-top">
-            <strong class="review-name">Alex</strong>
-            <span class="review-stars">★★★★★</span>
-          </div>
-          <p class="review-text">Fast delivery, smooth communication, and a really clean final edit.</p>
-        </article>
-
-        <article class="review-card reveal">
-          <div class="review-top">
-            <strong class="review-name">Mika</strong>
-            <span class="review-stars">★★★★★</span>
-          </div>
-          <p class="review-text">Great pacing and subtitles. The video felt much more professional after the edit.</p>
-        </article>
+        
       </div>
 
       <form class="review-form reveal" id="reviewForm">
         <input type="text" id="reviewName" data-i18n-placeholder="reviewNamePlaceholder" placeholder="Your name" maxlength="30" required>
 
-        <select id="reviewStars" required>
-          <option value="" data-i18n="reviewRating">Rating</option>
-          <option value="5" data-i18n="review5">5 Stars</option>
-          <option value="4" data-i18n="review4">4 Stars</option>
-          <option value="3" data-i18n="review3">3 Stars</option>
-          <option value="2" data-i18n="review2">2 Stars</option>
-          <option value="1" data-i18n="review1">1 Star</option>
-        </select>
+        <select id="reviewStars">
+  <option value="5" data-i18n="review5" selected>5 Stars</option>
+  <option value="4" data-i18n="review4">4 Stars</option>
+  <option value="3" data-i18n="review3">3 Stars</option>
+  <option value="2" data-i18n="review2">2 Stars</option>
+  <option value="1" data-i18n="review1">1 Star</option>
+</select>
 
         <textarea id="reviewMessage" data-i18n-placeholder="reviewMessagePlaceholder" placeholder="Write a short review..." maxlength="140" required></textarea>
 
@@ -1640,7 +1625,6 @@ body {
         review1: "1 Star",
         reviewMessagePlaceholder: "Write a short review...",
         reviewSubmit: "Leave a review",
-        
         copyright: "© 2026 FABRI. All rights reserved."
       },
 
@@ -1994,10 +1978,10 @@ body {
       e.preventDefault();
 
       const name = document.getElementById('reviewName').value.trim();
-      const stars = Number(document.getElementById('reviewStars').value);
+      const stars = Number(document.getElementById('reviewStars').value || 5);
       const message = document.getElementById('reviewMessage').value.trim();
 
-      if (!name || !stars || !message) return;
+      if (!name || !message) return;
 
       const review = document.createElement('article');
       review.className = 'review-card show';
