@@ -820,8 +820,8 @@ body {
   transform: scale(1.08);
   background: rgba(255, 0, 0, 1);
 }
-    .player-overlay {
-  pointer-events: none;
+    .custom-player {
+  touch-action: manipulation;
 }
 
 .player-overlay * {
@@ -1330,7 +1330,11 @@ body {
 
     @media (hover: none) and (pointer: coarse) {
   .player-overlay {
-    opacity: 1;
+    opacity: 1 !important;
+  }
+
+  .custom-player {
+    cursor: default;
   }
 }
   </style>
