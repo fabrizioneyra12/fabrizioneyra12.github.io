@@ -2099,7 +2099,7 @@ function detectSiteLanguage() {
     });
   }
 
-  const siteLanguage = "es";
+  const siteLanguage = detectSiteLanguage();
   applyTranslations(siteLanguage);
 
   const revealElements = document.querySelectorAll('.reveal');
