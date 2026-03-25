@@ -943,6 +943,33 @@ body {
 .reviews-list {
   display: grid;
   gap: 16px;
+  height: 620px;
+  overflow-y: auto;
+  padding-right: 10px;
+  align-content: start;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 211, 77, 0.9) rgba(255,255,255,0.06);
+}
+
+    .reviews-list::-webkit-scrollbar {
+  width: 12px;
+}
+
+.reviews-list::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 999px;
+  box-shadow: inset 0 0 10px rgba(255, 211, 77, 0.06);
+}
+
+.reviews-list::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  border-radius: 999px;
+  border: 2px solid rgba(10, 8, 16, 0.95);
+  box-shadow: 0 0 12px rgba(255, 211, 77, 0.28);
+}
+
+.reviews-list::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffe27a, #b86bff);
 }
 
 .review-card {
@@ -956,9 +983,9 @@ body {
 }
 
 .review-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(255, 211, 77, 0.28);
-  box-shadow: 0 0 28px rgba(255, 211, 77, 0.12);
+  transform: translateY(-2px);
+  border-color: rgba(255, 211, 77, 0.26);
+  box-shadow: 0 0 26px rgba(255, 211, 77, 0.12);
 }
 
 .review-top {
@@ -984,7 +1011,7 @@ body {
   color: var(--muted);
   line-height: 1.7;
   font-size: 0.96rem;
-  max-height: 220px;
+  max-height: 120px;
   overflow-y: auto;
   padding: 14px 16px;
   margin-top: 10px;
@@ -993,7 +1020,22 @@ body {
   border: 1px solid rgba(255,255,255,0.07);
   box-shadow: inset 0 0 18px rgba(255, 211, 77, 0.05);
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 211, 77, 0.65) rgba(255,255,255,0.06);
+  scrollbar-color: rgba(255, 211, 77, 0.75) rgba(255,255,255,0.05);
+}
+
+    .review-text::-webkit-scrollbar {
+  width: 10px;
+}
+
+.review-text::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 999px;
+}
+
+.review-text::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  border-radius: 999px;
+  border: 2px solid rgba(10, 8, 16, 0.9);
 }
 
 .review-form {
