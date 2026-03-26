@@ -107,6 +107,33 @@ body {
       text-shadow: 0 0 18px rgba(255, 211, 77, 0.6);
     }
 
+    .logo-image {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+}
+
+.logo-image img {
+  height: 52px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 0 6px rgba(255, 211, 77, 0.45))
+    drop-shadow(0 0 14px rgba(255, 211, 77, 0.30))
+    drop-shadow(0 0 24px rgba(159, 77, 255, 0.18));
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.logo-image:hover img {
+  transform: scale(1.03);
+  filter:
+    drop-shadow(0 0 8px rgba(255, 211, 77, 0.65))
+    drop-shadow(0 0 18px rgba(255, 211, 77, 0.42))
+    drop-shadow(0 0 30px rgba(159, 77, 255, 0.24));
+}
+
     .nav-links {
       display: flex;
       gap: 12px;
@@ -1494,7 +1521,9 @@ body {
 <body>
   <header class="site-header">
     <div class="container nav">
-      <a href="#home" class="logo"><span class="b">F</span><span>abri</span></a>
+      <a href="#home" class="logo logo-image">
+        <img src="title.png" alt="Fabri logo">
+      </a>
       <nav class="nav-links">
         <a class="pill" href="#work" data-i18n="navWork">Work</a>
         <a class="pill" href="#contact" data-i18n="navHire">Hire Me</a>
