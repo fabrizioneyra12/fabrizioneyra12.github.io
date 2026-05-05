@@ -313,47 +313,12 @@
     }
     @media(max-width:640px){.player-controls{gap:5px}.player-time{min-width:54px;font-size:.78rem}.volume{width:46px;min-width:36px}.player-btn{width:32px;height:32px;font-size:.78rem}.pill{min-width:110px;padding:10px 16px;font-size:.86rem}}
 
-    /* ── LIGHT MODE ── */
-    body.light{
-      --bg:#f0eefc;--panel:rgba(0,0,0,.05);--panel-border:rgba(180,130,0,.3);
-      --text:#0a0818;--muted:#4a4460;--accent:#b8920a;--accent-2:#6a1fcc;--accent-3:#cc2a7a;
-    }
-    body.light #galaxy-canvas{opacity:.18;}
-    body.light #scanlines{opacity:0;}
-    body.light #noise-overlay{opacity:.04;}
-    body.light .site-header{background:rgba(240,238,252,.82);}
-    body.light .video-card{background:rgba(255,255,255,.7);border-color:rgba(180,130,0,.2);box-shadow:0 8px 32px rgba(0,0,0,.12);}
-    body.light .review-card{background:rgba(255,255,255,.8);}
-    body.light .pricing-card{background:rgba(255,255,255,.7);}
-    body.light .stat-box{background:rgba(255,255,255,.7);}
-    body.light .ghost-btn{background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.2);color:var(--text);}
-    body.light .hero-orb-1{background:radial-gradient(circle,rgba(110,45,240,.15) 0%,transparent 70%);}
-    body.light .hero-orb-2{background:radial-gradient(circle,rgba(200,150,0,.15) 0%,transparent 70%);}
-    body.light .hero-orb-3{background:radial-gradient(circle,rgba(200,40,120,.12) 0%,transparent 70%);}
-    body.light #cursor-glow{background:radial-gradient(circle,rgba(180,130,0,.12) 0%,rgba(106,31,204,.06) 40%,transparent 70%);}
-
-    /* toggle button */
-    #theme-toggle{position:fixed;bottom:28px;right:28px;z-index:200;width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(255,211,77,.4);background:rgba(255,255,255,.07);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;transition:transform .3s cubic-bezier(.22,.8,.36,1),box-shadow .3s ease,background .3s ease;box-shadow:0 0 18px rgba(255,211,77,.15);}
-    #theme-toggle:hover{transform:scale(1.15) rotate(20deg);box-shadow:0 0 32px rgba(255,211,77,.4);}
-    body.light #theme-toggle{border-color:rgba(180,130,0,.4);background:rgba(0,0,0,.07);box-shadow:0 0 18px rgba(180,130,0,.15);}
-
-    /* ── SCROLL PROGRESS BAR ── */
-    #scroll-bar{position:fixed;top:0;left:0;height:3px;width:0%;z-index:9999;background:linear-gradient(90deg,var(--accent),var(--accent-3),var(--accent-2));box-shadow:0 0 8px rgba(255,211,77,.6);transition:width .1s linear;pointer-events:none;}
-
-    /* ── AVAILABILITY STATUS ── */
-    .avail-badge{display:inline-flex;align-items:center;gap:8px;margin-bottom:18px;padding:7px 16px;border-radius:999px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.3);font-size:.78rem;font-weight:700;letter-spacing:.1em;color:#4ade80;cursor:default;opacity:0;transition:opacity .6s ease,transform .6s ease;transform:translateY(30px);}
-    .avail-badge.busy{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3);color:#f87171;}
-    .avail-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px rgba(74,222,128,.8);animation:availPulse 1.8s ease-in-out infinite;flex-shrink:0;}
-    .avail-badge.busy .avail-dot{background:#f87171;box-shadow:0 0 6px rgba(248,113,113,.8);}
-    @keyframes availPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.5}}
   </style>
 </head>
 <body>
   <!-- PERF: fx-canvas removed entirely -->
-  <div id="scroll-bar"></div>
   <canvas id="galaxy-canvas"></canvas>
   <div id="cursor-glow"></div>
-  <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
   <div id="cursor-dot"></div>
   <div id="noise-overlay"></div>
   <div id="scanlines"></div>
@@ -386,8 +351,7 @@
       <div class="hero-aurora"></div>
 
       <div class="container hero-inner">
-        <div class="avail-badge" id="availBadge"><span class="avail-dot"></span><span id="availText">Available for work</span></div>
-        <div class="hero-kicker"><span class="dot"></span><span class="hero-kicker-text" data-i18n="heroKicker">VIDEO EDITOR</span></div>
+        <div class="hero-kicker"><span class="dot"></span><span class="hero-kicker-text" data-i18n="heroKicker">Video Editor</span></div>
         <h1>
           <span class="line1 char-animate" data-i18n="heroTitleTop">I turn your ideas into</span>
           <span class="line2" data-i18n="heroTitleAccent">high-impact videos</span>
@@ -627,8 +591,8 @@
 
   /* ══ TRANSLATIONS ══ */
   const T={
-    en:{navWork:"Work",navHire:"Hire Me",heroKicker:"VIDEO EDITOR",heroTitleTop:"I turn your ideas into",heroTitleAccent:"high-impact videos",heroDesc:"The editing is what makes people stay, share, and come back. I know what works and I put that into every single video I touch. Whether it's a short or a long video, the result is always clean, sharp and built to hold attention.",heroBtnWork:"Explore My Work",heroBtnContact:"Let's Work Together",heroStatYears:"Years Editing",heroStatSubs:"Subscribers",heroStatViews:"Views",oldChannels:"My Old Channels",statSubscribers:"Subscribers",statViews:"Views",longTitle:"Long-form videos",longDesc1:"I edit YouTube videos and horizontal content with",longAccent1:"strong rhythm",longDesc2:"sharp pacing, and visuals designed to hold attention. I can also turn streams or raw recordings into polished long-form content with",longAccent2:"best moments highlighted",longShowcase1:"Long-form Showcase 01",longShowcase2:"Long-form Showcase 02",shortTitle:"Short-form videos",shortDesc1:"I create vertical content for TikTok, Instagram Reels, and YouTube Shorts with",shortAccent1:"fast hooks",shortDesc2:"subtitles, dynamic motion, and edits built to stop the scroll.",shortsCategory:"Shorts",shortsClip1:"Shorts Clip 01",shortsClip2:"Shorts Clip 02",shortsClip3:"Shorts Clip 03",clientsKicker:"CLIENTS",clientsTitle:"CHANNELS I'VE EDITED",clientSubs1:"26.3k subs",clientSubs3:"2.27k subs",clientSubs4:"176 subs",clientViews3:"545k views",clientViews4:"88k views",pricingTitle:"Pricing",pricingDesc1:"Clear starting prices for each format.",pricingAccent:"Prices are negotiable",pricingDesc2:"depending on complexity, editing style, amount of footage, and turnaround time.",pricingShortTag:"Short-form",pricingLongTag:"Long-form",pricingStartingPrice:"Starting price",pricingShortDesc:"Perfect for TikTok, Reels, YouTube Shorts, gaming clips, and fast-paced social media edits.",pricingLongDesc:"Great for YouTube videos, commentary, gameplay videos, streams, and polished horizontal content.",pricingNegotiable:"Negotiable depending on the project.",pricingImportant:"Important:",pricingBottom1:"These are base prices only —",pricingBottomAccent:"everything can be negotiated",pricingBottom2:"based on video length, style, effects, subtitles, and delivery speed.",reviewsTitle:"Client reviews",reviewsDesc:"What people say about working with me.",hireTitle:"Hire Me",hireSub:"Ready to make your content stand out? Let's create something amazing together.",copyright:"© 2026 FABRI. All rights reserved."},
-    es:{navWork:"Trabajos",navHire:"Contrátame",heroKicker:"EDITOR DE VIDEO",heroTitleTop:"Convierto tus ideas en",heroTitleAccent:"videos de alto impacto",heroDesc:"La edición es lo que hace que la gente se quede, comparta y vuelva. Sé lo que funciona y lo aplico en cada video que toco. Ya sea un short o un video largo, el resultado siempre es limpio, preciso y hecho para mantener la atención.",heroBtnWork:"Ver mi trabajo",heroBtnContact:"Trabajemos juntos",heroStatYears:"Años editando",heroStatSubs:"Suscriptores",heroStatViews:"Vistas",oldChannels:"Mis Canales Antiguos",statSubscribers:"Suscriptores",statViews:"Vistas",longTitle:"Videos largos",longDesc1:"Edito videos de YouTube y contenido horizontal con",longAccent1:"ritmo fuerte",longDesc2:"edición dinámica y visuales diseñados para mantener la atención. También puedo convertir streams o grabaciones en contenido largo pulido con",longAccent2:"los mejores momentos destacados",longShowcase1:"Muestra largo 01",longShowcase2:"Muestra largo 02",shortTitle:"Videos cortos",shortDesc1:"Creo contenido vertical para TikTok, Instagram Reels y YouTube Shorts con",shortAccent1:"ganchos rápidos",shortDesc2:"subtítulos, movimiento dinámico y ediciones hechas para detener el scroll.",shortsCategory:"Shorts",shortsClip1:"Clip Shorts 01",shortsClip2:"Clip Shorts 02",shortsClip3:"Clip Shorts 03",clientsKicker:"CLIENTES",clientsTitle:"CANALES QUE HE EDITADO",clientSubs1:"26.3k suscriptores",clientSubs3:"2.27k suscriptores",clientSubs4:"176 suscriptores",clientViews3:"545k vistas",clientViews4:"88k vistas",pricingTitle:"Precios",pricingDesc1:"Precios iniciales claros para cada formato.",pricingAccent:"Los precios son negociables",pricingDesc2:"dependiendo de la complejidad, el estilo de edición, la cantidad de material y el tiempo de entrega.",pricingShortTag:"Formato corto",pricingLongTag:"Formato largo",pricingStartingPrice:"Precio inicial",pricingShortDesc:"Perfecto para TikTok, Reels, YouTube Shorts, clips gaming y ediciones rápidas.",pricingLongDesc:"Ideal para videos de YouTube, comentarios, gameplays, streams y contenido horizontal.",pricingNegotiable:"Negotiable según el proyecto.",pricingImportant:"Importante:",pricingBottom1:"Estos son solo precios base —",pricingBottomAccent:"todo puede negociarse",pricingBottom2:"según la duración del video, el estilo, los efectos, los subtítulos y la velocidad.",reviewsTitle:"Reseñas de clientes",reviewsDesc:"Lo que dice la gente sobre trabajar conmigo.",hireTitle:"Contrátame",hireSub:"¿Listo para hacer que tu contenido destaque? Creemos algo increíble juntos.",copyright:"© 2026 FABRI. Todos los derechos reservados."}
+    en:{navWork:"Work",navHire:"Hire Me",heroKicker:"Video Editor",heroTitleTop:"I turn your ideas into",heroTitleAccent:"high-impact videos",heroDesc:"The editing is what makes people stay, share, and come back. I know what works and I put that into every single video I touch. Whether it's a short or a long video, the result is always clean, sharp and built to hold attention.",heroBtnWork:"Explore My Work",heroBtnContact:"Let's Work Together",heroStatYears:"Years Editing",heroStatSubs:"Subscribers",heroStatViews:"Views",oldChannels:"My Old Channels",statSubscribers:"Subscribers",statViews:"Views",longTitle:"Long-form videos",longDesc1:"I edit YouTube videos and horizontal content with",longAccent1:"strong rhythm",longDesc2:"sharp pacing, and visuals designed to hold attention. I can also turn streams or raw recordings into polished long-form content with",longAccent2:"best moments highlighted",longShowcase1:"Long-form Showcase 01",longShowcase2:"Long-form Showcase 02",shortTitle:"Short-form videos",shortDesc1:"I create vertical content for TikTok, Instagram Reels, and YouTube Shorts with",shortAccent1:"fast hooks",shortDesc2:"subtitles, dynamic motion, and edits built to stop the scroll.",shortsCategory:"Shorts",shortsClip1:"Shorts Clip 01",shortsClip2:"Shorts Clip 02",shortsClip3:"Shorts Clip 03",clientsKicker:"CLIENTS",clientsTitle:"CHANNELS I'VE EDITED",clientSubs1:"26.3k subs",clientSubs3:"2.27k subs",clientSubs4:"176 subs",clientViews3:"545k views",clientViews4:"88k views",pricingTitle:"Pricing",pricingDesc1:"Clear starting prices for each format.",pricingAccent:"Prices are negotiable",pricingDesc2:"depending on complexity, editing style, amount of footage, and turnaround time.",pricingShortTag:"Short-form",pricingLongTag:"Long-form",pricingStartingPrice:"Starting price",pricingShortDesc:"Perfect for TikTok, Reels, YouTube Shorts, gaming clips, and fast-paced social media edits.",pricingLongDesc:"Great for YouTube videos, commentary, gameplay videos, streams, and polished horizontal content.",pricingNegotiable:"Negotiable depending on the project.",pricingImportant:"Important:",pricingBottom1:"These are base prices only —",pricingBottomAccent:"everything can be negotiated",pricingBottom2:"based on video length, style, effects, subtitles, and delivery speed.",reviewsTitle:"Client reviews",reviewsDesc:"What people say about working with me.",hireTitle:"Hire Me",hireSub:"Ready to make your content stand out? Let's create something amazing together.",copyright:"© 2026 FABRI. All rights reserved."},
+    es:{navWork:"Trabajos",navHire:"Contrátame",heroKicker:"Editor De Video",heroTitleTop:"Convierto tus ideas en",heroTitleAccent:"videos de alto impacto",heroDesc:"La edición es lo que hace que la gente se quede, comparta y vuelva. Sé lo que funciona y lo aplico en cada video que toco. Ya sea un short o un video largo, el resultado siempre es limpio, preciso y hecho para mantener la atención.",heroBtnWork:"Ver mi trabajo",heroBtnContact:"Trabajemos juntos",heroStatYears:"Años editando",heroStatSubs:"Suscriptores",heroStatViews:"Vistas",oldChannels:"Mis Canales Antiguos",statSubscribers:"Suscriptores",statViews:"Vistas",longTitle:"Videos largos",longDesc1:"Edito videos de YouTube y contenido horizontal con",longAccent1:"ritmo fuerte",longDesc2:"edición dinámica y visuales diseñados para mantener la atención. También puedo convertir streams o grabaciones en contenido largo pulido con",longAccent2:"los mejores momentos destacados",longShowcase1:"Muestra largo 01",longShowcase2:"Muestra largo 02",shortTitle:"Videos cortos",shortDesc1:"Creo contenido vertical para TikTok, Instagram Reels y YouTube Shorts con",shortAccent1:"ganchos rápidos",shortDesc2:"subtítulos, movimiento dinámico y ediciones hechas para detener el scroll.",shortsCategory:"Shorts",shortsClip1:"Clip Shorts 01",shortsClip2:"Clip Shorts 02",shortsClip3:"Clip Shorts 03",clientsKicker:"CLIENTES",clientsTitle:"CANALES QUE HE EDITADO",clientSubs1:"26.3k suscriptores",clientSubs3:"2.27k suscriptores",clientSubs4:"176 suscriptores",clientViews3:"545k vistas",clientViews4:"88k vistas",pricingTitle:"Precios",pricingDesc1:"Precios iniciales claros para cada formato.",pricingAccent:"Los precios son negociables",pricingDesc2:"dependiendo de la complejidad, el estilo de edición, la cantidad de material y el tiempo de entrega.",pricingShortTag:"Formato corto",pricingLongTag:"Formato largo",pricingStartingPrice:"Precio inicial",pricingShortDesc:"Perfecto para TikTok, Reels, YouTube Shorts, clips gaming y ediciones rápidas.",pricingLongDesc:"Ideal para videos de YouTube, comentarios, gameplays, streams y contenido horizontal.",pricingNegotiable:"Negotiable según el proyecto.",pricingImportant:"Importante:",pricingBottom1:"Estos son solo precios base —",pricingBottomAccent:"todo puede negociarse",pricingBottom2:"según la duración del video, el estilo, los efectos, los subtítulos y la velocidad.",reviewsTitle:"Reseñas de clientes",reviewsDesc:"Lo que dice la gente sobre trabajar conmigo.",hireTitle:"Contrátame",hireSub:"¿Listo para hacer que tu contenido destaque? Creemos algo increíble juntos.",copyright:"© 2026 FABRI. Todos los derechos reservados."}
   };
   const srReg=new Set(["AR","BO","CL","CO","CR","CU","DO","EC","SV","GQ","GT","HN","MX","NI","PA","PY","PE","ES","UY","VE"]);
   const srTZ=new Set(["Europe/Madrid","Atlantic/Canary","America/Mexico_City","America/Cancun","America/Guatemala","America/El_Salvador","America/Tegucigalpa","America/Managua","America/Costa_Rica","America/Panama","America/Havana","America/Santo_Domingo","America/Bogota","America/Caracas","America/Lima","America/Guayaquil","America/La_Paz","America/Asuncion","America/Santiago","America/Montevideo","America/Buenos_Aires","America/Argentina/Buenos_Aires"]);
@@ -885,67 +849,8 @@
     });
   })();
 
-  /* ══ DARK / LIGHT MODE TOGGLE ══ */
-  (function(){
-    const btn = document.getElementById('theme-toggle');
-    if(!btn) return;
-    const key = 'fabri-theme';
-    const saved = localStorage.getItem(key);
 
-    function setTheme(mode){
-      if(mode==='light'){
-        document.body.classList.add('light');
-        btn.textContent='☀️';
-      } else {
-        document.body.classList.remove('light');
-        btn.textContent='🌙';
-      }
-      localStorage.setItem(key, mode);
-    }
 
-    // Load saved preference
-    setTheme(saved||'dark');
-
-    btn.addEventListener('click',()=>{
-      const isLight = document.body.classList.contains('light');
-      setTheme(isLight?'dark':'light');
-    });
-  })();
-
-  /* ══ SCROLL PROGRESS BAR ══ */
-  (function(){
-    const bar = document.getElementById('scroll-bar');
-    if(!bar) return;
-    window.addEventListener('scroll',function(){
-      const doc = document.documentElement;
-      const pct = (doc.scrollTop||document.body.scrollTop) / (doc.scrollHeight - doc.clientHeight) * 100;
-      bar.style.width = Math.min(pct,100)+'%';
-    },{passive:true});
-  })();
-
-  /* ══ AVAILABILITY STATUS ══ */
-  (function(){
-    // ── SET TO false WHEN YOU ARE BUSY ──
-    const available = true;
-
-    const badge = document.getElementById('availBadge');
-    const txt   = document.getElementById('availText');
-    const lang  = document.documentElement.lang||'en';
-    if(!badge||!txt) return;
-
-    if(!available){
-      badge.classList.add('busy');
-      txt.textContent = lang==='es' ? 'No disponible ahora' : 'Fully booked';
-    } else {
-      txt.textContent = lang==='es' ? 'Disponible para trabajar' : 'Available for work';
-    }
-
-    // Animate in after short delay
-    setTimeout(function(){
-      badge.style.opacity='1';
-      badge.style.transform='translateY(0)';
-    }, 120);
-  })();
   </script>
 </body>
 </html>
