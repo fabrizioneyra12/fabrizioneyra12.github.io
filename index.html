@@ -70,7 +70,7 @@
     /* ── HEADLINE ── */
     .hero h1{font-size:clamp(2.6rem,7vw,6rem);line-height:.94;font-weight:900;letter-spacing:-.05em;margin-bottom:24px;opacity:0;animation:fadeUp .85s .32s ease forwards;}
     .hero h1 .line1{display:block;color:#fff;white-space:nowrap;overflow:hidden;font-size:clamp(2rem,5.5vw,5.2rem);}
-    .hero h1 .line2{display:block;background:linear-gradient(90deg,var(--accent) 0%,var(--accent-3) 38%,var(--accent-2) 75%,var(--accent) 100%);background-size:300% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:fadeUp .85s .32s ease forwards,shimmer 4.5s 1.3s linear infinite;}
+    .hero h1 .line2{display:block;background:linear-gradient(90deg,var(--accent) 0%,var(--accent-3) 38%,var(--accent-2) 75%,var(--accent) 100%);background-size:300% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;animation:fadeUp .85s .96s ease forwards,shimmer 4.5s 1.3s linear infinite;}
     @keyframes shimmer{0%{background-position:0% center}100%{background-position:300% center}}
 
     .hero-desc{max-width:700px;margin:0 auto 34px;color:var(--muted);font-size:clamp(.98rem,2vw,1.18rem);line-height:1.72;opacity:0;animation:fadeUp .85s .5s ease forwards;}
@@ -799,6 +799,103 @@
       });
       v.addEventListener('play',function(){v._playing=true;if(v.currentTime<=thumbTime+0.5&&v.currentTime>=thumbTime-0.5)v.currentTime=0;});
       v.addEventListener('pause',function(){v._playing=false;});
+    });
+  })();
+
+  /* ══ EASTER EGG 3 — Triple-click a price → money rain 💸 ══ */
+  (function(){
+    document.querySelectorAll('.pricing-card h3').forEach(function(el){
+      var clicks=0,timer;
+      el.style.cursor='pointer';
+      el.addEventListener('click',function(){
+        clicks++;clearTimeout(timer);
+        timer=setTimeout(function(){clicks=0;},600);
+        if(clicks>=3){
+          clicks=0;
+          var count=0,max=38;
+          var interval=setInterval(function(){
+            if(count>=max){clearInterval(interval);return;}
+            count++;
+            var em=document.createElement('div');
+            var emojis=['💸','💰','🤑','💵','✨'];
+            em.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+            em.style.cssText='position:fixed;top:-40px;left:'+(10+Math.random()*80)+'vw;font-size:'+(1.4+Math.random()*1.6)+'rem;z-index:99999;pointer-events:none;animation:moneyFall '+(1.8+Math.random()*1.4)+'s ease-in forwards;';
+            document.body.appendChild(em);
+            setTimeout(function(){em.remove();},3400);
+          },55);
+          /* inject keyframe once */
+          if(!document.getElementById('money-style')){
+            var st=document.createElement('style');
+            st.id='money-style';
+            st.textContent='@keyframes moneyFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}';
+            document.head.appendChild(st);
+          }
+          /* toast */
+          var msg=document.createElement('div');
+          msg.style.cssText='position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:99999;padding:10px 24px;border-radius:999px;background:rgba(255,211,77,.12);border:1px solid rgba(255,211,77,.4);color:#ffd34d;font-size:.85rem;font-weight:800;letter-spacing:.1em;white-space:nowrap;opacity:0;transition:opacity .3s ease;pointer-events:none;';
+          msg.textContent='bro really triple-clicked the price 💸';
+          document.body.appendChild(msg);
+          requestAnimationFrame(function(){msg.style.opacity='1';});
+          setTimeout(function(){msg.style.opacity='0';setTimeout(function(){msg.remove();},400);},2600);
+        }
+      });
+    });
+  })();
+
+  /* ══ EASTER EGG 4 — Type "fabri" → hype explosion ══ */
+  (function(){
+    var secret='fabri',buf='';
+    document.addEventListener('keydown',function(e){
+      buf=(buf+e.key).slice(-secret.length);
+      if(buf.toLowerCase()===secret){
+        buf='';
+        /* ring burst */
+        var burst=document.createElement('div');
+        burst.style.cssText='position:fixed;top:50%;left:50%;z-index:99999;pointer-events:none;transform:translate(-50%,-50%);';
+        burst.innerHTML='<div style="width:320px;height:320px;border-radius:50%;border:3px solid rgba(255,211,77,.9);animation:ringBurst .7s ease-out forwards;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);"></div>'
+          +'<div style="width:220px;height:220px;border-radius:50%;border:2px solid rgba(255,110,180,.8);animation:ringBurst .7s .1s ease-out forwards;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);"></div>'
+          +'<div style="width:120px;height:120px;border-radius:50%;border:2px solid rgba(159,77,255,.8);animation:ringBurst .7s .2s ease-out forwards;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);"></div>';
+        document.body.appendChild(burst);
+        setTimeout(function(){burst.remove();},1100);
+        if(!document.getElementById('ring-style')){
+          var st=document.createElement('style');
+          st.id='ring-style';
+          st.textContent='@keyframes ringBurst{0%{transform:translate(-50%,-50%) scale(.2);opacity:1}100%{transform:translate(-50%,-50%) scale(1.8);opacity:0}}';
+          document.head.appendChild(st);
+        }
+        /* big message */
+        var box=document.createElement('div');
+        box.style.cssText='position:fixed;inset:0;z-index:99998;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;pointer-events:none;';
+        box.innerHTML='<div style="font-size:clamp(2rem,6vw,4rem);font-weight:900;letter-spacing:-.02em;background:linear-gradient(90deg,#ffd34d,#ff6eb4,#9f4dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:hypeIn .4s cubic-bezier(.22,.8,.36,1) forwards;opacity:0;">that\'s my name 🎬</div>'
+          +'<div style="font-size:1rem;color:#c9c2a5;letter-spacing:.1em;animation:hypeIn .4s .12s cubic-bezier(.22,.8,.36,1) forwards;opacity:0;">you spelled it right tho, respect.</div>';
+        if(!document.getElementById('hype-style')){
+          var st2=document.createElement('style');
+          st2.id='hype-style';
+          st2.textContent='@keyframes hypeIn{0%{opacity:0;transform:scale(.6)}100%{opacity:1;transform:scale(1)}}';
+          document.head.appendChild(st2);
+        }
+        document.body.appendChild(box);
+        setTimeout(function(){box.style.opacity='0';box.style.transition='opacity .4s';setTimeout(function(){box.remove();},450);},2200);
+      }
+    });
+  })();
+
+  /* ══ EASTER EGG 5 — Switch tab → title taunts you ══ */
+  (function(){
+    var original=document.title;
+    var away=['come back... 👀','ur missing out 😭','the videos miss u 🎬','hello?? 👋','still here waiting 💀'];
+    var idx=0,iv=null;
+    document.addEventListener('visibilitychange',function(){
+      if(document.hidden){
+        iv=setInterval(function(){
+          document.title=away[idx%away.length];
+          idx++;
+        },2200);
+      } else {
+        clearInterval(iv);
+        document.title='welcome back 🔥';
+        setTimeout(function(){document.title=original;},1800);
+      }
     });
   })();
 
