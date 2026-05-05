@@ -817,6 +817,20 @@
       }
     });
   })();
+
+  /* ══ VIDEO THUMBNAIL FRAME — show frame at 2s, reset to 0 on play ══ */
+  (function(){
+    document.querySelectorAll('.custom-player video').forEach(function(v){
+      // Seek to 2s once metadata loaded so thumbnail shows a non-flashy frame
+      v.addEventListener('loadedmetadata',function(){
+        v.currentTime=2;
+      });
+      // When user hits play, jump back to start
+      v.addEventListener('play',function(){
+        if(v.currentTime>=1.5&&v.currentTime<=2.5) v.currentTime=0;
+      });
+    });
+  })();
   </script>
 </body>
 </html>
