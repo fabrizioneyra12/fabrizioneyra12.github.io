@@ -21,15 +21,13 @@
     a{text-decoration:none;color:inherit;}
     .container{width:min(var(--max),calc(100% - 48px));margin:0 auto;}
 
+    /* ── SCROLL PROGRESS BAR ── */
+    #scroll-progress{position:fixed;top:0;left:0;z-index:10000;height:3px;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-3),var(--accent-2));box-shadow:0 0 10px rgba(255,211,77,.7),0 0 22px rgba(255,211,77,.35);pointer-events:none;transition:width .08s linear;}
+
     /* ── LAYERS ── */
-    /* PERF: Single canvas only, fx-canvas removed */
     #galaxy-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
-    /* PERF: cursor-glow removed (GPU-heavy blur + continuous rAF). Keep dot only on desktop */
-    /* GLOW CURSOR — desktop only, native cursor kept */
     #cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(255,211,77,.13) 0%,rgba(159,77,255,.06) 40%,transparent 70%);transform:translate(-50%,-50%);opacity:0;transition:opacity .5s ease;will-change:transform;}
-    /* Fullscreen: keep native cursor visible */
     :fullscreen *,:-webkit-full-screen *{cursor:auto!important;}
-    /* PERF: noise uses CSS only, no extra repaint */
     #noise-overlay{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.022;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px 128px;}
     #scanlines{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.018;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.4) 2px,rgba(0,0,0,.4) 4px);}
 
@@ -42,7 +40,6 @@
     .logo-image:hover img{transform:scale(1.07) rotate(-1.5deg);filter:drop-shadow(0 0 14px rgba(255,211,77,.85)) drop-shadow(0 0 30px rgba(255,211,77,.52));}
     .nav-links{display:flex;gap:10px;flex-wrap:wrap;}
     .pill{display:inline-flex;align-items:center;justify-content:center;min-width:130px;padding:11px 20px;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#1a1200;font-weight:800;font-size:.9rem;box-shadow:0 0 22px rgba(255,211,77,.32);border:none;transition:transform .22s ease,box-shadow .22s ease;white-space:nowrap;cursor:pointer;position:relative;overflow:hidden;}
-    /* PERF: shimmer ::before kept but only on hover — no idle animation */
     .pill::before{content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-15deg);transition:left .5s ease;}
     .pill:hover::before{left:130%;}
     .pill:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 0 40px rgba(255,211,77,.65);}
@@ -51,23 +48,21 @@
     .hero{position:relative;z-index:1;min-height:100svh;display:flex;align-items:center;justify-content:center;text-align:center;padding:90px 0 80px;overflow:hidden;}
     .hero-inner{max-width:960px;margin:0 auto;position:relative;z-index:2;}
 
-    /* PERF: Reduced to 3 orbs (was 5), simplified animations, use transform only */
     .hero-orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;will-change:transform;contain:layout style;}
     .hero-orb-1{width:620px;height:620px;background:radial-gradient(circle,rgba(110,45,240,.28) 0%,transparent 70%);top:-160px;left:-230px;animation:orbA 11s ease-in-out infinite;}
     .hero-orb-2{width:460px;height:460px;background:radial-gradient(circle,rgba(255,211,77,.2) 0%,transparent 70%);bottom:-120px;right:-150px;animation:orbB 13s ease-in-out infinite;}
     .hero-orb-3{width:340px;height:340px;background:radial-gradient(circle,rgba(255,80,160,.19) 0%,transparent 70%);top:32%;left:52%;animation:orbC 9s ease-in-out infinite;}
-    /* orb-4 and orb-5 removed for performance */
     @keyframes orbA{0%,100%{transform:translate(0,0)}50%{transform:translate(55px,-50px)}}
     @keyframes orbB{0%,100%{transform:translate(0,0)}50%{transform:translate(-42px,33px)}}
     @keyframes orbC{0%,100%{transform:translate(0,0)}50%{transform:translate(-32px,-38px)}}
 
-    /* PERF: Aurora replaced with static gradient, saves animation overhead */
     .hero-aurora{position:absolute;bottom:0;left:0;width:100%;height:220px;pointer-events:none;z-index:0;background:linear-gradient(to top,rgba(110,45,240,.07),transparent);}
 
     /* ── KICKER ── */
     .hero-kicker{display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;padding:8px 20px;border-radius:999px;background:rgba(255,211,77,.07);border:1px solid rgba(255,211,77,.24);color:var(--accent);font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;opacity:0;animation:fadeUp .7s .15s ease forwards;}
     .hero-kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px rgba(255,211,77,.8);animation:blink 1.8s infinite;}
-    .hero-kicker-text{overflow:hidden;white-space:nowrap;border-right:2px solid var(--accent);animation:typewriter 2s steps(22,end) .5s forwards,cursorBlink .7s step-end 2.5s 5;}
+    /* FIX: text-transform:none overrides the parent uppercase so "Video Editor" stays as-is */
+    .hero-kicker-text{overflow:hidden;white-space:nowrap;border-right:2px solid var(--accent);animation:typewriter 2s steps(22,end) .5s forwards,cursorBlink .7s step-end 2.5s 5;text-transform:none;letter-spacing:.06em;}
     @keyframes typewriter{from{width:0}to{width:100%}}
     @keyframes cursorBlink{0%,100%{border-color:var(--accent)}50%{border-color:transparent}}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
@@ -111,12 +106,9 @@
     .scroll-arrows span:nth-child(3){animation-delay:.32s;opacity:.38;}
     @keyframes arrowBounce{0%,100%{transform:rotate(45deg) translateY(0)}50%{transform:rotate(45deg) translateY(7px)}}
     .scroll-pulse-ring{width:52px;height:52px;border-radius:50%;border:2px solid rgba(255,211,77,.44);display:flex;align-items:center;justify-content:center;position:relative;}
-    /* PERF: removed ::before/::after ring pulse animations */
 
     @keyframes fadeUp{from{opacity:0;transform:translateY(38px)}to{opacity:1;transform:translateY(0)}}
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-
-    /* PERF: hero-particles, geometric shapes, lightning lines, float labels REMOVED — these created dozens of extra animating DOM nodes */
 
     /* ── SECTIONS ── */
     section{padding:80px 0;position:relative;z-index:1;}
@@ -139,7 +131,6 @@
     .video-grid{align-items:start;}
 
     /* ── VIDEO CARD ── */
-    /* PERF: removed cardBreath animation (was running on every card constantly). Kept hover effects. */
     .video-card{position:relative;background:var(--panel);border:1px solid var(--panel-border);border-radius:24px;overflow:hidden;height:auto;box-shadow:0 16px 42px rgba(0,0,0,.34);transition:transform .38s cubic-bezier(.22,.8,.36,1),border-color .38s ease,box-shadow .38s ease;transform-style:preserve-3d;content-visibility:auto;contain-intrinsic-size:0 400px;}
     .video-card:hover{transform:translateY(-12px) scale(1.018);border-color:rgba(255,211,77,.75);box-shadow:0 32px 68px rgba(0,0,0,.5),0 0 48px rgba(255,211,77,.26);}
     .video-card::before{content:'';position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:24px;background:linear-gradient(115deg,transparent 22%,rgba(255,255,255,.08) 50%,transparent 78%);background-size:250% 100%;background-position:-100% 0;transition:background-position .8s ease;}
@@ -177,7 +168,6 @@
 
     .play-center{position:absolute;inset:0;display:grid;place-items:center;z-index:5;pointer-events:auto;transition:opacity .25s ease;transform:translateY(-4px);}
     .custom-player.playing .play-center{opacity:0;pointer-events:none;}
-    /* PERF: playPulse animation removed — was running on every video at all times */
     .play-center .yt-play{width:72px;height:72px;border-radius:50%;background:rgba(255,0,0,.9);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 8px 32px rgba(0,0,0,.5);backdrop-filter:blur(6px);transition:transform .25s cubic-bezier(.22,.8,.36,1),background .2s ease,box-shadow .25s ease;}
     .play-center .yt-play::before{content:"";width:0;height:0;border-left:21px solid white;border-top:13px solid transparent;border-bottom:13px solid transparent;margin-left:5px;}
     .play-center .yt-play:hover{transform:scale(1.2);background:rgba(255,0,0,1);box-shadow:0 16px 48px rgba(255,0,0,.65);}
@@ -199,13 +189,11 @@
     .old-channels-inner{text-align:center;}
     .old-channels-title{text-align:center;font-size:22px;font-weight:600;margin-top:22px;margin-bottom:16px;letter-spacing:1px;background:linear-gradient(90deg,#ffd34d,#9f4dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;opacity:0;transform:translateY(18px);animation:fadeUp .8s ease forwards;}
     .channels{margin-top:38px;display:flex;justify-content:center;gap:30px;flex-wrap:wrap;}
-    /* PERF: channelBreath animation removed */
     .channel-card{width:155px;height:155px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);box-shadow:0 0 22px rgba(255,211,77,.09);transition:transform .38s cubic-bezier(.22,.8,.36,1),box-shadow .38s ease,border-color .38s ease;text-decoration:none;cursor:pointer;}
     .channel-card img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;}
     .channel-card:hover{transform:translateY(-14px) scale(1.09);box-shadow:0 0 50px rgba(255,211,77,.52);border-color:rgba(255,211,77,.62);}
 
     .stats-strip{margin-top:32px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap;}
-    /* PERF: statBreath animation removed */
     .stat-box{min-width:185px;padding:16px 22px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);box-shadow:0 0 16px rgba(255,211,77,.08);display:flex;flex-direction:column;align-items:center;transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease;cursor:default;}
     .stat-box:hover{transform:translateY(-7px);border-color:rgba(255,211,77,.38);box-shadow:0 0 32px rgba(255,211,77,.22);}
     .stat-number{font-size:2rem;font-weight:900;color:var(--accent);}
@@ -217,7 +205,6 @@
     .clients-heading h2{font-size:clamp(2.2rem,5.5vw,5.5rem);line-height:.95;font-weight:900;letter-spacing:-.04em;color:#f1e7e7;text-transform:uppercase;}
     .clients-grid{display:flex;justify-content:center;align-items:flex-start;gap:40px;flex-wrap:nowrap;}
     .client-card{text-align:center;width:200px;}
-    /* PERF: avatarBreath animation removed */
     .client-avatar{width:200px;height:200px;border-radius:50%;object-fit:cover;display:block;border:4px solid rgba(255,211,77,.62);box-shadow:0 0 22px rgba(255,211,77,.26);margin:0 auto 16px;transition:transform .38s cubic-bezier(.22,.8,.36,1),box-shadow .38s ease,border-color .38s ease;}
     .client-card:hover .client-avatar,.client-link:hover .client-avatar{transform:scale(1.08) translateY(-6px);box-shadow:0 0 44px rgba(255,211,77,.58);border-color:rgba(255,211,77,1);}
     .client-card h3{font-size:clamp(1.1rem,1.7vw,1.65rem);font-weight:800;color:#f2e9e9;margin-bottom:8px;}
@@ -228,7 +215,6 @@
 
     /* ── PRICING ── */
     .pricing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;}
-    /* PERF: pricing-card idle animation removed */
     .pricing-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:24px;box-shadow:0 0 20px rgba(255,211,77,.06);transition:transform .36s cubic-bezier(.22,.8,.36,1),border-color .36s ease,box-shadow .36s ease;position:relative;overflow:hidden;}
     .pricing-card::before{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(135deg,rgba(255,211,77,.055) 0%,transparent 60%);opacity:0;transition:opacity .36s ease;}
     .pricing-card:hover{transform:translateY(-9px);border-color:rgba(255,211,77,.58);box-shadow:0 0 44px rgba(255,211,77,.22);}
@@ -248,14 +234,12 @@
     .review-card:hover{transform:translateY(-8px) scale(1.02);border-color:rgba(255,211,77,.38);box-shadow:0 0 36px rgba(255,211,77,.16);}
     .review-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;}
     .review-name{font-size:.96rem;font-weight:800;}
-    /* PERF: starsShimmer animation removed */
     .review-stars{color:var(--accent);letter-spacing:.08em;font-weight:900;}
     .review-text{color:var(--muted);line-height:1.6;font-size:.88rem;padding:10px 12px;margin-top:6px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);}
 
     /* ── HIRE ME ── */
     .hire-me-section{padding:60px 0 10px;}
     .hire-me-box{text-align:center;max-width:700px;margin:0 auto 10px;}
-    /* PERF: glowPulse removed from hire-title, kept shimmer only */
     .hire-title{font-size:clamp(2.7rem,5.5vw,4.8rem);font-weight:900;margin-bottom:13px;letter-spacing:-.02em;background:linear-gradient(90deg,#ffd34d,#ff9f4d,#ff6eb4,#9f4dff,#ffd34d);background-size:400% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 5s linear infinite;cursor:default;}
     .hire-sub{font-size:clamp(1.05rem,1.8vw,1.48rem);font-weight:600;line-height:1.6;margin-bottom:26px;background:linear-gradient(90deg,#a6ff9e,#6effc2,#a6ff9e);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 
@@ -316,7 +300,7 @@
   </style>
 </head>
 <body>
-  <!-- PERF: fx-canvas removed entirely -->
+  <div id="scroll-progress"></div>
   <canvas id="galaxy-canvas"></canvas>
   <div id="cursor-glow"></div>
   <div id="cursor-dot"></div>
@@ -347,7 +331,6 @@
       <div class="hero-orb hero-orb-1"></div>
       <div class="hero-orb hero-orb-2"></div>
       <div class="hero-orb hero-orb-3"></div>
-      <!-- orb-4 and orb-5 removed for performance -->
       <div class="hero-aurora"></div>
 
       <div class="container hero-inner">
@@ -484,29 +467,31 @@
 
   <script type="module">
 
-  /* ══ GALAXY CANVAS — OPTIMIZED ══
-     Key changes:
-     - Star count capped lower (was up to 560, now 320 max)
-     - Star rendering batched by color to reduce ctx state changes
-     - Glow halos only for stars > 1.8r (was 1.45)
-     - Shooter star count reduced from 8 to 4
-     - Cloud count reduced from 8 to 5
-     - Canvas uses 'alpha: false' hint for GPU compositing speedup
-  */
+  /* ══ SCROLL PROGRESS BAR ══ */
+  (function(){
+    const bar=document.getElementById('scroll-progress');
+    if(!bar)return;
+    const upd=()=>{
+      const s=window.scrollY||document.documentElement.scrollTop;
+      const d=document.documentElement.scrollHeight-window.innerHeight;
+      bar.style.width=(d>0?(s/d*100):0)+'%';
+    };
+    window.addEventListener('scroll',upd,{passive:true});
+    upd();
+  })();
+
+  /* ══ GALAXY CANVAS — OPTIMIZED ══ */
   (function(){
     const canvas=document.getElementById('galaxy-canvas');
-    const ctx=canvas.getContext('2d',{alpha:false}); // PERF: alpha:false = faster compositing
+    const ctx=canvas.getContext('2d',{alpha:false});
     let W,H,stars,shooters,clouds,raf;
     const rand=(a,b)=>a+Math.random()*(b-a);
     function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
     function build(){
-      // PERF: was min(W*H/2100, 560) — now capped at 320
       const n=Math.min(Math.floor(W*H/3500),320);
       const cols=['#ffffff','#ffe8b0','#cccaff','#b8d8ff','#ffd6f0','#c8f0ff','#d0ffe8','#ffe0c8'];
       stars=Array.from({length:n},()=>({x:rand(0,W),y:rand(0,H),r:rand(.2,2.4),vy:rand(.003,.036),a:rand(.12,1),tw:rand(0,Math.PI*2),ts:rand(.0015,.018),col:cols[0|rand(0,8)]}));
-      // PERF: 4 shooters instead of 8
       shooters=Array.from({length:4},makeShooter);
-      // PERF: 5 clouds instead of 8
       clouds=[
         {x:W*.14,y:H*.28,r:350,c:'rgba(100,40,220,.057)'},{x:W*.82,y:H*.62,r:265,c:'rgba(255,185,50,.044)'},
         {x:W*.5,y:H*.1,r:220,c:'rgba(200,45,155,.048)'},{x:W*.3,y:H*.8,r:240,c:'rgba(40,110,230,.046)'},
@@ -517,13 +502,11 @@
     let frame=0;
     function draw(){
       raf=requestAnimationFrame(draw);
-      // PERF: fillRect instead of clearRect (works because alpha:false)
       const bg=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H)*.76);
       bg.addColorStop(0,'rgba(22,9,48,1)');bg.addColorStop(.5,'rgba(10,4,24,1)');bg.addColorStop(1,'rgba(2,1,6,1)');
       ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
       clouds.forEach(cl=>{const g=ctx.createRadialGradient(cl.x,cl.y,0,cl.x,cl.y,cl.r);g.addColorStop(0,cl.c);g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.beginPath();ctx.arc(cl.x,cl.y,cl.r,0,Math.PI*2);ctx.fill();});
       frame++;
-      /* shooting stars */
       shooters.forEach((s,i)=>{
         if(!s.active){if(Math.random()<.0032)s.active=true;return;}
         s.life++;const prog=s.life/s.maxLife,al=prog<.13?prog/.13:prog>.87?1-(prog-.87)/.13:1;
@@ -533,12 +516,10 @@
         ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s.x-s.vx*(s.len/s.maxLife*s.life*.6),s.y-s.vy*(s.len/s.maxLife*s.life*.6));ctx.stroke();
         s.x+=s.vx;s.y+=s.vy;if(s.life>=s.maxLife||s.x>W+70||s.y>H+70)shooters[i]=makeShooter();
       });
-      /* PERF: stars drawn all at once, halos only for larger stars */
       stars.forEach(s=>{
         s.y-=s.vy;if(s.y<-3){s.y=H+3;s.x=rand(0,W);}
         const tw=.5+.5*Math.sin(frame*s.ts+s.tw),al=s.a*(.44+.56*tw);
         ctx.globalAlpha=al;ctx.fillStyle=s.col;ctx.beginPath();ctx.arc(s.x,s.y,s.r*(.82+.18*tw),0,Math.PI*2);ctx.fill();
-        // PERF: threshold raised from 1.45 to 1.8 — fewer glow halos
         if(s.r>1.8){
           const gw=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r*7.5);
           gw.addColorStop(0,`rgba(255,240,200,${al*.32})`);gw.addColorStop(1,'transparent');
@@ -550,7 +531,6 @@
     function init(){resize();build();draw();}
     let resizeTimer;
     window.addEventListener('resize',()=>{
-      // PERF: debounce resize (was firing immediately)
       clearTimeout(resizeTimer);
       resizeTimer=setTimeout(()=>{cancelAnimationFrame(raf);resize();build();draw();},150);
     },{passive:true});
@@ -558,12 +538,11 @@
     init();
   })();
 
-  /* ══ CURSOR DOT ONLY (no large glow blob) ══ */
+  /* ══ CURSOR DOT ONLY ══ */
   (function(){
     const dot=document.getElementById('cursor-dot');
     if(!dot)return;
     let vis=false;
-    // PERF: use CSS transform directly instead of a trailing rAF loop for the big glow
     window.addEventListener('mousemove',e=>{
       dot.style.left=e.clientX+'px';
       dot.style.top=e.clientY+'px';
@@ -652,7 +631,6 @@
 
   /* ══ MAGNETIC BUTTONS — throttled ══ */
   if(!isTouch){
-    // PERF: throttled mousemove with rAF instead of raw handler
     document.querySelectorAll('.cta-btn,.ghost-btn,.pill,.contact-pill').forEach(btn=>{
       let rafId=null;
       btn.addEventListener('mousemove',e=>{
@@ -671,7 +649,6 @@
 
   /* ══ 3D TILT — throttled ══ */
   if(!isTouch){
-    // PERF: throttled with rAF
     document.querySelectorAll('.video-card').forEach(card=>{
       let rafId=null;
       card.addEventListener('mousemove',e=>{
@@ -699,7 +676,6 @@
 
   /* ══ PARALLAX ORBS — throttled ══ */
   if(!isTouch){
-    // PERF: rAF-throttled instead of raw mousemove
     let orbRaf=null,lastMx=0,lastMy=0;
     window.addEventListener('mousemove',e=>{
       lastMx=(e.clientX/window.innerWidth-.5)*2;
@@ -715,9 +691,6 @@
     },{passive:true});
   }
 
-  /* PERF: ripple click effect REMOVED — it injected a new <style> tag on every single click,
-     causing repeated style recalculations and DOM bloat. */
-
   /* ══ SECTION ENTRANCE FLASH ══ */
   (function(){
     const sections=document.querySelectorAll('section[id]');
@@ -731,7 +704,6 @@
     },{threshold:.15});
     sections.forEach(s=>io.observe(s));
   })();
-
 
   /* ══ PAUSE ORB ANIMATIONS WHEN HERO SCROLLED PAST ══ */
   (function(){
@@ -748,32 +720,24 @@
     io.observe(hero);
   })();
 
-  /* ══ GLOW CURSOR — smooth radial glow follows mouse, native cursor kept ══ */
+  /* ══ GLOW CURSOR ══ */
   (function(){
-    const glow = document.getElementById('cursor-glow');
-    if(!glow) return;
-    const isTouch = window.matchMedia('(hover:none) and (pointer:coarse)').matches;
-    if(isTouch) return; // no glow on touch devices
-
+    const glow=document.getElementById('cursor-glow');
+    if(!glow)return;
+    const isTouch=window.matchMedia('(hover:none) and (pointer:coarse)').matches;
+    if(isTouch)return;
     let tx=0,ty=0,cx=0,cy=0,visible=false;
-
     window.addEventListener('mousemove',e=>{
-      tx=e.clientX; ty=e.clientY;
-      if(!visible){ glow.style.opacity='1'; visible=true; }
+      tx=e.clientX;ty=e.clientY;
+      if(!visible){glow.style.opacity='1';visible=true;}
     },{passive:true});
-
-    window.addEventListener('mouseleave',()=>{ glow.style.opacity='0'; visible=false; });
-
-    // Smooth lag follow via rAF
+    window.addEventListener('mouseleave',()=>{glow.style.opacity='0';visible=false;});
     (function loop(){
-      cx += (tx-cx)*0.08;
-      cy += (ty-cy)*0.08;
-      glow.style.left = cx+'px';
-      glow.style.top  = cy+'px';
+      cx+=(tx-cx)*.08;cy+=(ty-cy)*.08;
+      glow.style.left=cx+'px';glow.style.top=cy+'px';
       requestAnimationFrame(loop);
     })();
   })();
-
 
   /* ══ EASTER EGG 1 — Konami Code ══ */
   (function(){
@@ -819,37 +783,24 @@
     });
   })();
 
-  /* ══ VIDEO THUMBNAIL FRAME — show frame at Ns, reset to 0 on play ══ */
+  /* ══ VIDEO THUMBNAIL FRAME ══ */
   (function(){
     document.querySelectorAll('.custom-player video').forEach(function(v){
-      var src = v.getAttribute('src')||'';
-      // longform1 gets 3s, everything else 2s
-      var thumbTime = src.indexOf('longform1')>=0 ? 3 : 2;
-
-      v.addEventListener('loadedmetadata',function(){
-        v.currentTime = thumbTime;
-      });
-
-      // Reset time display to 0:00 so it doesn't show 0:02/0:03
+      var src=v.getAttribute('src')||'';
+      var thumbTime=src.indexOf('longform1')>=0?3:2;
+      v.addEventListener('loadedmetadata',function(){v.currentTime=thumbTime;});
       v.addEventListener('seeked',function(){
         if(!v._playing){
-          var tim = v.closest('.custom-player').querySelector('.player-time');
-          if(tim) tim.textContent = '0:00 / ' + (isFinite(v.duration)?Math.floor(v.duration/60)+':'+String(Math.floor(v.duration%60)).padStart(2,'0'):'0:00');
-          var pr = v.closest('.custom-player').querySelector('.progress');
-          if(pr){ pr.value=0; pr.style.background='rgba(255,255,255,.18)'; }
+          var tim=v.closest('.custom-player').querySelector('.player-time');
+          if(tim)tim.textContent='0:00 / '+(isFinite(v.duration)?Math.floor(v.duration/60)+':'+String(Math.floor(v.duration%60)).padStart(2,'0'):'0:00');
+          var pr=v.closest('.custom-player').querySelector('.progress');
+          if(pr){pr.value=0;pr.style.background='rgba(255,255,255,.18)';}
         }
       });
-
-      v.addEventListener('play',function(){
-        v._playing=true;
-        if(v.currentTime<=thumbTime+0.5&&v.currentTime>=thumbTime-0.5) v.currentTime=0;
-      });
-
-      v.addEventListener('pause',function(){ v._playing=false; });
+      v.addEventListener('play',function(){v._playing=true;if(v.currentTime<=thumbTime+0.5&&v.currentTime>=thumbTime-0.5)v.currentTime=0;});
+      v.addEventListener('pause',function(){v._playing=false;});
     });
   })();
-
-
 
   </script>
 </body>
