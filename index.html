@@ -312,12 +312,37 @@
       .hero h1 .line1{white-space:normal;font-size:clamp(1.9rem,7vw,3.6rem);}
     }
     @media(max-width:640px){.player-controls{gap:5px}.player-time{min-width:54px;font-size:.78rem}.volume{width:46px;min-width:36px}.player-btn{width:32px;height:32px;font-size:.78rem}.pill{min-width:110px;padding:10px 16px;font-size:.86rem}}
+
+    /* ── LIGHT MODE ── */
+    body.light{
+      --bg:#f0eefc;--panel:rgba(0,0,0,.05);--panel-border:rgba(180,130,0,.3);
+      --text:#0a0818;--muted:#4a4460;--accent:#b8920a;--accent-2:#6a1fcc;--accent-3:#cc2a7a;
+    }
+    body.light #galaxy-canvas{opacity:.18;}
+    body.light #scanlines{opacity:0;}
+    body.light #noise-overlay{opacity:.04;}
+    body.light .site-header{background:rgba(240,238,252,.82);}
+    body.light .video-card{background:rgba(255,255,255,.7);border-color:rgba(180,130,0,.2);box-shadow:0 8px 32px rgba(0,0,0,.12);}
+    body.light .review-card{background:rgba(255,255,255,.8);}
+    body.light .pricing-card{background:rgba(255,255,255,.7);}
+    body.light .stat-box{background:rgba(255,255,255,.7);}
+    body.light .ghost-btn{background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.2);color:var(--text);}
+    body.light .hero-orb-1{background:radial-gradient(circle,rgba(110,45,240,.15) 0%,transparent 70%);}
+    body.light .hero-orb-2{background:radial-gradient(circle,rgba(200,150,0,.15) 0%,transparent 70%);}
+    body.light .hero-orb-3{background:radial-gradient(circle,rgba(200,40,120,.12) 0%,transparent 70%);}
+    body.light #cursor-glow{background:radial-gradient(circle,rgba(180,130,0,.12) 0%,rgba(106,31,204,.06) 40%,transparent 70%);}
+
+    /* toggle button */
+    #theme-toggle{position:fixed;bottom:28px;right:28px;z-index:200;width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(255,211,77,.4);background:rgba(255,255,255,.07);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;transition:transform .3s cubic-bezier(.22,.8,.36,1),box-shadow .3s ease,background .3s ease;box-shadow:0 0 18px rgba(255,211,77,.15);}
+    #theme-toggle:hover{transform:scale(1.15) rotate(20deg);box-shadow:0 0 32px rgba(255,211,77,.4);}
+    body.light #theme-toggle{border-color:rgba(180,130,0,.4);background:rgba(0,0,0,.07);box-shadow:0 0 18px rgba(180,130,0,.15);}
   </style>
 </head>
 <body>
   <!-- PERF: fx-canvas removed entirely -->
   <canvas id="galaxy-canvas"></canvas>
   <div id="cursor-glow"></div>
+  <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
   <div id="cursor-dot"></div>
   <div id="noise-overlay"></div>
   <div id="scanlines"></div>
@@ -818,17 +843,60 @@
     });
   })();
 
-  /* ══ VIDEO THUMBNAIL FRAME — show frame at 2s, reset to 0 on play ══ */
+  /* ══ VIDEO THUMBNAIL FRAME — show frame at Ns, reset to 0 on play ══ */
   (function(){
     document.querySelectorAll('.custom-player video').forEach(function(v){
-      // Seek to 2s once metadata loaded so thumbnail shows a non-flashy frame
+      var src = v.getAttribute('src')||'';
+      // longform1 gets 3s, everything else 2s
+      var thumbTime = src.indexOf('longform1')>=0 ? 3 : 2;
+
       v.addEventListener('loadedmetadata',function(){
-        v.currentTime=2;
+        v.currentTime = thumbTime;
       });
-      // When user hits play, jump back to start
+
+      // Reset time display to 0:00 so it doesn't show 0:02/0:03
+      v.addEventListener('seeked',function(){
+        if(!v._playing){
+          var tim = v.closest('.custom-player').querySelector('.player-time');
+          if(tim) tim.textContent = '0:00 / ' + (isFinite(v.duration)?Math.floor(v.duration/60)+':'+String(Math.floor(v.duration%60)).padStart(2,'0'):'0:00');
+          var pr = v.closest('.custom-player').querySelector('.progress');
+          if(pr){ pr.value=0; pr.style.background='rgba(255,255,255,.18)'; }
+        }
+      });
+
       v.addEventListener('play',function(){
-        if(v.currentTime>=1.5&&v.currentTime<=2.5) v.currentTime=0;
+        v._playing=true;
+        if(v.currentTime<=thumbTime+0.5&&v.currentTime>=thumbTime-0.5) v.currentTime=0;
       });
+
+      v.addEventListener('pause',function(){ v._playing=false; });
+    });
+  })();
+
+  /* ══ DARK / LIGHT MODE TOGGLE ══ */
+  (function(){
+    const btn = document.getElementById('theme-toggle');
+    if(!btn) return;
+    const key = 'fabri-theme';
+    const saved = localStorage.getItem(key);
+
+    function setTheme(mode){
+      if(mode==='light'){
+        document.body.classList.add('light');
+        btn.textContent='☀️';
+      } else {
+        document.body.classList.remove('light');
+        btn.textContent='🌙';
+      }
+      localStorage.setItem(key, mode);
+    }
+
+    // Load saved preference
+    setTheme(saved||'dark');
+
+    btn.addEventListener('click',()=>{
+      const isLight = document.body.classList.contains('light');
+      setTheme(isLight?'dark':'light');
     });
   })();
   </script>
