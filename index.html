@@ -336,10 +336,21 @@
     #theme-toggle{position:fixed;bottom:28px;right:28px;z-index:200;width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(255,211,77,.4);background:rgba(255,255,255,.07);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;transition:transform .3s cubic-bezier(.22,.8,.36,1),box-shadow .3s ease,background .3s ease;box-shadow:0 0 18px rgba(255,211,77,.15);}
     #theme-toggle:hover{transform:scale(1.15) rotate(20deg);box-shadow:0 0 32px rgba(255,211,77,.4);}
     body.light #theme-toggle{border-color:rgba(180,130,0,.4);background:rgba(0,0,0,.07);box-shadow:0 0 18px rgba(180,130,0,.15);}
+
+    /* ── SCROLL PROGRESS BAR ── */
+    #scroll-bar{position:fixed;top:0;left:0;height:3px;width:0%;z-index:9999;background:linear-gradient(90deg,var(--accent),var(--accent-3),var(--accent-2));box-shadow:0 0 8px rgba(255,211,77,.6);transition:width .1s linear;pointer-events:none;}
+
+    /* ── AVAILABILITY STATUS ── */
+    .avail-badge{display:inline-flex;align-items:center;gap:8px;margin-bottom:18px;padding:7px 16px;border-radius:999px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.3);font-size:.78rem;font-weight:700;letter-spacing:.1em;color:#4ade80;cursor:default;}
+    .avail-badge.busy{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3);color:#f87171;}
+    .avail-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px rgba(74,222,128,.8);animation:availPulse 1.8s ease-in-out infinite;flex-shrink:0;}
+    .avail-badge.busy .avail-dot{background:#f87171;box-shadow:0 0 6px rgba(248,113,113,.8);}
+    @keyframes availPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.5}}
   </style>
 </head>
 <body>
   <!-- PERF: fx-canvas removed entirely -->
+  <div id="scroll-bar"></div>
   <canvas id="galaxy-canvas"></canvas>
   <div id="cursor-glow"></div>
   <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
@@ -375,6 +386,7 @@
       <div class="hero-aurora"></div>
 
       <div class="container hero-inner">
+        <div class="avail-badge" id="availBadge"><span class="avail-dot"></span><span id="availText">Available for work</span></div>
         <div class="hero-kicker"><span class="dot"></span><span class="hero-kicker-text" data-i18n="heroKicker">VIDEO EDITOR</span></div>
         <h1>
           <span class="line1 char-animate" data-i18n="heroTitleTop">I turn your ideas into</span>
@@ -898,6 +910,35 @@
       const isLight = document.body.classList.contains('light');
       setTheme(isLight?'dark':'light');
     });
+  })();
+
+  /* ══ SCROLL PROGRESS BAR ══ */
+  (function(){
+    const bar = document.getElementById('scroll-bar');
+    if(!bar) return;
+    window.addEventListener('scroll',function(){
+      const doc = document.documentElement;
+      const pct = (doc.scrollTop||document.body.scrollTop) / (doc.scrollHeight - doc.clientHeight) * 100;
+      bar.style.width = Math.min(pct,100)+'%';
+    },{passive:true});
+  })();
+
+  /* ══ AVAILABILITY STATUS ══ */
+  (function(){
+    // ── SET TO false WHEN YOU ARE BUSY ──
+    const available = true;
+
+    const badge = document.getElementById('availBadge');
+    const txt   = document.getElementById('availText');
+    const lang  = document.documentElement.lang||'en';
+    if(!badge||!txt) return;
+
+    if(!available){
+      badge.classList.add('busy');
+      txt.textContent = lang==='es' ? 'No disponible ahora' : 'Fully booked';
+    } else {
+      txt.textContent = lang==='es' ? 'Disponible para trabajar' : 'Available for work';
+    }
   })();
   </script>
 </body>
