@@ -621,17 +621,22 @@
     revEls.forEach(el=>{if(!el.classList.contains('show'))io.observe(el);});window.addEventListener('load',show);
   }
 
-  /* ══ CHAR HEADLINE ══ */
-  setTimeout(()=>{
-    document.querySelectorAll('.char-animate').forEach(el=>{
-      const isLine2=el.classList.contains('line2');
-      // line2 chars start after line1 finishes (~0.96s base delay + line1 chars)
-      const baseDelay=isLine2?0.96:0;
-      const txt=el.textContent;
-      el.innerHTML=txt.split('').map((c,i)=>`<span class="char" style="transition-delay:${baseDelay+i*0.045}s">${c===' '?'&nbsp;':c}</span>`).join('');
-      setTimeout(()=>el.classList.add('show'),isLine2?960:360);
-    });
-  },100);
+/* ══ CHAR HEADLINE ══ */
+setTimeout(() => {
+  document.querySelectorAll('.char-animate').forEach(el => {
+    const isLine2 = el.classList.contains('line2');
+
+    // faster line 2
+    const baseDelay = isLine2 ? 0.03 : 0;
+
+    const txt = el.textContent;
+    el.innerHTML = txt.split('').map((c, i) =>
+      `<span class="char" style="transition-delay:${baseDelay + i * 0.03}s">${c === ' ' ? '&nbsp;' : c}</span>`
+    ).join('');
+
+    setTimeout(() => el.classList.add('show'), isLine2 ? 40 : 220);
+  });
+}, 50);
 
   /* ══ VIDEO PLAYERS ══ */
   const fmt=t=>isFinite(t)?`${0|t/60}:${String(0|t%60).padStart(2,'0')}`:'0:00';
