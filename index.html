@@ -822,7 +822,7 @@ setTimeout(() => {
   (function(){
     document.querySelectorAll('.custom-player video').forEach(function(v){
       var src=v.getAttribute('src')||'';
-      var thumbTime=src.indexOf('longform1')>=0?3:2;
+      var thumbTime=src.indexOf('longform1')>=0?3:src.indexOf('short2')>=0?5:2;
       v.addEventListener('loadedmetadata',function(){v.currentTime=thumbTime;});
       v.addEventListener('seeked',function(){
         if(!v._playing){
