@@ -895,22 +895,37 @@ setTimeout(() => {
     });
   })();
 
-  /* ══ TAB TITLE — CLEAN PROFESSIONAL TEXT ══ */
+  /* ══ TAB TITLE — MATURE RETURN MESSAGES ══ */
   (function(){
     var original=document.title;
-    var away=['Fabri Video Editor','Editing Portfolio','Selected Video Work','Professional Video Editing','Ready When You Are'];
+    var away=[
+      'Let’s get back to work 🎬',
+      'Your edit is waiting ⚡',
+      'Ready to continue? 🚀',
+      'Back to the timeline 🎞️',
+      'Let’s finish strong ✨',
+      'Time to create again 🎥',
+      'Your portfolio is ready 💼',
+      'Keep the momentum going 🔥',
+      'Back to clean cuts ✂️',
+      'Let’s make it polished ✅',
+      'The next great edit starts here 🌟',
+      'Return when you’re ready 🎧'
+    ];
     var idx=0,iv=null;
     document.addEventListener('visibilitychange',function(){
       if(document.hidden){
         clearInterval(iv);
+        document.title=away[idx%away.length];
+        idx++;
         iv=setInterval(function(){
           document.title=away[idx%away.length];
           idx++;
         },2200);
       } else {
         clearInterval(iv);
-        document.title='Welcome back';
-        setTimeout(function(){document.title=original;},1800);
+        document.title='Welcome back — let’s get to work 🎬';
+        setTimeout(function(){document.title=original;},2200);
       }
     });
   })();
