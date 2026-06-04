@@ -24,7 +24,6 @@
 
     /* ── LAYERS ── */
     #galaxy-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
-    #cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(255,211,77,.13) 0%,rgba(159,77,255,.06) 40%,transparent 70%);transform:translate(-50%,-50%);opacity:0;transition:opacity .5s ease;will-change:transform;}
     :fullscreen *,:-webkit-full-screen *{cursor:auto!important;}
     #noise-overlay{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.022;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px 128px;}
     #scanlines{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.018;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.4) 2px,rgba(0,0,0,.4) 4px);}
@@ -308,7 +307,6 @@
 </head>
 <body>
   <canvas id="galaxy-canvas"></canvas>
-  <div id="cursor-glow"></div>
   <div id="cursor-dot"></div>
   <div id="noise-overlay"></div>
   <div id="scanlines"></div>
@@ -785,24 +783,6 @@ setTimeout(() => {
     },{threshold:0});
     io.observe(hero);
   })();
-
-  /* ══ GLOW CURSOR ══ */
-  (function(){
-    const glow=document.getElementById('cursor-glow');
-    if(!glow)return;
-    const isTouch=window.matchMedia('(hover:none) and (pointer:coarse)').matches;
-    if(isTouch)return;
-    let tx=0,ty=0,cx=0,cy=0,visible=false;
-    window.addEventListener('mousemove',e=>{
-      tx=e.clientX;ty=e.clientY;
-      if(!visible){glow.style.opacity='1';visible=true;}
-    },{passive:true});
-    window.addEventListener('mouseleave',()=>{glow.style.opacity='0';visible=false;});
-    (function loop(){
-      cx+=(tx-cx)*.08;cy+=(ty-cy)*.08;
-      glow.style.left=cx+'px';glow.style.top=cy+'px';
-      requestAnimationFrame(loop);
-    })();
   })();
 
   /* ══ EASTER EGG 1 — Konami Code ══ */
