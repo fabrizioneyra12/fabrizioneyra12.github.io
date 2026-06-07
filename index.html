@@ -1924,5 +1924,241 @@ setTimeout(() => {
 })();
 </script>
 
+
+
+<!-- ===================== FINAL OVERRIDE: SMOOTH CENTERED 40% MODAL PLAYER ===================== -->
+<style id="fabri-super-modal-patch">
+  /* keep portfolio cards clean; controls only exist inside popup */
+  .video-card .player-overlay,
+  .video-card .custom-player .player-overlay,
+  .video-card .custom-player:hover .player-overlay,
+  .video-card .custom-player.hover-preview .player-overlay,
+  .video-card .custom-player.playing .player-overlay,
+  .video-card .custom-player.paused .player-overlay{
+    display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;
+  }
+  .video-card .custom-player video{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;background:#000!important;}
+  .video-card .custom-player:not(.hover-preview):not(:hover) .play-center{opacity:0!important;pointer-events:none!important;}
+  .video-card .custom-player:hover .play-center,
+  .video-card .custom-player.hover-preview .play-center{opacity:1!important;pointer-events:auto!important;}
+  .video-card .custom-player.hover-preview .forced-video-poster,
+  .video-card .custom-player.playing .forced-video-poster{display:none!important;opacity:0!important;visibility:hidden!important;}
+  .video-card .forced-video-poster{display:block;object-fit:cover!important;}
+
+  #fabriSuperModal{
+    position:fixed;inset:0;z-index:2147483646;display:none;align-items:center;justify-content:center;
+    background:rgba(0,0,0,.40)!important;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    padding:clamp(14px,3vw,42px);overflow:hidden;opacity:0;contain:layout paint;
+  }
+  #fabriSuperModal.open{display:flex;animation:superBackdropIn .34s cubic-bezier(.16,1,.3,1) both;}
+  #fabriSuperModal.closing{display:flex;animation:superBackdropOut .30s cubic-bezier(.7,0,.84,0) both;}
+  @keyframes superBackdropIn{from{opacity:0;backdrop-filter:blur(0)}to{opacity:1;backdrop-filter:blur(6px)}}
+  @keyframes superBackdropOut{from{opacity:1;backdrop-filter:blur(6px)}to{opacity:0;backdrop-filter:blur(0)}}
+
+  #fabriSuperModal .super-close{
+    position:fixed;top:24px;right:28px;z-index:50;width:54px;height:54px;border-radius:50%;
+    border:1px solid rgba(255,255,255,.45);background:rgba(0,0,0,.34);color:#fff;font-size:38px;line-height:1;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transform:scale(.75) rotate(-10deg);
+    transition:transform .22s ease,background .22s ease,border-color .22s ease,opacity .22s ease;
+  }
+  #fabriSuperModal.open .super-close{animation:superCloseIn .42s cubic-bezier(.16,1,.3,1) .12s both;}
+  #fabriSuperModal.closing .super-close{animation:superCloseOut .22s ease both;}
+  #fabriSuperModal .super-close:hover{transform:scale(.94) rotate(0deg)!important;background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.8)}
+  @keyframes superCloseIn{to{opacity:1;transform:scale(1) rotate(0deg)}}
+  @keyframes superCloseOut{to{opacity:0;transform:scale(.75) rotate(12deg)}}
+
+  #fabriSuperModal .super-player{
+    position:relative;z-index:10;background:#000;border-radius:12px;overflow:hidden;box-shadow:0 32px 110px rgba(0,0,0,.66),0 0 70px rgba(255,211,77,.12);
+    display:flex;align-items:center;justify-content:center;transform-origin:center center;opacity:0;transform:scale(.84) translateY(28px);filter:blur(10px) brightness(.75);
+    pointer-events:auto;max-width:92vw;max-height:78vh;
+  }
+  #fabriSuperModal.open .super-player{animation:superPlayerIn .52s cubic-bezier(.16,1,.3,1) both;}
+  #fabriSuperModal.closing .super-player{animation:superPlayerOut .26s cubic-bezier(.7,0,.84,0) both;}
+  @keyframes superPlayerIn{
+    0%{opacity:0;transform:scale(.84) translateY(28px);filter:blur(10px) brightness(.72)}
+    62%{opacity:1;transform:scale(1.018) translateY(0);filter:blur(0) brightness(1.06)}
+    100%{opacity:1;transform:scale(1) translateY(0);filter:blur(0) brightness(1)}
+  }
+  @keyframes superPlayerOut{to{opacity:0;transform:scale(.88) translateY(18px);filter:blur(8px) brightness(.72)}}
+  #fabriSuperModal .super-player::before{
+    content:"";position:absolute;inset:0;z-index:4;pointer-events:none;
+    background:linear-gradient(115deg,transparent 22%,rgba(255,255,255,.16) 50%,transparent 78%);
+    transform:translateX(-135%);opacity:0;
+  }
+  #fabriSuperModal.open .super-player::before{animation:superShine .72s cubic-bezier(.22,1,.36,1) .12s both;}
+  @keyframes superShine{0%{opacity:0;transform:translateX(-135%)}20%{opacity:.6}100%{opacity:0;transform:translateX(135%)}}
+
+  #fabriSuperModal.landscape .super-player{width:min(940px,72vw);aspect-ratio:16/9;height:auto;}
+  #fabriSuperModal.portrait .super-player{height:min(78vh,760px);aspect-ratio:9/16;width:auto;}
+  #fabriSuperModal .super-video{width:100%;height:100%;display:block;object-fit:contain;object-position:center;background:#000;}
+
+  #fabriSuperModal .super-controls{
+    position:absolute;left:0;right:0;bottom:0;z-index:30;padding:56px 14px 12px;
+    background:linear-gradient(to top,rgba(0,0,0,.92),rgba(0,0,0,.42),transparent);
+    display:flex;flex-direction:column;gap:8px;opacity:1;transform:none;transition:opacity .22s ease,transform .22s ease;pointer-events:auto;
+  }
+  #fabriSuperModal .super-player.hide-controls .super-controls{opacity:0;transform:translateY(8px);pointer-events:none;}
+  #fabriSuperModal .super-progress{width:100%;height:5px;border-radius:999px;-webkit-appearance:none;appearance:none;outline:none;cursor:pointer;background:rgba(255,255,255,.24);}
+  #fabriSuperModal .super-progress::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.15)}
+  #fabriSuperModal .super-progress::-moz-range-thumb{width:13px;height:13px;border:0;border-radius:50%;background:#fff;}
+  #fabriSuperModal .super-row{display:flex;align-items:center;gap:10px;color:#fff;}
+  #fabriSuperModal .super-btn{width:34px;height:34px;border:0;background:transparent;color:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:18px;opacity:.92;transition:opacity .2s ease,transform .2s ease;pointer-events:auto;}
+  #fabriSuperModal .super-btn:hover{opacity:1;transform:scale(1.08)}
+  #fabriSuperModal .super-time{font-size:.86rem;font-weight:800;white-space:nowrap;min-width:76px;}
+  #fabriSuperModal .super-spacer{flex:1;}
+  #fabriSuperModal .super-volume{width:86px;height:4px;-webkit-appearance:none;appearance:none;border-radius:999px;background:rgba(255,255,255,.24);outline:none;cursor:pointer;pointer-events:auto;}
+  #fabriSuperModal .super-volume::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#fff;}
+  #fabriSuperModal .super-volume::-moz-range-thumb{width:12px;height:12px;border:0;border-radius:50%;background:#fff;}
+  #fabriSuperModal .super-bigplay{position:absolute;inset:0;display:grid;place-items:center;z-index:20;pointer-events:none;opacity:0;transition:opacity .2s ease;}
+  #fabriSuperModal .super-player.paused .super-bigplay{opacity:1;}
+  #fabriSuperModal .super-bigplay span{width:76px;height:76px;border-radius:50%;background:rgba(255,0,0,.64);box-shadow:0 14px 42px rgba(0,0,0,.55),0 0 18px rgba(255,0,0,.22);display:flex;align-items:center;justify-content:center;}
+  #fabriSuperModal .super-bigplay span::before{content:"";width:0;height:0;border-left:22px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent;margin-left:6px;}
+
+  #fabriSuperModal .super-player:fullscreen,
+  #fabriSuperModal .super-player:-webkit-full-screen{width:100vw!important;height:100vh!important;max-width:none!important;max-height:none!important;aspect-ratio:auto!important;border-radius:0!important;background:#000!important;}
+  #fabriSuperModal .super-player:fullscreen .super-video,
+  #fabriSuperModal .super-player:-webkit-full-screen .super-video{width:100vw!important;height:100vh!important;object-fit:contain!important;}
+  #fabriSuperModal .super-player:fullscreen::before,
+  #fabriSuperModal .super-player:-webkit-full-screen::before{display:none!important;}
+
+  body.super-modal-locked{overflow:hidden!important;}
+  body.super-modal-locked main,body.super-modal-locked header{filter:blur(2px) brightness(.78);transition:filter .25s ease;}
+
+  @media(max-width:760px){
+    #fabriSuperModal{padding:12px;}
+    #fabriSuperModal .super-close{top:14px;right:14px;width:44px;height:44px;font-size:32px;}
+    #fabriSuperModal.landscape .super-player{width:94vw;}
+    #fabriSuperModal.portrait .super-player{height:min(76vh,720px);max-width:90vw;}
+    #fabriSuperModal .super-controls{padding:46px 10px 10px;}
+    #fabriSuperModal .super-volume{display:none;}
+    #fabriSuperModal .super-time{font-size:.78rem;min-width:68px;}
+  }
+</style>
+<script id="fabri-super-modal-script">
+(function(){
+  const fmt = t => Number.isFinite(t) ? `${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}` : '0:00';
+  let modal, player, video, closeBtn, playBtn, muteBtn, fsBtn, progress, volume, timeEl, hideTimer;
+
+  function ensureModal(){
+    if(modal) return modal;
+    modal = document.createElement('div');
+    modal.id = 'fabriSuperModal';
+    modal.innerHTML = `
+      <button class="super-close" type="button" aria-label="Close video">×</button>
+      <div class="super-player hide-controls">
+        <video class="super-video" playsinline webkit-playsinline preload="metadata"></video>
+        <div class="super-bigplay" aria-hidden="true"><span></span></div>
+        <div class="super-controls">
+          <input class="super-progress" type="range" min="0" max="100" value="0" aria-label="Video progress">
+          <div class="super-row">
+            <button class="super-btn super-play" type="button" aria-label="Play or pause">▶</button>
+            <button class="super-btn super-mute" type="button" aria-label="Mute or unmute">🔊</button>
+            <span class="super-time">0:00 / 0:00</span>
+            <span class="super-spacer"></span>
+            <input class="super-volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+            <button class="super-btn super-fullscreen" type="button" aria-label="Fullscreen">⛶</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+    player = modal.querySelector('.super-player');
+    video = modal.querySelector('.super-video');
+    closeBtn = modal.querySelector('.super-close');
+    playBtn = modal.querySelector('.super-play');
+    muteBtn = modal.querySelector('.super-mute');
+    fsBtn = modal.querySelector('.super-fullscreen');
+    progress = modal.querySelector('.super-progress');
+    volume = modal.querySelector('.super-volume');
+    timeEl = modal.querySelector('.super-time');
+
+    function update(){
+      const pct = video.duration ? (video.currentTime / video.duration) * 100 : 0;
+      progress.value = pct || 0;
+      progress.style.background = `linear-gradient(to right,#fff 0%,#fff ${pct||0}%,rgba(255,255,255,.24) ${pct||0}%,rgba(255,255,255,.24) 100%)`;
+      timeEl.textContent = `${fmt(video.currentTime)} / ${fmt(video.duration)}`;
+      playBtn.textContent = video.paused ? '▶' : '❚❚';
+      muteBtn.textContent = (video.muted || video.volume === 0) ? '🔇' : '🔊';
+      player.classList.toggle('paused', video.paused);
+    }
+    function showControls(){
+      player.classList.remove('hide-controls');
+      clearTimeout(hideTimer);
+      if(!video.paused){ hideTimer = setTimeout(()=>player.classList.add('hide-controls'), 2600); }
+    }
+    function doClose(){
+      if(!modal.classList.contains('open')) return;
+      clearTimeout(hideTimer);
+      if(document.fullscreenElement === player) document.exitFullscreen().catch(()=>{});
+      modal.classList.remove('open');
+      modal.classList.add('closing');
+      document.body.classList.remove('super-modal-locked');
+      setTimeout(()=>{
+        video.pause(); video.removeAttribute('src'); video.removeAttribute('poster'); video.load();
+        modal.classList.remove('closing','portrait','landscape');
+        player.classList.remove('paused','hide-controls');
+      }, 300);
+    }
+
+    closeBtn.addEventListener('click', e=>{e.preventDefault(); e.stopPropagation(); doClose();});
+    modal.addEventListener('click', e=>{ if(e.target === modal) doClose(); });
+    player.addEventListener('click', e=>e.stopPropagation());
+    modal.querySelector('.super-controls').addEventListener('click', e=>e.stopPropagation());
+    video.addEventListener('click', ()=>{ video.paused ? video.play().catch(()=>{}) : video.pause(); showControls(); });
+    playBtn.addEventListener('click', ()=>{ video.paused ? video.play().catch(()=>{}) : video.pause(); showControls(); });
+    muteBtn.addEventListener('click', ()=>{ video.muted = !video.muted; update(); showControls(); });
+    volume.addEventListener('input', ()=>{ video.volume = +volume.value; video.muted = video.volume === 0; update(); showControls(); });
+    progress.addEventListener('input', ()=>{ if(video.duration) video.currentTime = (+progress.value/100)*video.duration; update(); showControls(); });
+    fsBtn.addEventListener('click', ()=>{ showControls(); if(document.fullscreenElement) document.exitFullscreen().catch(()=>{}); else player.requestFullscreen?.().catch(()=>{}); });
+    player.addEventListener('mousemove', showControls);
+    player.addEventListener('mouseenter', showControls);
+    ['loadedmetadata','timeupdate','volumechange'].forEach(ev=>video.addEventListener(ev, update));
+    video.addEventListener('play', ()=>{update(); showControls();});
+    video.addEventListener('pause', ()=>{update(); showControls();});
+    window.addEventListener('keydown', e=>{ if(e.key === 'Escape' && modal.classList.contains('open')) doClose(); });
+    return modal;
+  }
+
+  function openFrom(sourceVideo, card){
+    const m = ensureModal();
+    // kill any older broken modal if it was opened by previous scripts
+    document.querySelectorAll('.fabri-video-modal,#fabriUniversalModal').forEach(x=>{x.classList.remove('open'); x.style.display='none';});
+    const src = sourceVideo.getAttribute('src') || sourceVideo.currentSrc;
+    if(!src) return;
+    const isPortrait = card?.querySelector('.video-frame')?.classList.contains('portrait') || /short|shorform|reel|portrait/i.test(src);
+    m.classList.remove('closing','portrait','landscape');
+    m.classList.add(isPortrait ? 'portrait' : 'landscape');
+    video.src = src;
+    const poster = sourceVideo.getAttribute('poster') || sourceVideo.dataset.forcePoster || card?.querySelector('.forced-video-poster')?.getAttribute('src') || '';
+    if(poster) video.setAttribute('poster', poster); else video.removeAttribute('poster');
+    video.muted = false; video.volume = 1; volume.value = 1;
+    document.body.classList.add('super-modal-locked');
+    m.classList.add('open');
+    player.classList.remove('hide-controls');
+    video.load();
+    const startAt = sourceVideo.currentTime && sourceVideo.currentTime < 6 ? sourceVideo.currentTime : 0;
+    const go = () => { try{ video.currentTime = startAt || 0; }catch(e){} video.play().catch(()=>{}); };
+    if(video.readyState >= 1) go(); else video.addEventListener('loadedmetadata', go, {once:true});
+  }
+
+  // Capture clicks before the old player code can open the broken popup.
+  document.addEventListener('click', function(e){
+    const target = e.target.closest('.custom-player video, .custom-player .play-center, .custom-player .fullscreen-toggle');
+    if(!target) return;
+    const card = target.closest('.video-card');
+    const playerEl = target.closest('.custom-player');
+    const srcVideo = playerEl?.querySelector('video');
+    if(!card || !srcVideo) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    // reset hover preview cleanly before modal opens
+    document.querySelectorAll('.custom-player').forEach(pl=>{pl.classList.remove('hover-preview','playing'); pl.classList.add('paused');});
+    document.querySelectorAll('.custom-player video').forEach(v=>{if(v!==srcVideo){v.pause(); try{v.currentTime=0;}catch(_){}}});
+    srcVideo.pause();
+    openFrom(srcVideo, card);
+  }, true);
+})();
+</script>
+
 </body>
 </html>
