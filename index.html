@@ -305,406 +305,34 @@
 
   
 
-    /* ===================== CUT & HIRE STYLE HOVER PREVIEW PATCH ===================== */
-    /* Default: clean thumbnail, no big play button until the mouse is over the video. */
-    .custom-player .play-center{
-      opacity:0 !important;
-      pointer-events:none !important;
-      transform:translateY(-4px) scale(.86) !important;
-      transition:opacity .24s ease, transform .34s cubic-bezier(.34,1.56,.64,1) !important;
-    }
-    .custom-player:hover .play-center,
-    .custom-player.hover-preview .play-center,
-    .custom-player.paused:hover .play-center{
-      opacity:1 !important;
-      pointer-events:auto !important;
-      transform:translateY(-4px) scale(1) !important;
-    }
-    .custom-player.playing .play-center{
-      opacity:0 !important;
-      pointer-events:none !important;
-      transform:translateY(-4px) scale(.86) !important;
-    }
-
-    /* Hover preview plays silently in the background, but it does not show controls. */
-    .custom-player.hover-preview .player-overlay{
-      opacity:0 !important;
-      pointer-events:none !important;
-    }
-    .custom-player.playing .player-overlay,
-    .custom-player.paused .player-overlay,
-    .custom-player:focus-within .player-overlay,
-    .custom-player:fullscreen .player-overlay,
-    .custom-player:-webkit-full-screen .player-overlay{
-      opacity:1 !important;
-      pointer-events:auto !important;
-    }
-
-    /* Poster disappears during hover preview, then comes back when the mouse leaves. */
-    .custom-player.hover-preview .forced-video-poster,
-    .custom-player.playing .forced-video-poster{
-      opacity:0 !important;
-      visibility:hidden !important;
-      pointer-events:none !important;
-    }
-
-    /* Less bright play button, closer to Cut & Hire hover feel. */
-    .play-center .yt-play{
-      background:rgba(255,0,0,.66) !important;
-      box-shadow:0 8px 26px rgba(0,0,0,.46),0 0 18px rgba(255,0,0,.22) !important;
-      border:1px solid rgba(255,255,255,.16) !important;
-    }
-    .custom-player:hover .play-center .yt-play{
-      background:rgba(255,0,0,.74) !important;
-      box-shadow:0 12px 34px rgba(0,0,0,.5),0 0 20px rgba(255,0,0,.28) !important;
-    }
-    .play-center .yt-play:hover{
-      transform:scale(1.08) !important;
-      background:rgba(255,0,0,.82) !important;
-      box-shadow:0 14px 38px rgba(0,0,0,.55),0 0 22px rgba(255,0,0,.32) !important;
-    }
-
-    @media (hover:none), (pointer:coarse){
-      .custom-player .play-center{
-        opacity:1 !important;
-        pointer-events:auto !important;
-        transform:translateY(-4px) scale(1) !important;
-      }
-      .custom-player .player-overlay{opacity:0 !important;visibility:hidden !important;pointer-events:none !important;}
-    }
-
-
-    /* Less aggressive logo glow */
-    .logo-image img{
-      filter:drop-shadow(0 0 5px rgba(255,211,77,.32)) drop-shadow(0 0 12px rgba(255,211,77,.16)) !important;
-    }
-    .logo-image:hover img{
-      filter:drop-shadow(0 0 8px rgba(255,211,77,.48)) drop-shadow(0 0 18px rgba(255,211,77,.25)) !important;
-    }
-
-
-    /* ===================== FINAL CUT & HIRE CLICK/HOVER BEHAVIOR FIX ===================== */
-    /* Cards stay clean: no mini control bar before click, during hover, or after click. */
-    .custom-player .player-overlay,
-    .custom-player:hover .player-overlay,
-    .custom-player:focus-within .player-overlay,
-    .custom-player.hover-preview .player-overlay,
-    .custom-player.paused .player-overlay,
-    .custom-player.playing .player-overlay{
-      opacity:0 !important;
-      visibility:hidden !important;
-      pointer-events:none !important;
-    }
-
-    /* The play button is hidden normally and appears only when hovering the video, like Cut & Hire. */
-    .custom-player .play-center{
-      opacity:0 !important;
-      pointer-events:none !important;
-      transform:translateY(-4px) scale(.86) !important;
-    }
-    .custom-player:hover .play-center,
-    .custom-player.hover-preview .play-center{
-      opacity:1 !important;
-      pointer-events:auto !important;
-      transform:translateY(-4px) scale(1) !important;
-    }
-
-    /* Real playback happens in a centered custom modal player. */
-    .fabri-video-modal{
-      position:fixed;
-      inset:0;
-      z-index:9999;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      background:rgba(0,0,0,.88);
-      backdrop-filter:blur(4px);
-      -webkit-backdrop-filter:blur(4px);
-      padding:32px;
-    }
-    .fabri-video-modal.open{display:flex;}
-    .fabri-modal-close{
-      position:fixed;
-      top:24px;
-      right:28px;
-      width:54px;
-      height:54px;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.42);
-      background:rgba(0,0,0,.30);
-      color:#fff;
-      font-size:42px;
-      line-height:1;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      z-index:5;
-      transition:transform .22s ease, background .22s ease, border-color .22s ease;
-    }
-    .fabri-modal-close:hover{transform:scale(.96);background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.75);}
-    .fabri-modal-player{
-      position:relative;
-      width:min(920px,76vw);
-      aspect-ratio:16/9;
-      max-height:78vh;
-      border-radius:8px;
-      overflow:hidden;
-      background:#000;
-      box-shadow:0 28px 90px rgba(0,0,0,.65);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .fabri-video-modal.portrait .fabri-modal-player{
-      width:min(420px,38vw);
-      aspect-ratio:9/16;
-      height:min(78vh,760px);
-      max-height:78vh;
-    }
-    .fabri-modal-video{
-      width:100%;
-      height:100%;
-      display:block;
-      background:#000;
-      object-fit:contain;
-      outline:none;
-    }
-    .fabri-modal-player:fullscreen,
-    .fabri-modal-player:-webkit-full-screen{
-      width:100vw!important;
-      height:100vh!important;
-      max-height:none!important;
-      border-radius:0!important;
-      aspect-ratio:auto!important;
-      background:#000!important;
-    }
-    .fabri-modal-player:fullscreen .fabri-modal-video,
-    .fabri-modal-player:-webkit-full-screen .fabri-modal-video{
-      width:100%!important;
-      height:100%!important;
-      object-fit:contain!important;
-    }
-    .fabri-modal-controls{
-      position:absolute;
-      left:0;
-      right:0;
-      bottom:0;
-      z-index:3;
-      padding:48px 14px 12px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      background:linear-gradient(to top,rgba(0,0,0,.92),rgba(0,0,0,.42),transparent);
-      opacity:0;
-      transform:translateY(8px);
-      transition:opacity .22s ease,transform .22s ease;
-      pointer-events:none;
-    }
-    .fabri-modal-player:hover .fabri-modal-controls,
-    .fabri-modal-player.controls-visible .fabri-modal-controls,
-    .fabri-modal-player:fullscreen .fabri-modal-controls,
-    .fabri-modal-player:-webkit-full-screen .fabri-modal-controls{
-      opacity:1;
-      transform:none;
-      pointer-events:auto;
-    }
-    .fabri-modal-progress{
-      width:100%;
-      height:5px;
-      border-radius:999px;
-      -webkit-appearance:none;
-      appearance:none;
-      background:rgba(255,255,255,.22);
-      outline:none;
-      cursor:pointer;
-    }
-    .fabri-modal-progress::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.15)}
-    .fabri-modal-progress::-moz-range-thumb{width:12px;height:12px;border:0;border-radius:50%;background:#fff;}
-    .fabri-modal-row{display:flex;align-items:center;gap:10px;color:#fff;}
-    .fabri-modal-btn{
-      width:32px;
-      height:32px;
-      border:0;
-      background:transparent;
-      color:#fff;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      font-size:18px;
-      opacity:.9;
-      transition:opacity .2s ease,transform .2s ease;
-    }
-    .fabri-modal-btn:hover{opacity:1;transform:scale(1.08)}
-    .fabri-modal-time{font-size:.86rem;font-weight:700;white-space:nowrap;}
-    .fabri-modal-spacer{flex:1;}
-    .fabri-modal-volume{width:78px;height:4px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.22);border-radius:999px;outline:none;cursor:pointer;}
-    .fabri-modal-volume::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#fff;}
-    .fabri-modal-volume::-moz-range-thumb{width:12px;height:12px;border:0;border-radius:50%;background:#fff;}
-    .fabri-modal-bigplay{
-      position:absolute;
-      inset:0;
-      z-index:2;
-      display:grid;
-      place-items:center;
-      pointer-events:none;
-      opacity:0;
-      transition:opacity .22s ease;
-    }
-    .fabri-modal-player.paused .fabri-modal-bigplay{opacity:1;}
-    .fabri-modal-bigplay span{
-      width:76px;
-      height:76px;
-      border-radius:50%;
-      background:rgba(255,0,0,.72);
-      box-shadow:0 12px 40px rgba(0,0,0,.55),0 0 22px rgba(255,0,0,.28);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .fabri-modal-bigplay span::before{content:"";width:0;height:0;border-left:22px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent;margin-left:6px;}
-    body.fabri-modal-locked{overflow:hidden !important;}
-    body.fabri-modal-locked main,body.fabri-modal-locked header,body.fabri-modal-locked section{filter:brightness(.36);}
-    @media(max-width:760px){
-      .fabri-video-modal{padding:14px;}
-      .fabri-modal-close{top:14px;right:14px;width:44px;height:44px;font-size:34px;}
-      .fabri-modal-player{width:100%;max-height:78vh;}
-      .fabri-video-modal.portrait .fabri-modal-player{width:auto;height:min(78vh,720px);max-width:92vw;}
-      .fabri-modal-volume{display:none;}
-      .fabri-modal-time{font-size:.78rem;}
-    }
-
-  
-
-    /* ===================== FINAL MODAL CENTER + SHORTS PLAYER FIX ===================== */
-    /* Shorts posters must disappear during hover preview so the preview actually shows. */
-    .custom-player.hover-preview .forced-video-poster,
-    .custom-player.playing .forced-video-poster{
-      display:none !important;
-    }
-
-    .fabri-video-modal{
-      align-items:center !important;
-      justify-content:center !important;
-      place-items:center !important;
-      padding:clamp(18px,3vw,42px) !important;
-    }
-
-    .fabri-video-modal.open{
-      display:flex !important;
-    }
-
-    .fabri-modal-player{
-      margin:auto !important;
-      left:auto !important;
-      right:auto !important;
-      top:auto !important;
-      bottom:auto !important;
-      transform:none !important;
-      display:flex !important;
-      align-items:center !important;
-      justify-content:center !important;
-      background:#000 !important;
-      max-width:92vw !important;
-      max-height:78vh !important;
-    }
-
-    .fabri-video-modal.landscape .fabri-modal-player{
-      width:min(920px,78vw) !important;
-      height:auto !important;
-      aspect-ratio:16/9 !important;
-    }
-
-    .fabri-video-modal.portrait .fabri-modal-player{
-      width:auto !important;
-      height:min(78vh,760px) !important;
-      aspect-ratio:9/16 !important;
-      max-width:92vw !important;
-    }
-
-    .fabri-modal-video{
-      width:100% !important;
-      height:100% !important;
-      object-fit:contain !important;
-      object-position:center center !important;
-      margin:auto !important;
-      display:block !important;
-    }
-
-    .fabri-modal-controls{
-      z-index:20 !important;
-      pointer-events:auto !important;
-    }
-
-    .fabri-modal-btn,
-    .fabri-modal-progress,
-    .fabri-modal-volume{
-      pointer-events:auto !important;
-      position:relative !important;
-      z-index:25 !important;
-    }
-
-    .fabri-modal-player:fullscreen,
-    .fabri-modal-player:-webkit-full-screen{
-      width:100vw !important;
-      height:100vh !important;
-      max-width:none !important;
-      max-height:none !important;
-      aspect-ratio:auto !important;
-      border-radius:0 !important;
-      display:flex !important;
-      align-items:center !important;
-      justify-content:center !important;
-      background:#000 !important;
-    }
-
-    .fabri-modal-player:fullscreen .fabri-modal-video,
-    .fabri-modal-player:-webkit-full-screen .fabri-modal-video{
-      width:100vw !important;
-      height:100vh !important;
-      object-fit:contain !important;
-      object-position:center center !important;
-    }
-
-    @media(max-width:760px){
-      .fabri-video-modal{padding:12px !important;}
-      .fabri-video-modal.landscape .fabri-modal-player{width:96vw !important;}
-      .fabri-video-modal.portrait .fabri-modal-player{height:min(78vh,720px) !important;max-width:92vw !important;}
-      .fabri-modal-controls{padding:42px 10px 10px !important;}
-    }
-
-  
-
-/* ===================== FINAL REAL FIX: CENTERED PLAYER + 40% BACKDROP + SHORTS VISIBILITY ===================== */
-/* Card state: no mini controls on the portfolio cards, only clean hover preview + play button. */
+/* ===================== LOCKED-IN CUT&HIRE STYLE PORTFOLIO PLAYER FIX ===================== */
+/* Portfolio cards: clean cards, no mini/native controls until the custom popup opens. */
 .video-card .custom-player video{
   display:block !important;
   width:100% !important;
   height:100% !important;
   object-fit:cover !important;
+  object-position:center center !important;
+  background:#000 !important;
   opacity:1 !important;
   visibility:visible !important;
-  background:#000 !important;
 }
-.video-frame.landscape .custom-player video{object-fit:cover !important;}
-.video-frame.portrait .custom-player video{object-fit:cover !important;}
 .video-card .player-overlay,
 .video-card .custom-player .player-overlay,
 .video-card .custom-player:hover .player-overlay,
+.video-card .custom-player.hover-preview .player-overlay,
 .video-card .custom-player.playing .player-overlay,
-.video-card .custom-player.paused .player-overlay,
-.video-card .custom-player.hover-preview .player-overlay{
+.video-card .custom-player.paused .player-overlay{
+  display:none !important;
   opacity:0 !important;
   visibility:hidden !important;
   pointer-events:none !important;
-  display:none !important;
 }
 .video-card .custom-player .play-center{
   opacity:0 !important;
   pointer-events:none !important;
   transform:translateY(-4px) scale(.86) !important;
-  transition:opacity .24s ease, transform .32s cubic-bezier(.34,1.56,.64,1) !important;
+  transition:opacity .22s ease, transform .34s cubic-bezier(.34,1.56,.64,1) !important;
 }
 .video-card .custom-player:hover .play-center,
 .video-card .custom-player.hover-preview .play-center{
@@ -714,150 +342,180 @@
 }
 .video-card .custom-player.playing .play-center{opacity:0 !important;pointer-events:none !important;}
 .video-card .custom-player.hover-preview .forced-video-poster,
-.video-card .custom-player.playing .forced-video-poster{display:none !important;opacity:0 !important;visibility:hidden !important;}
-.video-card .forced-video-poster{object-fit:cover !important;}
-.play-center .yt-play{background:rgba(255,0,0,.62) !important;box-shadow:0 8px 24px rgba(0,0,0,.46),0 0 14px rgba(255,0,0,.18) !important;}
-.play-center .yt-play:hover{transform:scale(1.06) !important;background:rgba(255,0,0,.72) !important;box-shadow:0 12px 30px rgba(0,0,0,.5),0 0 18px rgba(255,0,0,.24) !important;}
+.video-card .custom-player.playing .forced-video-poster{
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+.video-card .forced-video-poster{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+  z-index:4 !important;
+  display:block;
+  background:#000;
+}
+.play-center .yt-play{
+  background:rgba(255,0,0,.60) !important;
+  box-shadow:0 8px 24px rgba(0,0,0,.45),0 0 14px rgba(255,0,0,.18) !important;
+  border:1px solid rgba(255,255,255,.16) !important;
+}
+.play-center .yt-play:hover{
+  transform:scale(1.06) !important;
+  background:rgba(255,0,0,.70) !important;
+  box-shadow:0 12px 30px rgba(0,0,0,.50),0 0 18px rgba(255,0,0,.24) !important;
+}
+.logo-image img{filter:drop-shadow(0 0 5px rgba(255,211,77,.30)) drop-shadow(0 0 11px rgba(255,211,77,.14)) !important;}
+.logo-image:hover img{filter:drop-shadow(0 0 8px rgba(255,211,77,.46)) drop-shadow(0 0 17px rgba(255,211,77,.22)) !important;}
 
-/* Disable the earlier broken modal completely; the universal modal below replaces it. */
-.fabri-video-modal{display:none !important;visibility:hidden !important;pointer-events:none !important;}
-body.fabri-modal-locked main,body.fabri-modal-locked header,body.fabri-modal-locked section{filter:none !important;}
-
-#fabriUniversalModal{
+/* Single clean modal. 40% overlay, centered player, custom controls, smooth open/close. */
+#portfolioPlayerModal{
   position:fixed;
   inset:0;
-  z-index:2147483000;
-  display:none;
-  background:rgba(0,0,0,.40); /* requested 40% background opacity */
-  backdrop-filter:blur(2px);
-  -webkit-backdrop-filter:blur(2px);
-  overflow:hidden;
-}
-#fabriUniversalModal.open{display:block;animation:fumBackdropIn .34s cubic-bezier(.16,1,.3,1) both;}
-#fabriUniversalModal.open .fum-player{animation:fumPlayerIn .46s cubic-bezier(.16,1,.3,1) both;}
-#fabriUniversalModal.open .fum-close{animation:fumCloseIn .42s cubic-bezier(.16,1,.3,1) .08s both;}
-@keyframes fumBackdropIn{
-  from{opacity:0;backdrop-filter:blur(0);-webkit-backdrop-filter:blur(0);}
-  to{opacity:1;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
-}
-@keyframes fumPlayerIn{
-  0%{opacity:0;transform:translate(-50%,-50%) scale(.82) translateY(28px);filter:blur(10px) brightness(.72);box-shadow:0 0 0 rgba(0,0,0,0);}
-  55%{opacity:1;transform:translate(-50%,-50%) scale(1.018) translateY(0);filter:blur(0) brightness(1.05);}
-  100%{opacity:1;transform:translate(-50%,-50%) scale(1) translateY(0);filter:blur(0) brightness(1);box-shadow:0 28px 90px rgba(0,0,0,.62),0 0 46px rgba(255,211,77,.12);}
-}
-@keyframes fumCloseIn{
-  from{opacity:0;transform:scale(.65) rotate(-14deg);}
-  to{opacity:1;transform:scale(1) rotate(0);}
-}
-#fabriUniversalModal .fum-player::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:2;
-  pointer-events:none;
-  background:linear-gradient(115deg,transparent 22%,rgba(255,255,255,.13) 48%,transparent 74%);
-  transform:translateX(-130%);
+  z-index:2147483647;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:clamp(16px,3vw,44px);
+  background:rgba(0,0,0,.40) !important;
+  backdrop-filter:blur(5px);
+  -webkit-backdrop-filter:blur(5px);
   opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .34s cubic-bezier(.16,1,.3,1), visibility 0s linear .34s;
 }
-#fabriUniversalModal.open .fum-player::before{animation:fumShineSweep .72s cubic-bezier(.22,1,.36,1) .1s both;}
-@keyframes fumShineSweep{
-  0%{opacity:0;transform:translateX(-130%);}
-  18%{opacity:.55;}
-  100%{opacity:0;transform:translateX(130%);}
+#portfolioPlayerModal.open{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transition:opacity .34s cubic-bezier(.16,1,.3,1), visibility 0s;
 }
-#fabriUniversalModal .fum-player:fullscreen::before,
-#fabriUniversalModal .fum-player:-webkit-full-screen::before{display:none!important;}
-@media(prefers-reduced-motion:reduce){
-  #fabriUniversalModal.open,#fabriUniversalModal.open .fum-player,#fabriUniversalModal.open .fum-close,#fabriUniversalModal.open .fum-player::before{animation:none!important;}
-}
-#fabriUniversalModal .fum-close{
+#portfolioPlayerModal.closing{opacity:0;visibility:visible;pointer-events:none;}
+#portfolioPlayerModal .ppm-close{
   position:fixed;
   top:24px;
   right:28px;
-  z-index:20;
+  z-index:60;
   width:54px;
   height:54px;
   border-radius:50%;
-  border:1px solid rgba(255,255,255,.44);
-  background:rgba(0,0,0,.30);
+  border:1px solid rgba(255,255,255,.45);
+  background:rgba(0,0,0,.34);
   color:#fff;
-  font-size:42px;
+  font-size:38px;
   line-height:1;
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
-  transition:transform .22s ease,background .22s ease,border-color .22s ease;
+  opacity:0;
+  transform:scale(.72) rotate(-12deg);
+  transition:transform .22s ease, background .22s ease, border-color .22s ease, opacity .22s ease;
 }
-#fabriUniversalModal .fum-close:hover{transform:scale(.96);background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.78);}
-#fabriUniversalModal .fum-player{
-  position:fixed !important;
-  left:50% !important;
-  top:50% !important;
-  transform:translate(-50%,-50%) !important;
+#portfolioPlayerModal.open .ppm-close{animation:ppmCloseIn .42s cubic-bezier(.16,1,.3,1) .10s both;}
+#portfolioPlayerModal.closing .ppm-close{animation:ppmCloseOut .22s ease both;}
+#portfolioPlayerModal .ppm-close:hover{transform:scale(.94) rotate(0deg)!important;background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.82)}
+@keyframes ppmCloseIn{to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes ppmCloseOut{to{opacity:0;transform:scale(.72) rotate(12deg)}}
+#portfolioPlayerModal .ppm-player{
+  position:relative;
   z-index:10;
-  margin:0 !important;
   background:#000;
-  border-radius:10px;
+  border-radius:12px;
   overflow:hidden;
-  box-shadow:0 28px 90px rgba(0,0,0,.62);
+  box-shadow:0 32px 110px rgba(0,0,0,.66),0 0 70px rgba(255,211,77,.12);
   display:flex;
   align-items:center;
   justify-content:center;
+  max-width:92vw;
+  max-height:78vh;
+  opacity:0;
+  transform:scale(.84) translateY(28px);
+  filter:blur(10px) brightness(.74);
   pointer-events:auto;
 }
-#fabriUniversalModal .fum-video{
-  width:100% !important;
-  height:100% !important;
-  object-fit:contain !important;
-  object-position:center center !important;
-  display:block !important;
-  background:#000 !important;
+#portfolioPlayerModal.open .ppm-player{animation:ppmPlayerIn .52s cubic-bezier(.16,1,.3,1) both;}
+#portfolioPlayerModal.closing .ppm-player{animation:ppmPlayerOut .28s cubic-bezier(.7,0,.84,0) both;}
+@keyframes ppmPlayerIn{
+  0%{opacity:0;transform:scale(.84) translateY(28px);filter:blur(10px) brightness(.74)}
+  62%{opacity:1;transform:scale(1.018) translateY(0);filter:blur(0) brightness(1.06)}
+  100%{opacity:1;transform:scale(1) translateY(0);filter:blur(0) brightness(1)}
 }
-#fabriUniversalModal .fum-controls{
+@keyframes ppmPlayerOut{to{opacity:0;transform:scale(.88) translateY(18px);filter:blur(8px) brightness(.74)}}
+#portfolioPlayerModal .ppm-player::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:4;
+  pointer-events:none;
+  background:linear-gradient(115deg,transparent 22%,rgba(255,255,255,.16) 50%,transparent 78%);
+  transform:translateX(-135%);
+  opacity:0;
+}
+#portfolioPlayerModal.open .ppm-player::before{animation:ppmShine .72s cubic-bezier(.22,1,.36,1) .12s both;}
+@keyframes ppmShine{0%{opacity:0;transform:translateX(-135%)}20%{opacity:.6}100%{opacity:0;transform:translateX(135%)}}
+#portfolioPlayerModal.landscape .ppm-player{width:min(940px,72vw);aspect-ratio:16/9;height:auto;}
+#portfolioPlayerModal.portrait .ppm-player{height:min(78vh,760px);aspect-ratio:9/16;width:auto;}
+#portfolioPlayerModal .ppm-video{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center center;
+  display:block;
+  background:#000;
+}
+#portfolioPlayerModal .ppm-controls{
   position:absolute;
   left:0;
   right:0;
   bottom:0;
   z-index:30;
-  padding:50px 14px 12px;
+  padding:56px 14px 12px;
   background:linear-gradient(to top,rgba(0,0,0,.92),rgba(0,0,0,.42),transparent);
   display:flex;
   flex-direction:column;
   gap:8px;
   opacity:1;
-  pointer-events:auto;
+  transform:none;
   transition:opacity .22s ease,transform .22s ease;
+  pointer-events:auto;
 }
-#fabriUniversalModal .fum-player.hide-controls .fum-controls{opacity:0;transform:translateY(8px);pointer-events:none;}
-#fabriUniversalModal .fum-progress{
-  width:100%;height:5px;border-radius:999px;-webkit-appearance:none;appearance:none;outline:none;cursor:pointer;background:rgba(255,255,255,.22);
-}
-#fabriUniversalModal .fum-progress::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.15);}
-#fabriUniversalModal .fum-progress::-moz-range-thumb{width:13px;height:13px;border:0;border-radius:50%;background:#fff;}
-#fabriUniversalModal .fum-row{display:flex;align-items:center;gap:10px;color:#fff;}
-#fabriUniversalModal .fum-btn{width:34px;height:34px;border:0;background:transparent;color:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:18px;opacity:.9;transition:opacity .2s ease,transform .2s ease;pointer-events:auto;}
-#fabriUniversalModal .fum-btn:hover{opacity:1;transform:scale(1.08);}
-#fabriUniversalModal .fum-time{font-size:.86rem;font-weight:800;white-space:nowrap;min-width:76px;}
-#fabriUniversalModal .fum-spacer{flex:1;}
-#fabriUniversalModal .fum-volume{width:86px;height:4px;-webkit-appearance:none;appearance:none;border-radius:999px;background:rgba(255,255,255,.22);outline:none;cursor:pointer;pointer-events:auto;}
-#fabriUniversalModal .fum-volume::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#fff;}
-#fabriUniversalModal .fum-volume::-moz-range-thumb{width:12px;height:12px;border:0;border-radius:50%;background:#fff;}
-#fabriUniversalModal .fum-bigplay{position:absolute;inset:0;display:grid;place-items:center;z-index:18;pointer-events:none;opacity:0;transition:opacity .2s ease;}
-#fabriUniversalModal .fum-player.paused .fum-bigplay{opacity:1;}
-#fabriUniversalModal .fum-bigplay span{width:76px;height:76px;border-radius:50%;background:rgba(255,0,0,.66);box-shadow:0 14px 40px rgba(0,0,0,.55),0 0 18px rgba(255,0,0,.22);display:flex;align-items:center;justify-content:center;}
-#fabriUniversalModal .fum-bigplay span::before{content:"";width:0;height:0;border-left:22px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent;margin-left:6px;}
-#fabriUniversalModal .fum-player:fullscreen,
-#fabriUniversalModal .fum-player:-webkit-full-screen{
-  left:0 !important;top:0 !important;transform:none !important;width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important;max-height:none !important;background:#000 !important;
-}
-#fabriUniversalModal .fum-player:fullscreen .fum-video,
-#fabriUniversalModal .fum-player:-webkit-full-screen .fum-video{width:100vw !important;height:100vh !important;object-fit:contain !important;}
+#portfolioPlayerModal .ppm-player.hide-controls .ppm-controls{opacity:0;transform:translateY(8px);pointer-events:none;}
+#portfolioPlayerModal .ppm-progress{width:100%;height:5px;border-radius:999px;-webkit-appearance:none;appearance:none;outline:none;cursor:pointer;background:rgba(255,255,255,.24);}
+#portfolioPlayerModal .ppm-progress::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.15)}
+#portfolioPlayerModal .ppm-progress::-moz-range-thumb{width:13px;height:13px;border:0;border-radius:50%;background:#fff;}
+#portfolioPlayerModal .ppm-row{display:flex;align-items:center;gap:10px;color:#fff;}
+#portfolioPlayerModal .ppm-btn{width:34px;height:34px;border:0;background:transparent;color:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:18px;opacity:.92;transition:opacity .2s ease,transform .2s ease;pointer-events:auto;}
+#portfolioPlayerModal .ppm-btn:hover{opacity:1;transform:scale(1.08)}
+#portfolioPlayerModal .ppm-time{font-size:.86rem;font-weight:800;white-space:nowrap;min-width:76px;}
+#portfolioPlayerModal .ppm-spacer{flex:1;}
+#portfolioPlayerModal .ppm-volume{width:86px;height:4px;-webkit-appearance:none;appearance:none;border-radius:999px;background:rgba(255,255,255,.24);outline:none;cursor:pointer;pointer-events:auto;}
+#portfolioPlayerModal .ppm-volume::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#fff;}
+#portfolioPlayerModal .ppm-volume::-moz-range-thumb{width:12px;height:12px;border:0;border-radius:50%;background:#fff;}
+#portfolioPlayerModal .ppm-bigplay{position:absolute;inset:0;display:grid;place-items:center;z-index:20;pointer-events:none;opacity:0;transition:opacity .2s ease;}
+#portfolioPlayerModal .ppm-player.paused .ppm-bigplay{opacity:1;}
+#portfolioPlayerModal .ppm-bigplay span{width:76px;height:76px;border-radius:50%;background:rgba(255,0,0,.64);box-shadow:0 14px 42px rgba(0,0,0,.55),0 0 18px rgba(255,0,0,.22);display:flex;align-items:center;justify-content:center;}
+#portfolioPlayerModal .ppm-bigplay span::before{content:"";width:0;height:0;border-left:22px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent;margin-left:6px;}
+#portfolioPlayerModal .ppm-player:fullscreen,
+#portfolioPlayerModal .ppm-player:-webkit-full-screen{width:100vw!important;height:100vh!important;max-width:none!important;max-height:none!important;aspect-ratio:auto!important;border-radius:0!important;background:#000!important;}
+#portfolioPlayerModal .ppm-player:fullscreen .ppm-video,
+#portfolioPlayerModal .ppm-player:-webkit-full-screen .ppm-video{width:100vw!important;height:100vh!important;object-fit:contain!important;}
+#portfolioPlayerModal .ppm-player:fullscreen::before,
+#portfolioPlayerModal .ppm-player:-webkit-full-screen::before{display:none!important;}
+body.portfolio-modal-locked{overflow:hidden!important;}
+body.portfolio-modal-locked main,body.portfolio-modal-locked header{filter:blur(2px) brightness(.78);transition:filter .25s ease;}
 @media(max-width:760px){
-  #fabriUniversalModal .fum-close{top:14px;right:14px;width:44px;height:44px;font-size:34px;}
-  #fabriUniversalModal .fum-volume{display:none;}
-  #fabriUniversalModal .fum-time{font-size:.78rem;min-width:68px;}
-  #fabriUniversalModal .fum-controls{padding:44px 10px 10px;}
+  #portfolioPlayerModal{padding:12px;}
+  #portfolioPlayerModal .ppm-close{top:14px;right:14px;width:44px;height:44px;font-size:32px;}
+  #portfolioPlayerModal.landscape .ppm-player{width:94vw;}
+  #portfolioPlayerModal.portrait .ppm-player{height:min(76vh,720px);max-width:90vw;}
+  #portfolioPlayerModal .ppm-controls{padding:46px 10px 10px;}
+  #portfolioPlayerModal .ppm-volume{display:none;}
+  #portfolioPlayerModal .ppm-time{font-size:.78rem;min-width:68px;}
 }
 
 </style>
@@ -1224,184 +882,159 @@ setTimeout(() => {
   });
 }, 50);
 
-  /* ══ VIDEO PLAYERS — HOVER PREVIEW + CENTERED CUSTOM MODAL PLAYER ══ */
+  /* ══ VIDEO PLAYERS — CUT & HIRE STYLE HOVER PREVIEW + CLEAN CENTERED MODAL ══ */
   const fmt=t=>isFinite(t)?`${0|t/60}:${String(0|t%60).padStart(2,'0')}`:'0:00';
 
-  const getFabriModal = () => {
-    let modal = document.querySelector('.fabri-video-modal');
+  function ensurePortfolioModal(){
+    let modal=document.getElementById('portfolioPlayerModal');
     if(modal) return modal;
-
-    modal = document.createElement('div');
-    modal.className = 'fabri-video-modal';
-    modal.innerHTML = `
-      <button class="fabri-modal-close" type="button" aria-label="Close video">×</button>
-      <div class="fabri-modal-player controls-visible">
-        <video class="fabri-modal-video" playsinline webkit-playsinline preload="metadata"></video>
-        <div class="fabri-modal-bigplay" aria-hidden="true"><span></span></div>
-        <div class="fabri-modal-controls">
-          <input class="fabri-modal-progress" type="range" min="0" max="100" value="0">
-          <div class="fabri-modal-row">
-            <button class="fabri-modal-btn fabri-modal-play" type="button" aria-label="Play or pause">▶</button>
-            <button class="fabri-modal-btn fabri-modal-mute" type="button" aria-label="Mute or unmute">🔊</button>
-            <span class="fabri-modal-time">0:00 / 0:00</span>
-            <span class="fabri-modal-spacer"></span>
-            <input class="fabri-modal-volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volume">
-            <button class="fabri-modal-btn fabri-modal-fullscreen" type="button" aria-label="Fullscreen">⛶</button>
+    modal=document.createElement('div');
+    modal.id='portfolioPlayerModal';
+    modal.innerHTML=`
+      <button class="ppm-close" type="button" aria-label="Close video">×</button>
+      <div class="ppm-player hide-controls">
+        <video class="ppm-video" playsinline webkit-playsinline preload="metadata"></video>
+        <div class="ppm-bigplay" aria-hidden="true"><span></span></div>
+        <div class="ppm-controls">
+          <input class="ppm-progress" type="range" min="0" max="100" value="0" aria-label="Video progress">
+          <div class="ppm-row">
+            <button class="ppm-btn ppm-play" type="button" aria-label="Play or pause">▶</button>
+            <button class="ppm-btn ppm-mute" type="button" aria-label="Mute or unmute">🔊</button>
+            <span class="ppm-time">0:00 / 0:00</span>
+            <span class="ppm-spacer"></span>
+            <input class="ppm-volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+            <button class="ppm-btn ppm-fullscreen" type="button" aria-label="Fullscreen">⛶</button>
           </div>
         </div>
       </div>`;
     document.body.appendChild(modal);
 
-    const player = modal.querySelector('.fabri-modal-player');
-    const video = modal.querySelector('.fabri-modal-video');
-    const playBtn = modal.querySelector('.fabri-modal-play');
-    const muteBtn = modal.querySelector('.fabri-modal-mute');
-    const fsBtn = modal.querySelector('.fabri-modal-fullscreen');
-    const progress = modal.querySelector('.fabri-modal-progress');
-    const volume = modal.querySelector('.fabri-modal-volume');
-    const time = modal.querySelector('.fabri-modal-time');
-    let hideControlsTimer = null;
+    const player=modal.querySelector('.ppm-player');
+    const video=modal.querySelector('.ppm-video');
+    const closeBtn=modal.querySelector('.ppm-close');
+    const playBtn=modal.querySelector('.ppm-play');
+    const muteBtn=modal.querySelector('.ppm-mute');
+    const fsBtn=modal.querySelector('.ppm-fullscreen');
+    const progress=modal.querySelector('.ppm-progress');
+    const volume=modal.querySelector('.ppm-volume');
+    const timeEl=modal.querySelector('.ppm-time');
+    let hideTimer=null;
 
-    player.addEventListener('click', e => e.stopPropagation());
-    modal.querySelector('.fabri-modal-controls').addEventListener('click', e => e.stopPropagation());
-
-    const setModalAspect = (portrait) => {
-      modal.classList.toggle('portrait', !!portrait);
-      modal.classList.toggle('landscape', !portrait);
-      player.classList.toggle('portrait-player', !!portrait);
-      player.classList.toggle('landscape-player', !portrait);
-    };
-
-    const update = () => {
-      const pct = video.duration ? (video.currentTime / video.duration) * 100 : 0;
-      progress.value = pct;
-      progress.style.background = `linear-gradient(to right,#fff 0%,#fff ${pct}%,rgba(255,255,255,.22) ${pct}%,rgba(255,255,255,.22) 100%)`;
-      time.textContent = `${fmt(video.currentTime)} / ${fmt(video.duration)}`;
-      playBtn.innerHTML = video.paused ? '▶' : '❚❚';
-      muteBtn.innerHTML = (video.muted || video.volume === 0) ? '🔇' : '🔊';
-      player.classList.toggle('paused', video.paused);
-    };
-
-    const showControls = () => {
-      player.classList.add('controls-visible');
-      clearTimeout(hideControlsTimer);
-      if(!video.paused){
-        hideControlsTimer = setTimeout(() => player.classList.remove('controls-visible'), 2400);
-      }
-    };
-
-    const close = () => {
-      modal.classList.remove('open','portrait','landscape');
-      document.body.classList.remove('fabri-modal-locked');
-      if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
-      video.pause();
-      video.removeAttribute('src');
-      video.removeAttribute('poster');
+    function update(){
+      const pct=video.duration?(video.currentTime/video.duration)*100:0;
+      progress.value=pct||0;
+      progress.style.background=`linear-gradient(to right,#fff 0%,#fff ${pct||0}%,rgba(255,255,255,.24) ${pct||0}%,rgba(255,255,255,.24) 100%)`;
+      timeEl.textContent=`${fmt(video.currentTime)} / ${fmt(video.duration)}`;
+      playBtn.textContent=video.paused?'▶':'❚❚';
+      muteBtn.textContent=(video.muted||video.volume===0)?'🔇':'🔊';
+      player.classList.toggle('paused',video.paused);
+    }
+    function showControls(){
+      player.classList.remove('hide-controls');
+      clearTimeout(hideTimer);
+      if(!video.paused) hideTimer=setTimeout(()=>player.classList.add('hide-controls'),2600);
+    }
+    function closeModal(){
+      if(!modal.classList.contains('open')) return;
+      clearTimeout(hideTimer);
+      if(document.fullscreenElement===player) document.exitFullscreen().catch(()=>{});
+      modal.classList.remove('open');
+      modal.classList.add('closing');
+      document.body.classList.remove('portfolio-modal-locked');
+      setTimeout(()=>{
+        video.pause();
+        video.removeAttribute('src');
+        video.removeAttribute('poster');
+        video.load();
+        modal.classList.remove('closing','portrait','landscape');
+        player.classList.add('hide-controls');
+        player.classList.remove('paused');
+      },300);
+    }
+    function openModal(sourceVideo, card){
+      const src=sourceVideo.getAttribute('src')||sourceVideo.currentSrc;
+      if(!src) return;
+      const frame=card?.querySelector('.video-frame');
+      const isPortrait=frame?.classList.contains('portrait')||/short|shorform|reel|portrait/i.test(src)||(sourceVideo.videoHeight&&sourceVideo.videoWidth&&sourceVideo.videoHeight>sourceVideo.videoWidth);
+      modal.classList.remove('closing','portrait','landscape');
+      modal.classList.add(isPortrait?'portrait':'landscape','open');
+      document.body.classList.add('portfolio-modal-locked');
+      const poster=sourceVideo.getAttribute('poster')||sourceVideo.dataset.forcePoster||card?.querySelector('.forced-video-poster')?.getAttribute('src')||'';
+      video.src=src;
+      if(poster) video.setAttribute('poster',poster); else video.removeAttribute('poster');
+      video.muted=false;
+      video.volume=1;
+      volume.value=1;
+      player.classList.remove('hide-controls');
       video.load();
-      player.classList.remove('paused');
-      clearTimeout(hideControlsTimer);
-    };
+      const startAt=(sourceVideo.currentTime&&sourceVideo.currentTime<5.5)?sourceVideo.currentTime:0;
+      const playNow=()=>{try{video.currentTime=startAt||0;}catch(e){} video.play().catch(()=>{}); showControls(); update();};
+      if(video.readyState>=1) playNow(); else video.addEventListener('loadedmetadata',playNow,{once:true});
+    }
 
-    modal.querySelector('.fabri-modal-close').addEventListener('click', close);
-    modal.addEventListener('click', e => { if(e.target === modal) close(); });
-    window.addEventListener('keydown', e => { if(e.key === 'Escape' && modal.classList.contains('open')) close(); });
-
-    playBtn.addEventListener('click', () => { video.paused ? video.play().catch(()=>{}) : video.pause(); showControls(); });
-    video.addEventListener('click', () => { video.paused ? video.play().catch(()=>{}) : video.pause(); showControls(); });
-    muteBtn.addEventListener('click', () => { video.muted = !video.muted; update(); showControls(); });
-    volume.addEventListener('input', () => { video.volume = +volume.value; video.muted = video.volume === 0; update(); showControls(); });
-    progress.addEventListener('input', () => { if(video.duration) video.currentTime = (+progress.value / 100) * video.duration; update(); showControls(); });
-    fsBtn.addEventListener('click', () => {
-      showControls();
-      if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
-      else player.requestFullscreen?.().catch(()=>{});
-    });
-    player.addEventListener('mousemove', showControls);
-    player.addEventListener('mouseenter', showControls);
-    video.addEventListener('loadedmetadata', update);
-    video.addEventListener('timeupdate', update);
-    video.addEventListener('play', () => { update(); showControls(); });
-    video.addEventListener('pause', () => { update(); showControls(); });
-    video.addEventListener('volumechange', update);
-
-    modal._openFabriVideo = (sourceVideo, startAt=0, isPortrait=false) => {
-      const src = sourceVideo.getAttribute('src') || sourceVideo.currentSrc || '';
-      const framePortrait = !!isPortrait || /short|shorform|reel|portrait/i.test(src);
-      setModalAspect(framePortrait);
-      const poster = sourceVideo.getAttribute('poster') || sourceVideo.dataset.forcePoster || '';
-      video.src = src;
-      if(poster) video.setAttribute('poster', poster); else video.removeAttribute('poster');
-      modal.classList.add('open');
-      document.body.classList.add('fabri-modal-locked');
-      video.muted = false;
-      video.volume = 1;
-      volume.value = 1;
-      video.load();
-      const start = Math.max(0, startAt || 0);
-      const play = () => {
-        const detectedPortrait = video.videoHeight && video.videoWidth ? video.videoHeight > video.videoWidth : framePortrait;
-        setModalAspect(detectedPortrait);
-        try{ if(start) video.currentTime = start; }catch(e){}
-        video.play().catch(()=>{});
-        update();
-        showControls();
-      };
-      if(video.readyState >= 1) play();
-      else video.addEventListener('loadedmetadata', play, {once:true});
-    };
-
+    closeBtn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();closeModal();});
+    modal.addEventListener('click',e=>{if(e.target===modal) closeModal();});
+    player.addEventListener('click',e=>e.stopPropagation());
+    modal.querySelector('.ppm-controls').addEventListener('click',e=>e.stopPropagation());
+    video.addEventListener('click',()=>{video.paused?video.play().catch(()=>{}):video.pause();showControls();});
+    playBtn.addEventListener('click',()=>{video.paused?video.play().catch(()=>{}):video.pause();showControls();});
+    muteBtn.addEventListener('click',()=>{video.muted=!video.muted;update();showControls();});
+    volume.addEventListener('input',()=>{video.volume=+volume.value;video.muted=video.volume===0;update();showControls();});
+    progress.addEventListener('input',()=>{if(video.duration) video.currentTime=(+progress.value/100)*video.duration;update();showControls();});
+    fsBtn.addEventListener('click',()=>{showControls(); if(document.fullscreenElement) document.exitFullscreen().catch(()=>{}); else player.requestFullscreen?.().catch(()=>{});});
+    player.addEventListener('mousemove',showControls);
+    player.addEventListener('mouseenter',showControls);
+    ['loadedmetadata','timeupdate','volumechange'].forEach(ev=>video.addEventListener(ev,update));
+    video.addEventListener('play',()=>{update();showControls();});
+    video.addEventListener('pause',()=>{update();showControls();});
+    window.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open')) closeModal();});
+    modal._openFrom=openModal;
     return modal;
-  };
+  }
 
+  const hasFineHover=window.matchMedia('(hover:hover) and (pointer:fine)').matches;
   document.querySelectorAll('.custom-player').forEach(pl=>{
-    const v=pl.querySelector('video'), pb=pl.querySelector('.play-toggle'), mb=pl.querySelector('.mute-toggle'), fb=pl.querySelector('.fullscreen-toggle'), pr=pl.querySelector('.progress'), vol=pl.querySelector('.volume'), tim=pl.querySelector('.player-time'), cp=pl.querySelector('.play-center');
-    const ttl=pl.closest('.video-card')?.querySelector('.card-body h3')?.textContent?.trim()||v.src;
-    let tracked=false;
+    const v=pl.querySelector('video');
+    if(!v) return;
+    const card=pl.closest('.video-card');
+    const poster= v.dataset.forcePoster || v.getAttribute('poster') || pl.querySelector('.forced-video-poster')?.getAttribute('src') || '';
     let hoverPreview=false;
-    let previewStart=0;
-    const PREVIEW_SECONDS=4.2;
-    const hasFineHover = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+    let triedFrame=false;
+    v.removeAttribute('controls');
+    v.preload='auto';
+    v.setAttribute('playsinline','');
+    v.setAttribute('webkit-playsinline','');
+    v.muted=false;
+    v.volume=1;
 
-    if(vol) vol.value=1;
-    v.muted=false; v.volume=1;
-
-    const upMute=()=>{ if(mb) mb.innerHTML=(v.muted||v.volume===0)?'&#128263;':'&#128266;'; };
-    const upProg=()=>{
-      if(!pr || !tim) return;
-      const pct=v.duration?(v.currentTime/v.duration)*100:0;
-      pr.value=pct;
-      pr.style.background=`linear-gradient(to right,#fff 0%,#fff ${pct}%,rgba(255,255,255,.18) ${pct}%,rgba(255,255,255,.18) 100%)`;
-      tim.textContent=`${fmt(v.currentTime)} / ${fmt(v.duration)}`;
-    };
-    const cleanCardState=()=>{
-      pl.classList.remove('playing');
-      pl.classList.toggle('paused', v.paused && !hoverPreview);
-      if(pb) pb.innerHTML='&#9654;';
-    };
-    const pauseAll=(except=null)=>document.querySelectorAll('.custom-player video').forEach(x=>{
-      if(x!==except){
-        const other=x.closest('.custom-player');
-        if(other){other.classList.remove('hover-preview','playing');other.classList.add('paused');}
-        x.pause();
-        try{x.currentTime=0;}catch(e){}
-        x.muted=false;
+    /* make shorts visible even when no poster exists by forcing the first frame to paint */
+    v.addEventListener('loadedmetadata',()=>{
+      if(!poster && !triedFrame){
+        triedFrame=true;
+        try{ v.currentTime=Math.min(.12, Math.max(0, (v.duration||1)-.05)); }catch(e){}
       }
-    });
+    },{once:true});
 
-    const startHoverPreview=async()=>{
-      if(!hasFineHover || hoverPreview) return;
-      pauseAll(v);
+    function stopOthers(){
+      document.querySelectorAll('.custom-player').forEach(other=>{
+        if(other===pl) return;
+        const ov=other.querySelector('video');
+        other.classList.remove('hover-preview','playing');
+        other.classList.add('paused');
+        if(ov){ ov.pause(); try{ov.currentTime=0;}catch(e){} ov.muted=false; }
+      });
+    }
+    async function startPreview(){
+      if(!hasFineHover||hoverPreview) return;
+      stopOthers();
       hoverPreview=true;
       pl.classList.add('hover-preview');
-      pl.classList.remove('paused','playing');
-      previewStart=0;
-      try{ if(v.readyState>=1) v.currentTime=previewStart; }catch(e){}
+      pl.classList.remove('playing','paused');
       v.muted=true;
-      try{ await v.play(); }catch(e){}
-      upMute();
-    };
-
-    const stopHoverPreview=()=>{
+      try{v.currentTime=0;}catch(e){}
+      try{await v.play();}catch(e){}
+    }
+    function stopPreview(){
       if(!hoverPreview) return;
       hoverPreview=false;
       pl.classList.remove('hover-preview','playing');
@@ -1409,50 +1042,23 @@ setTimeout(() => {
       v.pause();
       try{v.currentTime=0;}catch(e){}
       v.muted=false;
-      v.volume=vol ? (+vol.value || 1) : 1;
-      cleanCardState(); upMute(); upProg();
-    };
-
-    const startRealPlayback=()=>{
-      const startAt = hoverPreview ? v.currentTime : 0;
-      pauseAll(v);
-      hoverPreview=false;
-      pl.classList.remove('hover-preview','playing');
-      pl.classList.add('paused');
-      v.pause();
-      try{v.currentTime=0;}catch(e){}
-      v.muted=false;
-      const isPortrait = !!pl.closest('.video-frame')?.classList.contains('portrait');
-      getFabriModal()._openFabriVideo(v, startAt, isPortrait);
-      if(!tracked&&typeof gtag==='function'){
-        gtag('event','video_play',{video_title:ttl,video_src:v.getAttribute('src')||'',page_location:location.href});
-        tracked=true;
-      }
-      cleanCardState(); upMute(); upProg();
-    };
-
-    if(hasFineHover){
-      pl.addEventListener('mouseenter',startHoverPreview);
-      pl.addEventListener('mouseleave',stopHoverPreview);
     }
-
-    [pb,cp].forEach(el=>{ if(el) el.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();startRealPlayback();}); });
-    v.addEventListener('click',e=>{e.preventDefault();startRealPlayback();});
-    if(mb) mb.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();v.muted=!v.muted;upMute();});
-    if(vol) vol.addEventListener('input',()=>{v.volume=+vol.value;v.muted=v.volume===0;upMute();});
-    if(pr) pr.addEventListener('input',()=>{if(v.duration)v.currentTime=(+pr.value/100)*v.duration;});
-    if(fb) fb.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();startRealPlayback();});
-    v.addEventListener('loadedmetadata',upProg);
     v.addEventListener('timeupdate',()=>{
-      if(hoverPreview && v.currentTime>=previewStart+PREVIEW_SECONDS){try{v.currentTime=previewStart;}catch(e){}}
-      upProg();
+      if(hoverPreview && v.currentTime>=4.2){
+        try{v.currentTime=0;}catch(e){}
+        v.play().catch(()=>{});
+      }
     });
-    v.addEventListener('play',()=>{ if(!hoverPreview) cleanCardState(); });
-    v.addEventListener('pause',cleanCardState);
-    v.addEventListener('volumechange',upMute);
-    v.addEventListener('ended',()=>{hoverPreview=false;pl.classList.remove('hover-preview');cleanCardState();});
-    cleanCardState(); upMute(); upProg();
+    pl.addEventListener('mouseenter',startPreview);
+    pl.addEventListener('mouseleave',stopPreview);
+    pl.addEventListener('click',e=>{
+      e.preventDefault();
+      e.stopPropagation();
+      stopPreview();
+      ensurePortfolioModal()._openFrom(v,card);
+    },true);
   });
+
 
   /* ══ STAT COUNTERS ══ */
   let statsGo=false;
@@ -1724,441 +1330,5 @@ setTimeout(() => {
   })();
 
   </script>
-
-
-<script>
-/* ===================== UNIVERSAL FABRI VIDEO MODAL FINAL FIX ===================== */
-(function(){
-  const fmt = t => Number.isFinite(t) ? `${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}` : '0:00';
-  let modal, player, video, closeBtn, playBtn, muteBtn, fsBtn, progress, volume, time, hideTimer;
-  let lastSource = null;
-
-  function ensureModal(){
-    if(modal) return modal;
-    modal = document.createElement('div');
-    modal.id = 'fabriUniversalModal';
-    modal.innerHTML = `
-      <button class="fum-close" type="button" aria-label="Close video">×</button>
-      <div class="fum-player">
-        <video class="fum-video" playsinline webkit-playsinline preload="metadata"></video>
-        <div class="fum-bigplay" aria-hidden="true"><span></span></div>
-        <div class="fum-controls">
-          <input class="fum-progress" type="range" min="0" max="100" value="0" aria-label="Progress">
-          <div class="fum-row">
-            <button class="fum-btn fum-play" type="button" aria-label="Play or pause">▶</button>
-            <button class="fum-btn fum-mute" type="button" aria-label="Mute or unmute">🔊</button>
-            <span class="fum-time">0:00 / 0:00</span>
-            <span class="fum-spacer"></span>
-            <input class="fum-volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volume">
-            <button class="fum-btn fum-fullscreen" type="button" aria-label="Fullscreen">⛶</button>
-          </div>
-        </div>
-      </div>`;
-    document.body.appendChild(modal);
-    player = modal.querySelector('.fum-player');
-    video = modal.querySelector('.fum-video');
-    closeBtn = modal.querySelector('.fum-close');
-    playBtn = modal.querySelector('.fum-play');
-    muteBtn = modal.querySelector('.fum-mute');
-    fsBtn = modal.querySelector('.fum-fullscreen');
-    progress = modal.querySelector('.fum-progress');
-    volume = modal.querySelector('.fum-volume');
-    time = modal.querySelector('.fum-time');
-
-    function update(){
-      const pct = video.duration ? (video.currentTime / video.duration) * 100 : 0;
-      progress.value = pct || 0;
-      progress.style.background = `linear-gradient(to right,#fff 0%,#fff ${pct || 0}%,rgba(255,255,255,.22) ${pct || 0}%,rgba(255,255,255,.22) 100%)`;
-      time.textContent = `${fmt(video.currentTime)} / ${fmt(video.duration)}`;
-      playBtn.textContent = video.paused ? '▶' : '❚❚';
-      muteBtn.textContent = (video.muted || video.volume === 0) ? '🔇' : '🔊';
-      player.classList.toggle('paused', video.paused);
-    }
-    function showControls(){
-      player.classList.remove('hide-controls');
-      clearTimeout(hideTimer);
-      if(!video.paused){ hideTimer = setTimeout(()=>player.classList.add('hide-controls'), 2600); }
-    }
-    function close(){
-      modal.classList.remove('open');
-      document.body.style.overflow = '';
-      clearTimeout(hideTimer);
-      if(document.fullscreenElement === player){ document.exitFullscreen().catch(()=>{}); }
-      video.pause();
-      video.removeAttribute('src');
-      video.removeAttribute('poster');
-      video.load();
-      lastSource = null;
-    }
-    function togglePlay(){ video.paused ? video.play().catch(()=>{}) : video.pause(); showControls(); }
-
-    closeBtn.addEventListener('click', close);
-    modal.addEventListener('click', e => { if(e.target === modal) close(); });
-    player.addEventListener('click', e => e.stopPropagation());
-    video.addEventListener('click', togglePlay);
-    playBtn.addEventListener('click', togglePlay);
-    muteBtn.addEventListener('click', ()=>{ video.muted = !video.muted; update(); showControls(); });
-    volume.addEventListener('input', ()=>{ video.volume = +volume.value; video.muted = video.volume === 0; update(); showControls(); });
-    progress.addEventListener('input', ()=>{ if(video.duration) video.currentTime = (+progress.value/100) * video.duration; update(); showControls(); });
-    fsBtn.addEventListener('click', ()=>{ showControls(); document.fullscreenElement === player ? document.exitFullscreen().catch(()=>{}) : player.requestFullscreen?.().catch(()=>{}); });
-    player.addEventListener('mousemove', showControls);
-    player.addEventListener('mouseenter', showControls);
-    video.addEventListener('loadedmetadata', ()=>{ sizePlayer(); update(); });
-    video.addEventListener('timeupdate', update);
-    video.addEventListener('play', ()=>{ update(); showControls(); });
-    video.addEventListener('pause', ()=>{ update(); showControls(); });
-    video.addEventListener('volumechange', update);
-    window.addEventListener('resize', ()=>{ if(modal.classList.contains('open')) sizePlayer(); });
-    window.addEventListener('keydown', e => { if(e.key === 'Escape' && modal.classList.contains('open')) close(); });
-    document.addEventListener('fullscreenchange', ()=>{ showControls(); sizePlayer(); });
-    modal._close = close;
-    return modal;
-  }
-
-  function isPortraitSource(srcEl){
-    const frame = srcEl.closest('.video-frame');
-    const src = srcEl.getAttribute('src') || srcEl.currentSrc || '';
-    return frame?.classList.contains('portrait') || /short|shorform|reel|portrait/i.test(src) || (srcEl.videoHeight && srcEl.videoWidth && srcEl.videoHeight > srcEl.videoWidth);
-  }
-
-  function sizePlayer(){
-    if(!player || !video || document.fullscreenElement === player) return;
-    const portrait = lastSource ? isPortraitSource(lastSource) : (video.videoHeight > video.videoWidth);
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    let w, h;
-    if(portrait){
-      h = Math.min(vh * 0.74, 760);
-      w = h * 9 / 16;
-      if(w > vw * 0.42){ w = Math.min(vw * 0.42, 440); h = w * 16 / 9; }
-      if(w > vw * 0.92){ w = vw * 0.92; h = w * 16 / 9; }
-      player.classList.add('portrait'); player.classList.remove('landscape');
-    }else{
-      w = Math.min(vw * 0.70, 920);
-      h = w * 9 / 16;
-      if(h > vh * 0.70){ h = vh * 0.70; w = h * 16 / 9; }
-      if(w > vw * 0.92){ w = vw * 0.92; h = w * 9 / 16; }
-      player.classList.add('landscape'); player.classList.remove('portrait');
-    }
-    player.style.width = `${Math.round(w)}px`;
-    player.style.height = `${Math.round(h)}px`;
-  }
-
-  function stopCardPreviewExcept(source){
-    document.querySelectorAll('.custom-player video').forEach(v => {
-      if(v !== source){
-        v.pause();
-        try{ v.currentTime = 0; }catch(e){}
-        const p = v.closest('.custom-player');
-        if(p) p.classList.remove('hover-preview','playing');
-        v.muted = false;
-      }
-    });
-  }
-
-  function openVideoFrom(sourceVideo){
-    ensureModal();
-    stopCardPreviewExcept(sourceVideo);
-    const sourcePlayer = sourceVideo.closest('.custom-player');
-    if(sourcePlayer) sourcePlayer.classList.remove('hover-preview','playing');
-    const start = Math.max(0, sourceVideo.currentTime || 0);
-    sourceVideo.pause();
-    try{ sourceVideo.currentTime = 0; }catch(e){}
-    sourceVideo.muted = false;
-
-    lastSource = sourceVideo;
-    const src = sourceVideo.getAttribute('src') || sourceVideo.currentSrc || '';
-    const poster = sourceVideo.dataset.forcePoster || sourceVideo.getAttribute('poster') || sourceVideo.closest('.custom-player')?.querySelector('.forced-video-poster')?.getAttribute('src') || '';
-    video.src = src;
-    if(poster) video.setAttribute('poster', poster); else video.removeAttribute('poster');
-    video.muted = false;
-    video.volume = 1;
-    volume.value = 1;
-    modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    sizePlayer();
-    video.load();
-    const playNow = () => {
-      sizePlayer();
-      try{ if(start && Number.isFinite(start)) video.currentTime = start; }catch(e){}
-      video.play().catch(()=>{});
-    };
-    if(video.readyState >= 1) playNow(); else video.addEventListener('loadedmetadata', playNow, {once:true});
-  }
-
-  /* Capture clicks before the older broken player handlers. */
-  document.addEventListener('click', function(e){
-    const target = e.target.closest('.custom-player, .play-center, .fullscreen-toggle, .play-toggle');
-    if(!target) return;
-    const playerEl = target.closest('.custom-player');
-    if(!playerEl) return;
-    const sourceVideo = playerEl.querySelector('video');
-    if(!sourceVideo) return;
-    e.preventDefault();
-    e.stopPropagation();
-    if(e.stopImmediatePropagation) e.stopImmediatePropagation();
-    openVideoFrom(sourceVideo);
-  }, true);
-
-  /* Keep shorts/cards visible and prevent native controls from showing on cards. */
-  document.querySelectorAll('.custom-player video').forEach(v=>{
-    v.removeAttribute('controls');
-    v.preload = 'auto';
-    v.setAttribute('playsinline','');
-    v.setAttribute('webkit-playsinline','');
-    const p = v.closest('.custom-player');
-    const poster = v.dataset.forcePoster || v.getAttribute('poster');
-    if(poster && p && !p.querySelector('.forced-video-poster')){
-      const img = document.createElement('img');
-      img.className = 'forced-video-poster';
-      img.src = poster;
-      img.alt = '';
-      p.insertBefore(img, p.querySelector('.play-center'));
-    }
-    v.addEventListener('loadedmetadata', ()=>{
-      if(v.closest('.video-frame')?.classList.contains('portrait')){
-        v.style.objectFit = 'cover';
-      }
-    });
-  });
-})();
-</script>
-
-
-
-<!-- ===================== FINAL OVERRIDE: SMOOTH CENTERED 40% MODAL PLAYER ===================== -->
-<style id="fabri-super-modal-patch">
-  /* keep portfolio cards clean; controls only exist inside popup */
-  .video-card .player-overlay,
-  .video-card .custom-player .player-overlay,
-  .video-card .custom-player:hover .player-overlay,
-  .video-card .custom-player.hover-preview .player-overlay,
-  .video-card .custom-player.playing .player-overlay,
-  .video-card .custom-player.paused .player-overlay{
-    display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;
-  }
-  .video-card .custom-player video{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;background:#000!important;}
-  .video-card .custom-player:not(.hover-preview):not(:hover) .play-center{opacity:0!important;pointer-events:none!important;}
-  .video-card .custom-player:hover .play-center,
-  .video-card .custom-player.hover-preview .play-center{opacity:1!important;pointer-events:auto!important;}
-  .video-card .custom-player.hover-preview .forced-video-poster,
-  .video-card .custom-player.playing .forced-video-poster{display:none!important;opacity:0!important;visibility:hidden!important;}
-  .video-card .forced-video-poster{display:block;object-fit:cover!important;}
-
-  #fabriSuperModal{
-    position:fixed;inset:0;z-index:2147483646;display:none;align-items:center;justify-content:center;
-    background:rgba(0,0,0,.40)!important;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-    padding:clamp(14px,3vw,42px);overflow:hidden;opacity:0;contain:layout paint;
-  }
-  #fabriSuperModal.open{display:flex;animation:superBackdropIn .34s cubic-bezier(.16,1,.3,1) both;}
-  #fabriSuperModal.closing{display:flex;animation:superBackdropOut .30s cubic-bezier(.7,0,.84,0) both;}
-  @keyframes superBackdropIn{from{opacity:0;backdrop-filter:blur(0)}to{opacity:1;backdrop-filter:blur(6px)}}
-  @keyframes superBackdropOut{from{opacity:1;backdrop-filter:blur(6px)}to{opacity:0;backdrop-filter:blur(0)}}
-
-  #fabriSuperModal .super-close{
-    position:fixed;top:24px;right:28px;z-index:50;width:54px;height:54px;border-radius:50%;
-    border:1px solid rgba(255,255,255,.45);background:rgba(0,0,0,.34);color:#fff;font-size:38px;line-height:1;
-    display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transform:scale(.75) rotate(-10deg);
-    transition:transform .22s ease,background .22s ease,border-color .22s ease,opacity .22s ease;
-  }
-  #fabriSuperModal.open .super-close{animation:superCloseIn .42s cubic-bezier(.16,1,.3,1) .12s both;}
-  #fabriSuperModal.closing .super-close{animation:superCloseOut .22s ease both;}
-  #fabriSuperModal .super-close:hover{transform:scale(.94) rotate(0deg)!important;background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.8)}
-  @keyframes superCloseIn{to{opacity:1;transform:scale(1) rotate(0deg)}}
-  @keyframes superCloseOut{to{opacity:0;transform:scale(.75) rotate(12deg)}}
-
-  #fabriSuperModal .super-player{
-    position:relative;z-index:10;background:#000;border-radius:12px;overflow:hidden;box-shadow:0 32px 110px rgba(0,0,0,.66),0 0 70px rgba(255,211,77,.12);
-    display:flex;align-items:center;justify-content:center;transform-origin:center center;opacity:0;transform:scale(.84) translateY(28px);filter:blur(10px) brightness(.75);
-    pointer-events:auto;max-width:92vw;max-height:78vh;
-  }
-  #fabriSuperModal.open .super-player{animation:superPlayerIn .52s cubic-bezier(.16,1,.3,1) both;}
-  #fabriSuperModal.closing .super-player{animation:superPlayerOut .26s cubic-bezier(.7,0,.84,0) both;}
-  @keyframes superPlayerIn{
-    0%{opacity:0;transform:scale(.84) translateY(28px);filter:blur(10px) brightness(.72)}
-    62%{opacity:1;transform:scale(1.018) translateY(0);filter:blur(0) brightness(1.06)}
-    100%{opacity:1;transform:scale(1) translateY(0);filter:blur(0) brightness(1)}
-  }
-  @keyframes superPlayerOut{to{opacity:0;transform:scale(.88) translateY(18px);filter:blur(8px) brightness(.72)}}
-  #fabriSuperModal .super-player::before{
-    content:"";position:absolute;inset:0;z-index:4;pointer-events:none;
-    background:linear-gradient(115deg,transparent 22%,rgba(255,255,255,.16) 50%,transparent 78%);
-    transform:translateX(-135%);opacity:0;
-  }
-  #fabriSuperModal.open .super-player::before{animation:superShine .72s cubic-bezier(.22,1,.36,1) .12s both;}
-  @keyframes superShine{0%{opacity:0;transform:translateX(-135%)}20%{opacity:.6}100%{opacity:0;transform:translateX(135%)}}
-
-  #fabriSuperModal.landscape .super-player{width:min(940px,72vw);aspect-ratio:16/9;height:auto;}
-  #fabriSuperModal.portrait .super-player{height:min(78vh,760px);aspect-ratio:9/16;width:auto;}
-  #fabriSuperModal .super-video{width:100%;height:100%;display:block;object-fit:contain;object-position:center;background:#000;}
-
-  #fabriSuperModal .super-controls{
-    position:absolute;left:0;right:0;bottom:0;z-index:30;padding:56px 14px 12px;
-    background:linear-gradient(to top,rgba(0,0,0,.92),rgba(0,0,0,.42),transparent);
-    display:flex;flex-direction:column;gap:8px;opacity:1;transform:none;transition:opacity .22s ease,transform .22s ease;pointer-events:auto;
-  }
-  #fabriSuperModal .super-player.hide-controls .super-controls{opacity:0;transform:translateY(8px);pointer-events:none;}
-  #fabriSuperModal .super-progress{width:100%;height:5px;border-radius:999px;-webkit-appearance:none;appearance:none;outline:none;cursor:pointer;background:rgba(255,255,255,.24);}
-  #fabriSuperModal .super-progress::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.15)}
-  #fabriSuperModal .super-progress::-moz-range-thumb{width:13px;height:13px;border:0;border-radius:50%;background:#fff;}
-  #fabriSuperModal .super-row{display:flex;align-items:center;gap:10px;color:#fff;}
-  #fabriSuperModal .super-btn{width:34px;height:34px;border:0;background:transparent;color:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:18px;opacity:.92;transition:opacity .2s ease,transform .2s ease;pointer-events:auto;}
-  #fabriSuperModal .super-btn:hover{opacity:1;transform:scale(1.08)}
-  #fabriSuperModal .super-time{font-size:.86rem;font-weight:800;white-space:nowrap;min-width:76px;}
-  #fabriSuperModal .super-spacer{flex:1;}
-  #fabriSuperModal .super-volume{width:86px;height:4px;-webkit-appearance:none;appearance:none;border-radius:999px;background:rgba(255,255,255,.24);outline:none;cursor:pointer;pointer-events:auto;}
-  #fabriSuperModal .super-volume::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#fff;}
-  #fabriSuperModal .super-volume::-moz-range-thumb{width:12px;height:12px;border:0;border-radius:50%;background:#fff;}
-  #fabriSuperModal .super-bigplay{position:absolute;inset:0;display:grid;place-items:center;z-index:20;pointer-events:none;opacity:0;transition:opacity .2s ease;}
-  #fabriSuperModal .super-player.paused .super-bigplay{opacity:1;}
-  #fabriSuperModal .super-bigplay span{width:76px;height:76px;border-radius:50%;background:rgba(255,0,0,.64);box-shadow:0 14px 42px rgba(0,0,0,.55),0 0 18px rgba(255,0,0,.22);display:flex;align-items:center;justify-content:center;}
-  #fabriSuperModal .super-bigplay span::before{content:"";width:0;height:0;border-left:22px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent;margin-left:6px;}
-
-  #fabriSuperModal .super-player:fullscreen,
-  #fabriSuperModal .super-player:-webkit-full-screen{width:100vw!important;height:100vh!important;max-width:none!important;max-height:none!important;aspect-ratio:auto!important;border-radius:0!important;background:#000!important;}
-  #fabriSuperModal .super-player:fullscreen .super-video,
-  #fabriSuperModal .super-player:-webkit-full-screen .super-video{width:100vw!important;height:100vh!important;object-fit:contain!important;}
-  #fabriSuperModal .super-player:fullscreen::before,
-  #fabriSuperModal .super-player:-webkit-full-screen::before{display:none!important;}
-
-  body.super-modal-locked{overflow:hidden!important;}
-  body.super-modal-locked main,body.super-modal-locked header{filter:blur(2px) brightness(.78);transition:filter .25s ease;}
-
-  @media(max-width:760px){
-    #fabriSuperModal{padding:12px;}
-    #fabriSuperModal .super-close{top:14px;right:14px;width:44px;height:44px;font-size:32px;}
-    #fabriSuperModal.landscape .super-player{width:94vw;}
-    #fabriSuperModal.portrait .super-player{height:min(76vh,720px);max-width:90vw;}
-    #fabriSuperModal .super-controls{padding:46px 10px 10px;}
-    #fabriSuperModal .super-volume{display:none;}
-    #fabriSuperModal .super-time{font-size:.78rem;min-width:68px;}
-  }
-</style>
-<script id="fabri-super-modal-script">
-(function(){
-  const fmt = t => Number.isFinite(t) ? `${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}` : '0:00';
-  let modal, player, video, closeBtn, playBtn, muteBtn, fsBtn, progress, volume, timeEl, hideTimer;
-
-  function ensureModal(){
-    if(modal) return modal;
-    modal = document.createElement('div');
-    modal.id = 'fabriSuperModal';
-    modal.innerHTML = `
-      <button class="super-close" type="button" aria-label="Close video">×</button>
-      <div class="super-player hide-controls">
-        <video class="super-video" playsinline webkit-playsinline preload="metadata"></video>
-        <div class="super-bigplay" aria-hidden="true"><span></span></div>
-        <div class="super-controls">
-          <input class="super-progress" type="range" min="0" max="100" value="0" aria-label="Video progress">
-          <div class="super-row">
-            <button class="super-btn super-play" type="button" aria-label="Play or pause">▶</button>
-            <button class="super-btn super-mute" type="button" aria-label="Mute or unmute">🔊</button>
-            <span class="super-time">0:00 / 0:00</span>
-            <span class="super-spacer"></span>
-            <input class="super-volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volume">
-            <button class="super-btn super-fullscreen" type="button" aria-label="Fullscreen">⛶</button>
-          </div>
-        </div>
-      </div>`;
-    document.body.appendChild(modal);
-    player = modal.querySelector('.super-player');
-    video = modal.querySelector('.super-video');
-    closeBtn = modal.querySelector('.super-close');
-    playBtn = modal.querySelector('.super-play');
-    muteBtn = modal.querySelector('.super-mute');
-    fsBtn = modal.querySelector('.super-fullscreen');
-    progress = modal.querySelector('.super-progress');
-    volume = modal.querySelector('.super-volume');
-    timeEl = modal.querySelector('.super-time');
-
-    function update(){
-      const pct = video.duration ? (video.currentTime / video.duration) * 100 : 0;
-      progress.value = pct || 0;
-      progress.style.background = `linear-gradient(to right,#fff 0%,#fff ${pct||0}%,rgba(255,255,255,.24) ${pct||0}%,rgba(255,255,255,.24) 100%)`;
-      timeEl.textContent = `${fmt(video.currentTime)} / ${fmt(video.duration)}`;
-      playBtn.textContent = video.paused ? '▶' : '❚❚';
-      muteBtn.textContent = (video.muted || video.volume === 0) ? '🔇' : '🔊';
-      player.classList.toggle('paused', video.paused);
-    }
-    function showControls(){
-      player.classList.remove('hide-controls');
-      clearTimeout(hideTimer);
-      if(!video.paused){ hideTimer = setTimeout(()=>player.classList.add('hide-controls'), 2600); }
-    }
-    function doClose(){
-      if(!modal.classList.contains('open')) return;
-      clearTimeout(hideTimer);
-      if(document.fullscreenElement === player) document.exitFullscreen().catch(()=>{});
-      modal.classList.remove('open');
-      modal.classList.add('closing');
-      document.body.classList.remove('super-modal-locked');
-      setTimeout(()=>{
-        video.pause(); video.removeAttribute('src'); video.removeAttribute('poster'); video.load();
-        modal.classList.remove('closing','portrait','landscape');
-        player.classList.remove('paused','hide-controls');
-      }, 300);
-    }
-
-    closeBtn.addEventListener('click', e=>{e.preventDefault(); e.stopPropagation(); doClose();});
-    modal.addEventListener('click', e=>{ if(e.target === modal) doClose(); });
-    player.addEventListener('click', e=>e.stopPropagation());
-    modal.querySelector('.super-controls').addEventListener('click', e=>e.stopPropagation());
-    video.addEventListener('click', ()=>{ video.paused ? video.play().catch(()=>{}) : video.pause(); showControls(); });
-    playBtn.addEventListener('click', ()=>{ video.paused ? video.play().catch(()=>{}) : video.pause(); showControls(); });
-    muteBtn.addEventListener('click', ()=>{ video.muted = !video.muted; update(); showControls(); });
-    volume.addEventListener('input', ()=>{ video.volume = +volume.value; video.muted = video.volume === 0; update(); showControls(); });
-    progress.addEventListener('input', ()=>{ if(video.duration) video.currentTime = (+progress.value/100)*video.duration; update(); showControls(); });
-    fsBtn.addEventListener('click', ()=>{ showControls(); if(document.fullscreenElement) document.exitFullscreen().catch(()=>{}); else player.requestFullscreen?.().catch(()=>{}); });
-    player.addEventListener('mousemove', showControls);
-    player.addEventListener('mouseenter', showControls);
-    ['loadedmetadata','timeupdate','volumechange'].forEach(ev=>video.addEventListener(ev, update));
-    video.addEventListener('play', ()=>{update(); showControls();});
-    video.addEventListener('pause', ()=>{update(); showControls();});
-    window.addEventListener('keydown', e=>{ if(e.key === 'Escape' && modal.classList.contains('open')) doClose(); });
-    return modal;
-  }
-
-  function openFrom(sourceVideo, card){
-    const m = ensureModal();
-    // kill any older broken modal if it was opened by previous scripts
-    document.querySelectorAll('.fabri-video-modal,#fabriUniversalModal').forEach(x=>{x.classList.remove('open'); x.style.display='none';});
-    const src = sourceVideo.getAttribute('src') || sourceVideo.currentSrc;
-    if(!src) return;
-    const isPortrait = card?.querySelector('.video-frame')?.classList.contains('portrait') || /short|shorform|reel|portrait/i.test(src);
-    m.classList.remove('closing','portrait','landscape');
-    m.classList.add(isPortrait ? 'portrait' : 'landscape');
-    video.src = src;
-    const poster = sourceVideo.getAttribute('poster') || sourceVideo.dataset.forcePoster || card?.querySelector('.forced-video-poster')?.getAttribute('src') || '';
-    if(poster) video.setAttribute('poster', poster); else video.removeAttribute('poster');
-    video.muted = false; video.volume = 1; volume.value = 1;
-    document.body.classList.add('super-modal-locked');
-    m.classList.add('open');
-    player.classList.remove('hide-controls');
-    video.load();
-    const startAt = sourceVideo.currentTime && sourceVideo.currentTime < 6 ? sourceVideo.currentTime : 0;
-    const go = () => { try{ video.currentTime = startAt || 0; }catch(e){} video.play().catch(()=>{}); };
-    if(video.readyState >= 1) go(); else video.addEventListener('loadedmetadata', go, {once:true});
-  }
-
-  // Capture clicks before the old player code can open the broken popup.
-  document.addEventListener('click', function(e){
-    const target = e.target.closest('.custom-player video, .custom-player .play-center, .custom-player .fullscreen-toggle');
-    if(!target) return;
-    const card = target.closest('.video-card');
-    const playerEl = target.closest('.custom-player');
-    const srcVideo = playerEl?.querySelector('video');
-    if(!card || !srcVideo) return;
-    e.preventDefault();
-    e.stopPropagation();
-    e.stopImmediatePropagation();
-    // reset hover preview cleanly before modal opens
-    document.querySelectorAll('.custom-player').forEach(pl=>{pl.classList.remove('hover-preview','playing'); pl.classList.add('paused');});
-    document.querySelectorAll('.custom-player video').forEach(v=>{if(v!==srcVideo){v.pause(); try{v.currentTime=0;}catch(_){}}});
-    srcVideo.pause();
-    openFrom(srcVideo, card);
-  }, true);
-})();
-</script>
-
 </body>
 </html>
