@@ -575,6 +575,105 @@
       .fabri-modal-time{font-size:.78rem;}
     }
 
+  
+
+    /* ===================== FINAL MODAL CENTER + SHORTS PLAYER FIX ===================== */
+    /* Shorts posters must disappear during hover preview so the preview actually shows. */
+    .custom-player.hover-preview .forced-video-poster,
+    .custom-player.playing .forced-video-poster{
+      display:none !important;
+    }
+
+    .fabri-video-modal{
+      align-items:center !important;
+      justify-content:center !important;
+      place-items:center !important;
+      padding:clamp(18px,3vw,42px) !important;
+    }
+
+    .fabri-video-modal.open{
+      display:flex !important;
+    }
+
+    .fabri-modal-player{
+      margin:auto !important;
+      left:auto !important;
+      right:auto !important;
+      top:auto !important;
+      bottom:auto !important;
+      transform:none !important;
+      display:flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      background:#000 !important;
+      max-width:92vw !important;
+      max-height:78vh !important;
+    }
+
+    .fabri-video-modal.landscape .fabri-modal-player{
+      width:min(920px,78vw) !important;
+      height:auto !important;
+      aspect-ratio:16/9 !important;
+    }
+
+    .fabri-video-modal.portrait .fabri-modal-player{
+      width:auto !important;
+      height:min(78vh,760px) !important;
+      aspect-ratio:9/16 !important;
+      max-width:92vw !important;
+    }
+
+    .fabri-modal-video{
+      width:100% !important;
+      height:100% !important;
+      object-fit:contain !important;
+      object-position:center center !important;
+      margin:auto !important;
+      display:block !important;
+    }
+
+    .fabri-modal-controls{
+      z-index:20 !important;
+      pointer-events:auto !important;
+    }
+
+    .fabri-modal-btn,
+    .fabri-modal-progress,
+    .fabri-modal-volume{
+      pointer-events:auto !important;
+      position:relative !important;
+      z-index:25 !important;
+    }
+
+    .fabri-modal-player:fullscreen,
+    .fabri-modal-player:-webkit-full-screen{
+      width:100vw !important;
+      height:100vh !important;
+      max-width:none !important;
+      max-height:none !important;
+      aspect-ratio:auto !important;
+      border-radius:0 !important;
+      display:flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      background:#000 !important;
+    }
+
+    .fabri-modal-player:fullscreen .fabri-modal-video,
+    .fabri-modal-player:-webkit-full-screen .fabri-modal-video{
+      width:100vw !important;
+      height:100vh !important;
+      object-fit:contain !important;
+      object-position:center center !important;
+    }
+
+    @media(max-width:760px){
+      .fabri-video-modal{padding:12px !important;}
+      .fabri-video-modal.landscape .fabri-modal-player{width:96vw !important;}
+      .fabri-video-modal.portrait .fabri-modal-player{height:min(78vh,720px) !important;max-width:92vw !important;}
+      .fabri-modal-controls{padding:42px 10px 10px !important;}
+    }
+
   </style>
 </head>
 <body>
@@ -977,6 +1076,16 @@ setTimeout(() => {
     const time = modal.querySelector('.fabri-modal-time');
     let hideControlsTimer = null;
 
+    player.addEventListener('click', e => e.stopPropagation());
+    modal.querySelector('.fabri-modal-controls').addEventListener('click', e => e.stopPropagation());
+
+    const setModalAspect = (portrait) => {
+      modal.classList.toggle('portrait', !!portrait);
+      modal.classList.toggle('landscape', !portrait);
+      player.classList.toggle('portrait-player', !!portrait);
+      player.classList.toggle('landscape-player', !portrait);
+    };
+
     const update = () => {
       const pct = video.duration ? (video.currentTime / video.duration) * 100 : 0;
       progress.value = pct;
@@ -991,14 +1100,14 @@ setTimeout(() => {
       player.classList.add('controls-visible');
       clearTimeout(hideControlsTimer);
       if(!video.paused){
-        hideControlsTimer = setTimeout(() => player.classList.remove('controls-visible'), 1600);
+        hideControlsTimer = setTimeout(() => player.classList.remove('controls-visible'), 2400);
       }
     };
 
     const close = () => {
       modal.classList.remove('open','portrait','landscape');
       document.body.classList.remove('fabri-modal-locked');
-      if(document.fullscreenElement === player) document.exitFullscreen().catch(()=>{});
+      if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
       video.pause();
       video.removeAttribute('src');
       video.removeAttribute('poster');
@@ -1030,9 +1139,9 @@ setTimeout(() => {
     video.addEventListener('volumechange', update);
 
     modal._openFabriVideo = (sourceVideo, startAt=0, isPortrait=false) => {
-      modal.classList.toggle('portrait', !!isPortrait);
-      modal.classList.toggle('landscape', !isPortrait);
       const src = sourceVideo.getAttribute('src') || sourceVideo.currentSrc || '';
+      const framePortrait = !!isPortrait || /short|shorform|reel|portrait/i.test(src);
+      setModalAspect(framePortrait);
       const poster = sourceVideo.getAttribute('poster') || sourceVideo.dataset.forcePoster || '';
       video.src = src;
       if(poster) video.setAttribute('poster', poster); else video.removeAttribute('poster');
@@ -1044,6 +1153,8 @@ setTimeout(() => {
       video.load();
       const start = Math.max(0, startAt || 0);
       const play = () => {
+        const detectedPortrait = video.videoHeight && video.videoWidth ? video.videoHeight > video.videoWidth : framePortrait;
+        setModalAspect(detectedPortrait);
         try{ if(start) video.currentTime = start; }catch(e){}
         video.play().catch(()=>{});
         update();
