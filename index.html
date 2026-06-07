@@ -370,7 +370,7 @@
         pointer-events:auto !important;
         transform:translateY(-4px) scale(1) !important;
       }
-      .custom-player .player-overlay{opacity:1 !important;}
+      .custom-player .player-overlay{opacity:0 !important;visibility:hidden !important;pointer-events:none !important;}
     }
 
 
@@ -380,6 +380,98 @@
     }
     .logo-image:hover img{
       filter:drop-shadow(0 0 8px rgba(255,211,77,.48)) drop-shadow(0 0 18px rgba(255,211,77,.25)) !important;
+    }
+
+
+    /* ===================== FINAL CUT & HIRE CLICK/HOVER BEHAVIOR FIX ===================== */
+    /* Cards stay clean: no mini control bar before click, during hover, or after click. */
+    .custom-player .player-overlay,
+    .custom-player:hover .player-overlay,
+    .custom-player:focus-within .player-overlay,
+    .custom-player.hover-preview .player-overlay,
+    .custom-player.paused .player-overlay,
+    .custom-player.playing .player-overlay{
+      opacity:0 !important;
+      visibility:hidden !important;
+      pointer-events:none !important;
+    }
+
+    /* The play button is hidden normally and appears only when hovering the video, like Cut & Hire. */
+    .custom-player .play-center{
+      opacity:0 !important;
+      pointer-events:none !important;
+      transform:translateY(-4px) scale(.86) !important;
+    }
+    .custom-player:hover .play-center,
+    .custom-player.hover-preview .play-center{
+      opacity:1 !important;
+      pointer-events:auto !important;
+      transform:translateY(-4px) scale(1) !important;
+    }
+
+    /* Real playback now happens in a centered Cut-&-Hire-style modal, never inside the card. */
+    .fabri-video-modal{
+      position:fixed;
+      inset:0;
+      z-index:9999;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(0,0,0,.88);
+      backdrop-filter:blur(4px);
+      -webkit-backdrop-filter:blur(4px);
+      padding:28px;
+    }
+    .fabri-video-modal.open{display:flex;}
+    .fabri-modal-close{
+      position:fixed;
+      top:24px;
+      right:28px;
+      width:54px;
+      height:54px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.42);
+      background:rgba(0,0,0,.28);
+      color:#fff;
+      font-size:42px;
+      line-height:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      z-index:2;
+      transition:transform .22s ease, background .22s ease, border-color .22s ease;
+    }
+    .fabri-modal-close:hover{
+      transform:scale(.96);
+      background:rgba(255,255,255,.08);
+      border-color:rgba(255,255,255,.75);
+    }
+    .fabri-modal-video{
+      width:min(920px,78vw);
+      max-height:82vh;
+      border-radius:8px;
+      background:#000;
+      box-shadow:0 28px 90px rgba(0,0,0,.65);
+      object-fit:contain;
+      outline:none;
+    }
+    .fabri-video-modal.portrait .fabri-modal-video{
+      width:auto;
+      height:min(82vh,760px);
+      max-width:52vw;
+    }
+    body.fabri-modal-locked{overflow:hidden !important;}
+    body.fabri-modal-locked main,
+    body.fabri-modal-locked header,
+    body.fabri-modal-locked section{
+      filter:brightness(.38);
+    }
+    @media(max-width:760px){
+      .fabri-video-modal{padding:14px;}
+      .fabri-modal-close{top:14px;right:14px;width:44px;height:44px;font-size:34px;}
+      .fabri-modal-video{width:100%;max-height:78vh;}
+      .fabri-video-modal.portrait .fabri-modal-video{height:min(78vh,720px);max-width:92vw;}
     }
 
   </style>
@@ -746,7 +838,44 @@ setTimeout(() => {
   });
 }, 50);
 
-  /* ══ VIDEO PLAYERS — CUT & HIRE STYLE HOVER PREVIEW ══ */
+  /* ══ VIDEO PLAYERS — CUT & HIRE STYLE HOVER PREVIEW + CLICK MODAL ══ */
+  const getFabriModal = () => {
+    let modal = document.querySelector('.fabri-video-modal');
+    if(modal) return modal;
+    modal = document.createElement('div');
+    modal.className = 'fabri-video-modal';
+    modal.innerHTML = `
+      <button class="fabri-modal-close" type="button" aria-label="Close video">×</button>
+      <video class="fabri-modal-video" controls playsinline webkit-playsinline preload="metadata"></video>
+    `;
+    document.body.appendChild(modal);
+    const modalVideo = modal.querySelector('video');
+    const close = () => {
+      modal.classList.remove('open','portrait','landscape');
+      document.body.classList.remove('fabri-modal-locked');
+      modalVideo.pause();
+      modalVideo.removeAttribute('src');
+      modalVideo.load();
+    };
+    modal.querySelector('.fabri-modal-close').addEventListener('click', close);
+    modal.addEventListener('click', e => { if(e.target === modal) close(); });
+    window.addEventListener('keydown', e => { if(e.key === 'Escape' && modal.classList.contains('open')) close(); });
+    modal._openFabriVideo = (sourceVideo, startAt=0, isPortrait=false) => {
+      modal.classList.toggle('portrait', !!isPortrait);
+      modal.classList.toggle('landscape', !isPortrait);
+      modalVideo.src = sourceVideo.currentSrc || sourceVideo.getAttribute('src') || '';
+      const poster = sourceVideo.getAttribute('poster') || sourceVideo.dataset.forcePoster || '';
+      if(poster) modalVideo.setAttribute('poster', poster); else modalVideo.removeAttribute('poster');
+      modal.classList.add('open');
+      document.body.classList.add('fabri-modal-locked');
+      modalVideo.currentTime = Math.max(0, startAt || 0);
+      modalVideo.volume = 1;
+      modalVideo.muted = false;
+      modalVideo.play().catch(()=>{});
+    };
+    return modal;
+  };
+
   const fmt=t=>isFinite(t)?`${0|t/60}:${String(0|t%60).padStart(2,'0')}`:'0:00';
   document.querySelectorAll('.custom-player').forEach(pl=>{
     const v=pl.querySelector('video'),pb=pl.querySelector('.play-toggle'),mb=pl.querySelector('.mute-toggle'),fb=pl.querySelector('.fullscreen-toggle'),pr=pl.querySelector('.progress'),vol=pl.querySelector('.volume'),tim=pl.querySelector('.player-time'),cp=pl.querySelector('.play-center');
@@ -799,21 +928,25 @@ setTimeout(() => {
     };
 
     const startRealPlayback=async()=>{
+      const startAt = hoverPreview ? v.currentTime : 0;
       pauseAll(v);
       hoverPreview=false;
-      realPlaying=true;
-      pl.classList.remove('hover-preview','paused');
+      realPlaying=false;
+      pl.classList.remove('hover-preview','playing');
+      pl.classList.add('paused');
+      v.pause();
+      try{v.currentTime=0;}catch(e){}
       v.muted=false;
       v.volume=+vol.value || 1;
-      try{
-        await v.play();
-        if(!tracked&&typeof gtag==='function'){
-          gtag('event','video_play',{video_title:ttl,video_src:v.getAttribute('src')||'',page_location:location.href});
-          tracked=true;
-        }
-      }catch(e){}
+      const isPortrait = !!pl.closest('.video-frame')?.classList.contains('portrait');
+      getFabriModal()._openFabriVideo(v, startAt, isPortrait);
+      if(!tracked&&typeof gtag==='function'){
+        gtag('event','video_play',{video_title:ttl,video_src:v.getAttribute('src')||'',page_location:location.href});
+        tracked=true;
+      }
       applyPlayState();
       upMute();
+      upProg();
     };
 
     const toggle=async()=>{
