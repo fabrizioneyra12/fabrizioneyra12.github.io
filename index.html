@@ -303,222 +303,7 @@
     }
     @media(max-width:640px){.player-controls{gap:5px}.player-time{min-width:54px;font-size:.78rem}.volume{width:46px;min-width:36px}.player-btn{width:32px;height:32px;font-size:.78rem}.pill{min-width:110px;padding:10px 16px;font-size:.86rem}}
 
-  
-
-/* ===================== LOCKED-IN CUT&HIRE STYLE PORTFOLIO PLAYER FIX ===================== */
-/* Portfolio cards: clean cards, no mini/native controls until the custom popup opens. */
-.video-card .custom-player video{
-  display:block !important;
-  width:100% !important;
-  height:100% !important;
-  object-fit:cover !important;
-  object-position:center center !important;
-  background:#000 !important;
-  opacity:1 !important;
-  visibility:visible !important;
-}
-.video-card .player-overlay,
-.video-card .custom-player .player-overlay,
-.video-card .custom-player:hover .player-overlay,
-.video-card .custom-player.hover-preview .player-overlay,
-.video-card .custom-player.playing .player-overlay,
-.video-card .custom-player.paused .player-overlay{
-  display:none !important;
-  opacity:0 !important;
-  visibility:hidden !important;
-  pointer-events:none !important;
-}
-.video-card .custom-player .play-center{
-  opacity:0 !important;
-  pointer-events:none !important;
-  transform:translateY(-4px) scale(.86) !important;
-  transition:opacity .22s ease, transform .34s cubic-bezier(.34,1.56,.64,1) !important;
-}
-.video-card .custom-player:hover .play-center,
-.video-card .custom-player.hover-preview .play-center{
-  opacity:1 !important;
-  pointer-events:auto !important;
-  transform:translateY(-4px) scale(1) !important;
-}
-.video-card .custom-player.playing .play-center{opacity:0 !important;pointer-events:none !important;}
-.video-card .custom-player.hover-preview .forced-video-poster,
-.video-card .custom-player.playing .forced-video-poster{
-  opacity:0 !important;
-  visibility:hidden !important;
-  pointer-events:none !important;
-}
-.video-card .forced-video-poster{
-  position:absolute !important;
-  inset:0 !important;
-  width:100% !important;
-  height:100% !important;
-  object-fit:cover !important;
-  object-position:center center !important;
-  z-index:4 !important;
-  display:block;
-  background:#000;
-}
-.play-center .yt-play{
-  background:rgba(255,0,0,.60) !important;
-  box-shadow:0 8px 24px rgba(0,0,0,.45),0 0 14px rgba(255,0,0,.18) !important;
-  border:1px solid rgba(255,255,255,.16) !important;
-}
-.play-center .yt-play:hover{
-  transform:scale(1.06) !important;
-  background:rgba(255,0,0,.70) !important;
-  box-shadow:0 12px 30px rgba(0,0,0,.50),0 0 18px rgba(255,0,0,.24) !important;
-}
-.logo-image img{filter:drop-shadow(0 0 5px rgba(255,211,77,.30)) drop-shadow(0 0 11px rgba(255,211,77,.14)) !important;}
-.logo-image:hover img{filter:drop-shadow(0 0 8px rgba(255,211,77,.46)) drop-shadow(0 0 17px rgba(255,211,77,.22)) !important;}
-
-/* Single clean modal. 40% overlay, centered player, custom controls, smooth open/close. */
-#portfolioPlayerModal{
-  position:fixed;
-  inset:0;
-  z-index:2147483647;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:clamp(16px,3vw,44px);
-  background:rgba(0,0,0,.40) !important;
-  backdrop-filter:blur(5px);
-  -webkit-backdrop-filter:blur(5px);
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  transition:opacity .34s cubic-bezier(.16,1,.3,1), visibility 0s linear .34s;
-}
-#portfolioPlayerModal.open{
-  opacity:1;
-  visibility:visible;
-  pointer-events:auto;
-  transition:opacity .34s cubic-bezier(.16,1,.3,1), visibility 0s;
-}
-#portfolioPlayerModal.closing{opacity:0;visibility:visible;pointer-events:none;}
-#portfolioPlayerModal .ppm-close{
-  position:fixed;
-  top:24px;
-  right:28px;
-  z-index:60;
-  width:54px;
-  height:54px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,.45);
-  background:rgba(0,0,0,.34);
-  color:#fff;
-  font-size:38px;
-  line-height:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  opacity:0;
-  transform:scale(.72) rotate(-12deg);
-  transition:transform .22s ease, background .22s ease, border-color .22s ease, opacity .22s ease;
-}
-#portfolioPlayerModal.open .ppm-close{animation:ppmCloseIn .42s cubic-bezier(.16,1,.3,1) .10s both;}
-#portfolioPlayerModal.closing .ppm-close{animation:ppmCloseOut .22s ease both;}
-#portfolioPlayerModal .ppm-close:hover{transform:scale(.94) rotate(0deg)!important;background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.82)}
-@keyframes ppmCloseIn{to{opacity:1;transform:scale(1) rotate(0)}}
-@keyframes ppmCloseOut{to{opacity:0;transform:scale(.72) rotate(12deg)}}
-#portfolioPlayerModal .ppm-player{
-  position:relative;
-  z-index:10;
-  background:#000;
-  border-radius:12px;
-  overflow:hidden;
-  box-shadow:0 32px 110px rgba(0,0,0,.66),0 0 70px rgba(255,211,77,.12);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  max-width:92vw;
-  max-height:78vh;
-  opacity:0;
-  transform:scale(.84) translateY(28px);
-  filter:blur(10px) brightness(.74);
-  pointer-events:auto;
-}
-#portfolioPlayerModal.open .ppm-player{animation:ppmPlayerIn .52s cubic-bezier(.16,1,.3,1) both;}
-#portfolioPlayerModal.closing .ppm-player{animation:ppmPlayerOut .28s cubic-bezier(.7,0,.84,0) both;}
-@keyframes ppmPlayerIn{
-  0%{opacity:0;transform:scale(.84) translateY(28px);filter:blur(10px) brightness(.74)}
-  62%{opacity:1;transform:scale(1.018) translateY(0);filter:blur(0) brightness(1.06)}
-  100%{opacity:1;transform:scale(1) translateY(0);filter:blur(0) brightness(1)}
-}
-@keyframes ppmPlayerOut{to{opacity:0;transform:scale(.88) translateY(18px);filter:blur(8px) brightness(.74)}}
-#portfolioPlayerModal .ppm-player::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:4;
-  pointer-events:none;
-  background:linear-gradient(115deg,transparent 22%,rgba(255,255,255,.16) 50%,transparent 78%);
-  transform:translateX(-135%);
-  opacity:0;
-}
-#portfolioPlayerModal.open .ppm-player::before{animation:ppmShine .72s cubic-bezier(.22,1,.36,1) .12s both;}
-@keyframes ppmShine{0%{opacity:0;transform:translateX(-135%)}20%{opacity:.6}100%{opacity:0;transform:translateX(135%)}}
-#portfolioPlayerModal.landscape .ppm-player{width:min(940px,72vw);aspect-ratio:16/9;height:auto;}
-#portfolioPlayerModal.portrait .ppm-player{height:min(78vh,760px);aspect-ratio:9/16;width:auto;}
-#portfolioPlayerModal .ppm-video{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  object-position:center center;
-  display:block;
-  background:#000;
-}
-#portfolioPlayerModal .ppm-controls{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  z-index:30;
-  padding:56px 14px 12px;
-  background:linear-gradient(to top,rgba(0,0,0,.92),rgba(0,0,0,.42),transparent);
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  opacity:1;
-  transform:none;
-  transition:opacity .22s ease,transform .22s ease;
-  pointer-events:auto;
-}
-#portfolioPlayerModal .ppm-player.hide-controls .ppm-controls{opacity:0;transform:translateY(8px);pointer-events:none;}
-#portfolioPlayerModal .ppm-progress{width:100%;height:5px;border-radius:999px;-webkit-appearance:none;appearance:none;outline:none;cursor:pointer;background:rgba(255,255,255,.24);}
-#portfolioPlayerModal .ppm-progress::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.15)}
-#portfolioPlayerModal .ppm-progress::-moz-range-thumb{width:13px;height:13px;border:0;border-radius:50%;background:#fff;}
-#portfolioPlayerModal .ppm-row{display:flex;align-items:center;gap:10px;color:#fff;}
-#portfolioPlayerModal .ppm-btn{width:34px;height:34px;border:0;background:transparent;color:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:18px;opacity:.92;transition:opacity .2s ease,transform .2s ease;pointer-events:auto;}
-#portfolioPlayerModal .ppm-btn:hover{opacity:1;transform:scale(1.08)}
-#portfolioPlayerModal .ppm-time{font-size:.86rem;font-weight:800;white-space:nowrap;min-width:76px;}
-#portfolioPlayerModal .ppm-spacer{flex:1;}
-#portfolioPlayerModal .ppm-volume{width:86px;height:4px;-webkit-appearance:none;appearance:none;border-radius:999px;background:rgba(255,255,255,.24);outline:none;cursor:pointer;pointer-events:auto;}
-#portfolioPlayerModal .ppm-volume::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#fff;}
-#portfolioPlayerModal .ppm-volume::-moz-range-thumb{width:12px;height:12px;border:0;border-radius:50%;background:#fff;}
-#portfolioPlayerModal .ppm-bigplay{position:absolute;inset:0;display:grid;place-items:center;z-index:20;pointer-events:none;opacity:0;transition:opacity .2s ease;}
-#portfolioPlayerModal .ppm-player.paused .ppm-bigplay{opacity:1;}
-#portfolioPlayerModal .ppm-bigplay span{width:76px;height:76px;border-radius:50%;background:rgba(255,0,0,.64);box-shadow:0 14px 42px rgba(0,0,0,.55),0 0 18px rgba(255,0,0,.22);display:flex;align-items:center;justify-content:center;}
-#portfolioPlayerModal .ppm-bigplay span::before{content:"";width:0;height:0;border-left:22px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent;margin-left:6px;}
-#portfolioPlayerModal .ppm-player:fullscreen,
-#portfolioPlayerModal .ppm-player:-webkit-full-screen{width:100vw!important;height:100vh!important;max-width:none!important;max-height:none!important;aspect-ratio:auto!important;border-radius:0!important;background:#000!important;}
-#portfolioPlayerModal .ppm-player:fullscreen .ppm-video,
-#portfolioPlayerModal .ppm-player:-webkit-full-screen .ppm-video{width:100vw!important;height:100vh!important;object-fit:contain!important;}
-#portfolioPlayerModal .ppm-player:fullscreen::before,
-#portfolioPlayerModal .ppm-player:-webkit-full-screen::before{display:none!important;}
-body.portfolio-modal-locked{overflow:hidden!important;}
-body.portfolio-modal-locked main,body.portfolio-modal-locked header{filter:blur(2px) brightness(.78);transition:filter .25s ease;}
-@media(max-width:760px){
-  #portfolioPlayerModal{padding:12px;}
-  #portfolioPlayerModal .ppm-close{top:14px;right:14px;width:44px;height:44px;font-size:32px;}
-  #portfolioPlayerModal.landscape .ppm-player{width:94vw;}
-  #portfolioPlayerModal.portrait .ppm-player{height:min(76vh,720px);max-width:90vw;}
-  #portfolioPlayerModal .ppm-controls{padding:46px 10px 10px;}
-  #portfolioPlayerModal .ppm-volume{display:none;}
-  #portfolioPlayerModal .ppm-time{font-size:.78rem;min-width:68px;}
-}
-
-</style>
+  </style>
 </head>
 <body>
   <canvas id="galaxy-canvas"></canvas>
@@ -882,183 +667,26 @@ setTimeout(() => {
   });
 }, 50);
 
-  /* ══ VIDEO PLAYERS — CUT & HIRE STYLE HOVER PREVIEW + CLEAN CENTERED MODAL ══ */
+  /* ══ VIDEO PLAYERS ══ */
   const fmt=t=>isFinite(t)?`${0|t/60}:${String(0|t%60).padStart(2,'0')}`:'0:00';
-
-  function ensurePortfolioModal(){
-    let modal=document.getElementById('portfolioPlayerModal');
-    if(modal) return modal;
-    modal=document.createElement('div');
-    modal.id='portfolioPlayerModal';
-    modal.innerHTML=`
-      <button class="ppm-close" type="button" aria-label="Close video">×</button>
-      <div class="ppm-player hide-controls">
-        <video class="ppm-video" playsinline webkit-playsinline preload="metadata"></video>
-        <div class="ppm-bigplay" aria-hidden="true"><span></span></div>
-        <div class="ppm-controls">
-          <input class="ppm-progress" type="range" min="0" max="100" value="0" aria-label="Video progress">
-          <div class="ppm-row">
-            <button class="ppm-btn ppm-play" type="button" aria-label="Play or pause">▶</button>
-            <button class="ppm-btn ppm-mute" type="button" aria-label="Mute or unmute">🔊</button>
-            <span class="ppm-time">0:00 / 0:00</span>
-            <span class="ppm-spacer"></span>
-            <input class="ppm-volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volume">
-            <button class="ppm-btn ppm-fullscreen" type="button" aria-label="Fullscreen">⛶</button>
-          </div>
-        </div>
-      </div>`;
-    document.body.appendChild(modal);
-
-    const player=modal.querySelector('.ppm-player');
-    const video=modal.querySelector('.ppm-video');
-    const closeBtn=modal.querySelector('.ppm-close');
-    const playBtn=modal.querySelector('.ppm-play');
-    const muteBtn=modal.querySelector('.ppm-mute');
-    const fsBtn=modal.querySelector('.ppm-fullscreen');
-    const progress=modal.querySelector('.ppm-progress');
-    const volume=modal.querySelector('.ppm-volume');
-    const timeEl=modal.querySelector('.ppm-time');
-    let hideTimer=null;
-
-    function update(){
-      const pct=video.duration?(video.currentTime/video.duration)*100:0;
-      progress.value=pct||0;
-      progress.style.background=`linear-gradient(to right,#fff 0%,#fff ${pct||0}%,rgba(255,255,255,.24) ${pct||0}%,rgba(255,255,255,.24) 100%)`;
-      timeEl.textContent=`${fmt(video.currentTime)} / ${fmt(video.duration)}`;
-      playBtn.textContent=video.paused?'▶':'❚❚';
-      muteBtn.textContent=(video.muted||video.volume===0)?'🔇':'🔊';
-      player.classList.toggle('paused',video.paused);
-    }
-    function showControls(){
-      player.classList.remove('hide-controls');
-      clearTimeout(hideTimer);
-      if(!video.paused) hideTimer=setTimeout(()=>player.classList.add('hide-controls'),2600);
-    }
-    function closeModal(){
-      if(!modal.classList.contains('open')) return;
-      clearTimeout(hideTimer);
-      if(document.fullscreenElement===player) document.exitFullscreen().catch(()=>{});
-      modal.classList.remove('open');
-      modal.classList.add('closing');
-      document.body.classList.remove('portfolio-modal-locked');
-      setTimeout(()=>{
-        video.pause();
-        video.removeAttribute('src');
-        video.removeAttribute('poster');
-        video.load();
-        modal.classList.remove('closing','portrait','landscape');
-        player.classList.add('hide-controls');
-        player.classList.remove('paused');
-      },300);
-    }
-    function openModal(sourceVideo, card){
-      const src=sourceVideo.getAttribute('src')||sourceVideo.currentSrc;
-      if(!src) return;
-      const frame=card?.querySelector('.video-frame');
-      const isPortrait=frame?.classList.contains('portrait')||/short|shorform|reel|portrait/i.test(src)||(sourceVideo.videoHeight&&sourceVideo.videoWidth&&sourceVideo.videoHeight>sourceVideo.videoWidth);
-      modal.classList.remove('closing','portrait','landscape');
-      modal.classList.add(isPortrait?'portrait':'landscape','open');
-      document.body.classList.add('portfolio-modal-locked');
-      const poster=sourceVideo.getAttribute('poster')||sourceVideo.dataset.forcePoster||card?.querySelector('.forced-video-poster')?.getAttribute('src')||'';
-      video.src=src;
-      if(poster) video.setAttribute('poster',poster); else video.removeAttribute('poster');
-      video.muted=false;
-      video.volume=1;
-      volume.value=1;
-      player.classList.remove('hide-controls');
-      video.load();
-      const startAt=(sourceVideo.currentTime&&sourceVideo.currentTime<5.5)?sourceVideo.currentTime:0;
-      const playNow=()=>{try{video.currentTime=startAt||0;}catch(e){} video.play().catch(()=>{}); showControls(); update();};
-      if(video.readyState>=1) playNow(); else video.addEventListener('loadedmetadata',playNow,{once:true});
-    }
-
-    closeBtn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();closeModal();});
-    modal.addEventListener('click',e=>{if(e.target===modal) closeModal();});
-    player.addEventListener('click',e=>e.stopPropagation());
-    modal.querySelector('.ppm-controls').addEventListener('click',e=>e.stopPropagation());
-    video.addEventListener('click',()=>{video.paused?video.play().catch(()=>{}):video.pause();showControls();});
-    playBtn.addEventListener('click',()=>{video.paused?video.play().catch(()=>{}):video.pause();showControls();});
-    muteBtn.addEventListener('click',()=>{video.muted=!video.muted;update();showControls();});
-    volume.addEventListener('input',()=>{video.volume=+volume.value;video.muted=video.volume===0;update();showControls();});
-    progress.addEventListener('input',()=>{if(video.duration) video.currentTime=(+progress.value/100)*video.duration;update();showControls();});
-    fsBtn.addEventListener('click',()=>{showControls(); if(document.fullscreenElement) document.exitFullscreen().catch(()=>{}); else player.requestFullscreen?.().catch(()=>{});});
-    player.addEventListener('mousemove',showControls);
-    player.addEventListener('mouseenter',showControls);
-    ['loadedmetadata','timeupdate','volumechange'].forEach(ev=>video.addEventListener(ev,update));
-    video.addEventListener('play',()=>{update();showControls();});
-    video.addEventListener('pause',()=>{update();showControls();});
-    window.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open')) closeModal();});
-    modal._openFrom=openModal;
-    return modal;
-  }
-
-  const hasFineHover=window.matchMedia('(hover:hover) and (pointer:fine)').matches;
   document.querySelectorAll('.custom-player').forEach(pl=>{
-    const v=pl.querySelector('video');
-    if(!v) return;
-    const card=pl.closest('.video-card');
-    const poster= v.dataset.forcePoster || v.getAttribute('poster') || pl.querySelector('.forced-video-poster')?.getAttribute('src') || '';
-    let hoverPreview=false;
-    let triedFrame=false;
-    v.removeAttribute('controls');
-    v.preload='auto';
-    v.setAttribute('playsinline','');
-    v.setAttribute('webkit-playsinline','');
-    v.muted=false;
-    v.volume=1;
-
-    /* make shorts visible even when no poster exists by forcing the first frame to paint */
-    v.addEventListener('loadedmetadata',()=>{
-      if(!poster && !triedFrame){
-        triedFrame=true;
-        try{ v.currentTime=Math.min(.12, Math.max(0, (v.duration||1)-.05)); }catch(e){}
-      }
-    },{once:true});
-
-    function stopOthers(){
-      document.querySelectorAll('.custom-player').forEach(other=>{
-        if(other===pl) return;
-        const ov=other.querySelector('video');
-        other.classList.remove('hover-preview','playing');
-        other.classList.add('paused');
-        if(ov){ ov.pause(); try{ov.currentTime=0;}catch(e){} ov.muted=false; }
-      });
-    }
-    async function startPreview(){
-      if(!hasFineHover||hoverPreview) return;
-      stopOthers();
-      hoverPreview=true;
-      pl.classList.add('hover-preview');
-      pl.classList.remove('playing','paused');
-      v.muted=true;
-      try{v.currentTime=0;}catch(e){}
-      try{await v.play();}catch(e){}
-    }
-    function stopPreview(){
-      if(!hoverPreview) return;
-      hoverPreview=false;
-      pl.classList.remove('hover-preview','playing');
-      pl.classList.add('paused');
-      v.pause();
-      try{v.currentTime=0;}catch(e){}
-      v.muted=false;
-    }
-    v.addEventListener('timeupdate',()=>{
-      if(hoverPreview && v.currentTime>=4.2){
-        try{v.currentTime=0;}catch(e){}
-        v.play().catch(()=>{});
-      }
-    });
-    pl.addEventListener('mouseenter',startPreview);
-    pl.addEventListener('mouseleave',stopPreview);
-    pl.addEventListener('click',e=>{
-      e.preventDefault();
-      e.stopPropagation();
-      stopPreview();
-      ensurePortfolioModal()._openFrom(v,card);
-    },true);
+    const v=pl.querySelector('video'),pb=pl.querySelector('.play-toggle'),mb=pl.querySelector('.mute-toggle'),fb=pl.querySelector('.fullscreen-toggle'),pr=pl.querySelector('.progress'),vol=pl.querySelector('.volume'),tim=pl.querySelector('.player-time'),cp=pl.querySelector('.play-center');
+    const ttl=pl.closest('.video-card')?.querySelector('.card-body h3')?.textContent?.trim()||v.src;
+    let tracked=false;
+    v.muted=false;v.volume=1;vol.value=1;
+    const upPlay=()=>{const p=v.paused;pl.classList.toggle('playing',!p);pl.classList.toggle('paused',p);pb.innerHTML=p?'&#9654;':'&#10074;&#10074;';};
+    const upMute=()=>{mb.innerHTML=(v.muted||v.volume===0)?'&#128263;':'&#128266;';};
+    const upProg=()=>{const pct=v.duration?(v.currentTime/v.duration)*100:0;pr.value=pct;pr.style.background=`linear-gradient(to right,#fff 0%,#fff ${pct}%,rgba(255,255,255,.18) ${pct}%,rgba(255,255,255,.18) 100%)`;tim.textContent=`${fmt(v.currentTime)} / ${fmt(v.duration)}`;};
+    const pauseAll=()=>document.querySelectorAll('.custom-player video').forEach(x=>{if(x!==v)x.pause();});
+    const toggle=async()=>{pauseAll();if(v.paused){try{await v.play();if(!tracked&&typeof gtag==='function'){gtag('event','video_play',{video_title:ttl,video_src:v.getAttribute('src')||'',page_location:location.href});tracked=true;}}catch(e){}}else v.pause();};
+    [pb,cp].forEach(el=>el.addEventListener('click',toggle));v.addEventListener('click',toggle);
+    mb.addEventListener('click',()=>{v.muted=!v.muted;upMute();});
+    vol.addEventListener('input',()=>{v.volume=+vol.value;v.muted=v.volume===0;upMute();});
+    pr.addEventListener('input',()=>{if(v.duration)v.currentTime=(+pr.value/100)*v.duration;});
+    fb.addEventListener('click',()=>{try{if(v.webkitEnterFullscreen){v.webkitEnterFullscreen();return;}document.fullscreenElement?document.exitFullscreen():pl.requestFullscreen?.();}catch(e){}});
+    v.addEventListener('loadedmetadata',upProg);v.addEventListener('timeupdate',upProg);v.addEventListener('play',upPlay);v.addEventListener('pause',upPlay);v.addEventListener('volumechange',upMute);v.addEventListener('ended',upPlay);
+    upPlay();upMute();upProg();
   });
-
 
   /* ══ STAT COUNTERS ══ */
   let statsGo=false;
@@ -1332,169 +960,194 @@ setTimeout(() => {
   </script>
 
 
-<style id="fabri-final-centered-player-override">
-/* ===================== TRUE FINAL PLAYER OVERRIDE ===================== */
-.video-card .custom-player video{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;display:block!important;background:#000!important;}
+<!-- ===================== LOCKED CENTERED PORTFOLIO PLAYER PATCH ===================== -->
+<style id="locked-centered-player-patch">
+/* keep portfolio cards clean like Cut & Hire */
+.video-card .custom-player{position:relative!important;overflow:hidden!important;background:#000!important;cursor:pointer!important;}
+.video-card .custom-player video{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;display:block!important;background:#000!important;opacity:1!important;}
 .video-card .custom-player video::-webkit-media-controls{display:none!important;}
 .video-card .custom-player .player-overlay{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
 .video-card .custom-player .play-center{opacity:0!important;pointer-events:none!important;transform:translateY(-4px) scale(.86)!important;transition:opacity .22s ease,transform .32s cubic-bezier(.34,1.56,.64,1)!important;}
 .video-card .custom-player:hover .play-center,.video-card .custom-player.hover-preview .play-center{opacity:1!important;pointer-events:auto!important;transform:translateY(-4px) scale(1)!important;}
+.video-card .custom-player .yt-play{background:rgba(255,0,0,.64)!important;box-shadow:0 8px 22px rgba(0,0,0,.34),0 0 20px rgba(255,0,0,.20)!important;}
+.video-card .custom-player .yt-play:hover{background:rgba(255,0,0,.74)!important;box-shadow:0 10px 28px rgba(0,0,0,.38),0 0 22px rgba(255,0,0,.25)!important;}
 .video-card .custom-player.hover-preview .forced-video-poster{opacity:0!important;visibility:hidden!important;}
+.video-frame.portrait .custom-player video{object-fit:cover!important;}
+body.locked-player-open{overflow:hidden!important;}
+body.locked-player-open .site-header,
+body.locked-player-open main,
+body.locked-player-open #galaxy-canvas,
+body.locked-player-open #noise-overlay,
+body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;transition:filter .25s ease!important;}
 
-.fabri-fixed-video-modal{position:fixed!important;inset:0!important;z-index:2147483647!important;background:rgba(0,0,0,.40)!important;backdrop-filter:blur(5px)!important;-webkit-backdrop-filter:blur(5px)!important;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .28s cubic-bezier(.16,1,.3,1),visibility 0s linear .28s!important;overflow:hidden!important;}
-.fabri-fixed-video-modal.is-open{opacity:1!important;visibility:visible!important;pointer-events:auto!important;transition:opacity .28s cubic-bezier(.16,1,.3,1),visibility 0s!important;}
-.fabri-fixed-video-modal.is-closing{opacity:0!important;visibility:visible!important;pointer-events:none!important;}
-.fabri-fixed-video-modal .ffvm-close{position:fixed!important;right:26px!important;top:24px!important;width:54px!important;height:54px!important;border-radius:50%!important;border:1px solid rgba(255,255,255,.45)!important;background:rgba(0,0,0,.34)!important;color:#fff!important;font-size:38px!important;line-height:1!important;display:flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important;z-index:60!important;opacity:0;transform:scale(.72) rotate(-10deg);transition:background .2s,border-color .2s,transform .2s!important;}
-.fabri-fixed-video-modal.is-open .ffvm-close{animation:ffvmCloseIn .42s cubic-bezier(.16,1,.3,1) .08s both;}
-.fabri-fixed-video-modal.is-closing .ffvm-close{animation:ffvmCloseOut .22s ease both;}
-.fabri-fixed-video-modal .ffvm-close:hover{background:rgba(255,255,255,.10)!important;border-color:rgba(255,255,255,.86)!important;transform:scale(.94)!important;}
-@keyframes ffvmCloseIn{to{opacity:1;transform:scale(1) rotate(0)}}
-@keyframes ffvmCloseOut{to{opacity:0;transform:scale(.72) rotate(10deg)}}
+.locked-video-modal{position:fixed!important;inset:0!important;z-index:2147483647!important;display:flex!important;align-items:center!important;justify-content:center!important;background:rgba(0,0,0,.40)!important;backdrop-filter:blur(4px)!important;-webkit-backdrop-filter:blur(4px)!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;transition:opacity .26s cubic-bezier(.16,1,.3,1),visibility 0s linear .26s!important;padding:72px 24px 38px!important;overflow:hidden!important;}
+.locked-video-modal.open{opacity:1!important;visibility:visible!important;pointer-events:auto!important;transition:opacity .26s cubic-bezier(.16,1,.3,1),visibility 0s!important;}
+.locked-video-modal.closing{opacity:0!important;visibility:visible!important;pointer-events:none!important;}
+.locked-video-modal *{box-sizing:border-box!important;}
+.locked-video-close{position:fixed!important;top:24px!important;right:28px!important;width:54px!important;height:54px!important;border-radius:50%!important;border:1px solid rgba(255,255,255,.50)!important;background:rgba(0,0,0,.32)!important;color:#fff!important;font-size:38px!important;line-height:1!important;display:flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important;z-index:5!important;opacity:0;transform:scale(.74) rotate(-8deg);transition:background .18s,border-color .18s,transform .18s!important;}
+.locked-video-modal.open .locked-video-close{animation:lvcIn .42s cubic-bezier(.16,1,.3,1) .08s both;}
+.locked-video-modal.closing .locked-video-close{animation:lvcOut .2s ease both;}
+.locked-video-close:hover{background:rgba(255,255,255,.12)!important;border-color:rgba(255,255,255,.86)!important;transform:scale(.95)!important;}
+@keyframes lvcIn{to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes lvcOut{to{opacity:0;transform:scale(.74) rotate(8deg)}}
 
-.fabri-fixed-video-modal .ffvm-player{position:fixed!important;left:50%!important;top:50%!important;width:var(--ffvm-w, min(900px,72vw))!important;height:var(--ffvm-h, calc(min(900px,72vw) * .5625))!important;max-width:92vw!important;max-height:80vh!important;transform:translate(-50%,-50%) scale(.88)!important;transform-origin:center center!important;background:#000!important;border-radius:13px!important;overflow:hidden!important;box-shadow:0 34px 110px rgba(0,0,0,.68),0 0 64px rgba(255,211,77,.13)!important;opacity:0;filter:blur(10px) brightness(.76);display:block!important;pointer-events:auto!important;}
-.fabri-fixed-video-modal.is-open .ffvm-player{animation:ffvmPlayerIn .48s cubic-bezier(.16,1,.3,1) both;}
-.fabri-fixed-video-modal.is-closing .ffvm-player{animation:ffvmPlayerOut .25s cubic-bezier(.7,0,.84,0) both;}
-@keyframes ffvmPlayerIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.88);filter:blur(10px) brightness(.76)}65%{opacity:1;transform:translate(-50%,-50%) scale(1.018);filter:blur(0) brightness(1.06)}100%{opacity:1;transform:translate(-50%,-50%) scale(1);filter:blur(0) brightness(1)}}
-@keyframes ffvmPlayerOut{to{opacity:0;transform:translate(-50%,-50%) scale(.90);filter:blur(8px) brightness(.72)}}
-.fabri-fixed-video-modal .ffvm-player::before{content:"";position:absolute;inset:0;z-index:8;pointer-events:none;background:linear-gradient(115deg,transparent 18%,rgba(255,255,255,.18) 50%,transparent 82%);transform:translateX(-130%);opacity:0;}
-.fabri-fixed-video-modal.is-open .ffvm-player::before{animation:ffvmShine .72s cubic-bezier(.22,1,.36,1) .10s both;}
-@keyframes ffvmShine{0%{opacity:0;transform:translateX(-130%)}22%{opacity:.55}100%{opacity:0;transform:translateX(130%)}}
-.fabri-fixed-video-modal .ffvm-video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important;background:#000!important;display:block!important;}
-.fabri-fixed-video-modal .ffvm-video::-webkit-media-controls{display:none!important;}
-.fabri-fixed-video-modal .ffvm-controls{position:absolute!important;left:0!important;right:0!important;bottom:0!important;z-index:30!important;padding:58px 14px 12px!important;background:linear-gradient(to top,rgba(0,0,0,.94),rgba(0,0,0,.45),transparent)!important;display:flex!important;flex-direction:column!important;gap:8px!important;opacity:1;transform:translateY(0);transition:opacity .22s ease,transform .22s ease!important;pointer-events:auto!important;}
-.fabri-fixed-video-modal .ffvm-player.hide-controls .ffvm-controls{opacity:0!important;transform:translateY(10px)!important;pointer-events:none!important;}
-.fabri-fixed-video-modal .ffvm-progress{width:100%!important;height:5px!important;border-radius:999px!important;-webkit-appearance:none!important;appearance:none!important;background:rgba(255,255,255,.24)!important;outline:none!important;cursor:pointer!important;pointer-events:auto!important;}
-.fabri-fixed-video-modal .ffvm-progress::-webkit-slider-thumb{-webkit-appearance:none!important;width:13px!important;height:13px!important;border-radius:50%!important;background:#fff!important;box-shadow:0 0 0 3px rgba(255,255,255,.16)!important;}
-.fabri-fixed-video-modal .ffvm-progress::-moz-range-thumb{width:13px!important;height:13px!important;border:0!important;border-radius:50%!important;background:#fff!important;}
-.fabri-fixed-video-modal .ffvm-row{display:flex!important;align-items:center!important;gap:10px!important;color:#fff!important;}
-.fabri-fixed-video-modal .ffvm-btn{width:34px!important;height:34px!important;min-width:34px!important;border:0!important;background:transparent!important;color:#fff!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:18px!important;line-height:1!important;opacity:.94!important;pointer-events:auto!important;transition:opacity .18s,transform .18s!important;}
-.fabri-fixed-video-modal .ffvm-btn:hover{opacity:1!important;transform:scale(1.09)!important;}
-.fabri-fixed-video-modal .ffvm-time{font-size:.86rem!important;font-weight:800!important;white-space:nowrap!important;min-width:78px!important;color:#fff!important;}
-.fabri-fixed-video-modal .ffvm-spacer{flex:1!important;}
-.fabri-fixed-video-modal .ffvm-volume{width:88px!important;height:4px!important;-webkit-appearance:none!important;appearance:none!important;border-radius:999px!important;background:rgba(255,255,255,.24)!important;outline:none!important;cursor:pointer!important;pointer-events:auto!important;}
-.fabri-fixed-video-modal .ffvm-volume::-webkit-slider-thumb{-webkit-appearance:none!important;width:12px!important;height:12px!important;border-radius:50%!important;background:#fff!important;}
-.fabri-fixed-video-modal .ffvm-volume::-moz-range-thumb{width:12px!important;height:12px!important;border:0!important;border-radius:50%!important;background:#fff!important;}
-.fabri-fixed-video-modal .ffvm-bigplay{position:absolute!important;inset:0!important;z-index:20!important;display:grid!important;place-items:center!important;pointer-events:none!important;opacity:0!important;transition:opacity .18s!important;}
-.fabri-fixed-video-modal .ffvm-player.paused .ffvm-bigplay{opacity:1!important;}
-.fabri-fixed-video-modal .ffvm-bigplay span{width:76px;height:76px;border-radius:50%;background:rgba(255,0,0,.62);box-shadow:0 14px 42px rgba(0,0,0,.55),0 0 18px rgba(255,0,0,.20);display:flex;align-items:center;justify-content:center;}
-.fabri-fixed-video-modal .ffvm-bigplay span::before{content:"";width:0;height:0;border-left:22px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent;margin-left:6px;}
-.fabri-fixed-video-modal .ffvm-player:fullscreen,.fabri-fixed-video-modal .ffvm-player:-webkit-full-screen{left:0!important;top:0!important;width:100vw!important;height:100vh!important;max-width:none!important;max-height:none!important;transform:none!important;border-radius:0!important;background:#000!important;}
-.fabri-fixed-video-modal .ffvm-player:fullscreen .ffvm-video,.fabri-fixed-video-modal .ffvm-player:-webkit-full-screen .ffvm-video{width:100vw!important;height:100vh!important;object-fit:contain!important;}
-.fabri-fixed-video-modal .ffvm-player:fullscreen::before,.fabri-fixed-video-modal .ffvm-player:-webkit-full-screen::before{display:none!important;}
-body.ffvm-locked{overflow:hidden!important;}
-body.ffvm-locked main,body.ffvm-locked header{filter:blur(2px) brightness(.80)!important;transition:filter .25s ease!important;}
-@media(max-width:760px){.fabri-fixed-video-modal{padding:12px!important}.fabri-fixed-video-modal .ffvm-close{top:14px!important;right:14px!important;width:44px!important;height:44px!important;font-size:32px!important}.fabri-fixed-video-modal .ffvm-controls{padding:46px 10px 10px!important}.fabri-fixed-video-modal .ffvm-volume{display:none!important}.fabri-fixed-video-modal .ffvm-time{font-size:.78rem!important;min-width:68px!important}}
+.locked-video-player{position:relative!important;display:block!important;margin:auto!important;background:#000!important;border-radius:14px!important;overflow:hidden!important;box-shadow:0 30px 100px rgba(0,0,0,.58),0 0 46px rgba(255,211,77,.12)!important;opacity:0;transform:scale(.90) translateY(18px);filter:blur(10px) brightness(.78);transform-origin:center center!important;pointer-events:auto!important;}
+.locked-video-modal.open .locked-video-player{animation:lvpIn .48s cubic-bezier(.16,1,.3,1) both;}
+.locked-video-modal.closing .locked-video-player{animation:lvpOut .24s cubic-bezier(.7,0,.84,0) both;}
+@keyframes lvpIn{0%{opacity:0;transform:scale(.90) translateY(18px);filter:blur(10px) brightness(.78)}65%{opacity:1;transform:scale(1.018) translateY(0);filter:blur(0) brightness(1.05)}100%{opacity:1;transform:scale(1) translateY(0);filter:blur(0) brightness(1)}}
+@keyframes lvpOut{to{opacity:0;transform:scale(.91) translateY(16px);filter:blur(8px) brightness(.72)}}
+.locked-video-player.landscape{width:min(920px,72vw)!important;aspect-ratio:16/9!important;max-width:92vw!important;max-height:76vh!important;}
+.locked-video-player.portrait{height:min(78vh,760px)!important;aspect-ratio:9/16!important;max-width:88vw!important;max-height:78vh!important;}
+.locked-video-player.squareish{height:min(76vh,760px)!important;aspect-ratio:1/1!important;max-width:88vw!important;max-height:76vh!important;}
+.locked-video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important;background:#000!important;display:block!important;}
+.locked-video::-webkit-media-controls{display:none!important;}
+.locked-video-controls{position:absolute!important;left:0!important;right:0!important;bottom:0!important;z-index:4!important;padding:56px 14px 12px!important;background:linear-gradient(to top,rgba(0,0,0,.94),rgba(0,0,0,.48),transparent)!important;display:flex!important;flex-direction:column!important;gap:8px!important;opacity:1!important;transform:translateY(0)!important;transition:opacity .18s ease,transform .18s ease!important;pointer-events:auto!important;}
+.locked-video-player.hide-ui .locked-video-controls{opacity:0!important;transform:translateY(12px)!important;pointer-events:none!important;}
+.locked-progress{width:100%!important;height:5px!important;border-radius:999px!important;-webkit-appearance:none!important;appearance:none!important;background:rgba(255,255,255,.24)!important;outline:none!important;cursor:pointer!important;display:block!important;}
+.locked-progress::-webkit-slider-thumb{-webkit-appearance:none!important;width:13px!important;height:13px!important;border-radius:50%!important;background:#fff!important;box-shadow:0 0 0 3px rgba(255,255,255,.16)!important;}
+.locked-progress::-moz-range-thumb{width:13px!important;height:13px!important;border:0!important;border-radius:50%!important;background:#fff!important;}
+.locked-row{display:flex!important;align-items:center!important;gap:10px!important;color:#fff!important;}
+.locked-btn{width:34px!important;height:34px!important;min-width:34px!important;border:0!important;background:transparent!important;color:#fff!important;cursor:pointer!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:18px!important;line-height:1!important;opacity:.95!important;transition:opacity .18s,transform .18s!important;padding:0!important;}
+.locked-btn:hover{opacity:1!important;transform:scale(1.10)!important;}
+.locked-time{font-size:.86rem!important;font-weight:800!important;white-space:nowrap!important;min-width:82px!important;color:#fff!important;}
+.locked-spacer{flex:1!important;}
+.locked-volume{width:88px!important;height:4px!important;-webkit-appearance:none!important;appearance:none!important;border-radius:999px!important;background:rgba(255,255,255,.24)!important;outline:none!important;cursor:pointer!important;}
+.locked-volume::-webkit-slider-thumb{-webkit-appearance:none!important;width:12px!important;height:12px!important;border-radius:50%!important;background:#fff!important;}
+.locked-volume::-moz-range-thumb{width:12px!important;height:12px!important;border:0!important;border-radius:50%!important;background:#fff!important;}
+.locked-bigplay{position:absolute!important;inset:0!important;z-index:3!important;display:grid!important;place-items:center!important;pointer-events:none!important;opacity:0!important;transition:opacity .18s ease!important;}
+.locked-video-player.paused .locked-bigplay{opacity:1!important;}
+.locked-bigplay span{width:76px!important;height:76px!important;border-radius:50%!important;background:rgba(255,0,0,.62)!important;box-shadow:0 14px 42px rgba(0,0,0,.55),0 0 18px rgba(255,0,0,.20)!important;display:flex!important;align-items:center!important;justify-content:center!important;}
+.locked-bigplay span:before{content:"";width:0;height:0;border-left:22px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent;margin-left:6px;}
+.locked-video-player:fullscreen,.locked-video-player:-webkit-full-screen{width:100vw!important;height:100vh!important;max-width:none!important;max-height:none!important;aspect-ratio:auto!important;border-radius:0!important;background:#000!important;display:block!important;}
+.locked-video-player:fullscreen .locked-video,.locked-video-player:-webkit-full-screen .locked-video{width:100vw!important;height:100vh!important;object-fit:contain!important;}
+.locked-video-player:fullscreen .locked-video-controls,.locked-video-player:-webkit-full-screen .locked-video-controls{padding-bottom:18px!important;}
+@media(max-width:760px){.locked-video-modal{padding:62px 12px 28px!important}.locked-video-close{top:14px!important;right:14px!important;width:44px!important;height:44px!important;font-size:32px!important}.locked-video-player.landscape{width:94vw!important}.locked-video-player.portrait{height:76vh!important}.locked-video-controls{padding:46px 10px 10px!important}.locked-volume{display:none!important}.locked-time{font-size:.78rem!important;min-width:68px!important}}
 </style>
-<script id="fabri-final-centered-player-script">
+<script id="locked-centered-player-script">
 (function(){
+  const fineHover=matchMedia('(hover:hover) and (pointer:fine)').matches;
   const fmt=t=>Number.isFinite(t)?`${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}`:'0:00';
-  function sizeModal(modal, player, video, frame, src){
-    const vw=Math.max(document.documentElement.clientWidth, window.innerWidth||0);
-    const vh=Math.max(document.documentElement.clientHeight, window.innerHeight||0);
-    const byFrame=frame && frame.classList.contains('portrait');
-    const byName=/short|shorform|reel|portrait/i.test(src||'');
-    const byMeta=video.videoWidth && video.videoHeight && video.videoHeight > video.videoWidth;
-    const portrait=!!(byFrame||byName||byMeta);
-    modal.classList.toggle('portrait',portrait);
-    modal.classList.toggle('landscape',!portrait);
-    let w,h;
-    if(portrait){
-      h=Math.min(vh*0.80, 760);
-      w=h*9/16;
-      if(w>vw*0.90){w=vw*0.90;h=w*16/9;}
-    }else{
-      w=Math.min(vw*0.72, 940);
-      h=w*9/16;
-      if(h>vh*0.78){h=vh*0.78;w=h*16/9;}
-    }
-    player.style.setProperty('--ffvm-w', `${Math.round(w)}px`);
-    player.style.setProperty('--ffvm-h', `${Math.round(h)}px`);
-  }
-  function buildModal(){
-    document.getElementById('portfolioPlayerModal')?.remove();
-    document.getElementById('fabriFixedVideoModal')?.remove();
-    const modal=document.createElement('div');
-    modal.id='fabriFixedVideoModal';
-    modal.className='fabri-fixed-video-modal';
-    modal.innerHTML=`
-      <button class="ffvm-close" type="button" aria-label="Close video">×</button>
-      <div class="ffvm-player hide-controls">
-        <video class="ffvm-video" playsinline webkit-playsinline preload="auto"></video>
-        <div class="ffvm-bigplay" aria-hidden="true"><span></span></div>
-        <div class="ffvm-controls">
-          <input class="ffvm-progress" type="range" min="0" max="100" value="0" aria-label="Video progress">
-          <div class="ffvm-row">
-            <button class="ffvm-btn ffvm-play" type="button" aria-label="Play or pause">▶</button>
-            <button class="ffvm-btn ffvm-mute" type="button" aria-label="Mute or unmute">🔊</button>
-            <span class="ffvm-time">0:00 / 0:00</span>
-            <span class="ffvm-spacer"></span>
-            <input class="ffvm-volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volume">
-            <button class="ffvm-btn ffvm-fullscreen" type="button" aria-label="Fullscreen">⛶</button>
-          </div>
+
+  const modal=document.createElement('div');
+  modal.className='locked-video-modal';
+  modal.innerHTML=`
+    <button class="locked-video-close" type="button" aria-label="Close video">×</button>
+    <div class="locked-video-player landscape hide-ui">
+      <video class="locked-video" playsinline webkit-playsinline preload="auto"></video>
+      <div class="locked-bigplay" aria-hidden="true"><span></span></div>
+      <div class="locked-video-controls">
+        <input class="locked-progress" type="range" min="0" max="100" value="0" aria-label="Video progress">
+        <div class="locked-row">
+          <button class="locked-btn locked-play" type="button" aria-label="Play or pause">▶</button>
+          <button class="locked-btn locked-mute" type="button" aria-label="Mute or unmute">🔊</button>
+          <span class="locked-time">0:00 / 0:00</span>
+          <span class="locked-spacer"></span>
+          <input class="locked-volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+          <button class="locked-btn locked-full" type="button" aria-label="Fullscreen">⛶</button>
         </div>
-      </div>`;
-    document.body.appendChild(modal);
-    const player=modal.querySelector('.ffvm-player'), video=modal.querySelector('.ffvm-video');
-    const closeBtn=modal.querySelector('.ffvm-close'), playBtn=modal.querySelector('.ffvm-play'), muteBtn=modal.querySelector('.ffvm-mute'), fsBtn=modal.querySelector('.ffvm-fullscreen');
-    const progress=modal.querySelector('.ffvm-progress'), volume=modal.querySelector('.ffvm-volume'), timeEl=modal.querySelector('.ffvm-time');
-    let hideTimer=null, currentFrame=null, currentSrc='';
-    const update=()=>{
-      const pct=video.duration ? (video.currentTime/video.duration)*100 : 0;
-      progress.value=pct||0;
-      progress.style.background=`linear-gradient(to right,#fff 0%,#fff ${pct||0}%,rgba(255,255,255,.24) ${pct||0}%,rgba(255,255,255,.24) 100%)`;
-      timeEl.textContent=`${fmt(video.currentTime)} / ${fmt(video.duration)}`;
-      playBtn.textContent=video.paused?'▶':'❚❚';
-      muteBtn.textContent=(video.muted||video.volume===0)?'🔇':'🔊';
-      player.classList.toggle('paused',video.paused);
-    };
-    const showControls=()=>{player.classList.remove('hide-controls');clearTimeout(hideTimer);if(!video.paused)hideTimer=setTimeout(()=>player.classList.add('hide-controls'),2400);};
-    const close=()=>{
-      if(!modal.classList.contains('is-open'))return;
-      clearTimeout(hideTimer);
-      if(document.fullscreenElement===player) document.exitFullscreen().catch(()=>{});
-      modal.classList.remove('is-open'); modal.classList.add('is-closing'); document.body.classList.remove('ffvm-locked');
-      setTimeout(()=>{video.pause();video.removeAttribute('src');video.removeAttribute('poster');video.load();modal.className='fabri-fixed-video-modal';player.classList.add('hide-controls');player.classList.remove('paused');},270);
-    };
-    const open=(sourceVideo, card)=>{
-      const src=sourceVideo.getAttribute('src')||sourceVideo.currentSrc;if(!src)return;
-      currentFrame=card?.querySelector('.video-frame');currentSrc=src;
-      modal.className='fabri-fixed-video-modal';
-      video.pause();video.removeAttribute('src');video.load();
-      video.src=src;video.muted=false;video.volume=1;volume.value=1;
-      const poster=sourceVideo.getAttribute('poster')||sourceVideo.dataset.forcePoster||card?.querySelector('.forced-video-poster')?.getAttribute('src')||'';
-      if(poster)video.setAttribute('poster',poster);else video.removeAttribute('poster');
-      sizeModal(modal,player,video,currentFrame,currentSrc);
-      modal.classList.add('is-open');document.body.classList.add('ffvm-locked');player.classList.remove('hide-controls');
-      video.load();
-      const start=()=>{sizeModal(modal,player,video,currentFrame,currentSrc);try{video.currentTime=0;}catch(e){}video.play().catch(()=>{});showControls();update();};
-      if(video.readyState>=1)start();else video.addEventListener('loadedmetadata',start,{once:true});
-    };
-    closeBtn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();close();});
-    modal.addEventListener('click',e=>{if(e.target===modal)close();});
-    player.addEventListener('click',e=>e.stopPropagation());
-    video.addEventListener('click',()=>{video.paused?video.play().catch(()=>{}):video.pause();showControls();});
-    playBtn.addEventListener('click',e=>{e.stopPropagation();video.paused?video.play().catch(()=>{}):video.pause();showControls();});
-    muteBtn.addEventListener('click',e=>{e.stopPropagation();video.muted=!video.muted;update();showControls();});
-    volume.addEventListener('input',()=>{video.volume=+volume.value;video.muted=video.volume===0;update();showControls();});
-    progress.addEventListener('input',()=>{if(video.duration)video.currentTime=(+progress.value/100)*video.duration;update();showControls();});
-    fsBtn.addEventListener('click',e=>{e.stopPropagation();showControls();if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});else player.requestFullscreen?.().catch(()=>{});});
-    player.addEventListener('mousemove',showControls);player.addEventListener('mouseenter',showControls);
-    window.addEventListener('resize',()=>{if(modal.classList.contains('is-open'))sizeModal(modal,player,video,currentFrame,currentSrc);});
-    ['loadedmetadata','timeupdate','volumechange','play','pause'].forEach(ev=>video.addEventListener(ev,()=>{if(ev==='loadedmetadata')sizeModal(modal,player,video,currentFrame,currentSrc);update();}));
-    window.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
-    return {open,close};
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  const closeBtn=modal.querySelector('.locked-video-close');
+  const player=modal.querySelector('.locked-video-player');
+  const video=modal.querySelector('.locked-video');
+  const progress=modal.querySelector('.locked-progress');
+  const playBtn=modal.querySelector('.locked-play');
+  const muteBtn=modal.querySelector('.locked-mute');
+  const vol=modal.querySelector('.locked-volume');
+  const fsBtn=modal.querySelector('.locked-full');
+  const timeEl=modal.querySelector('.locked-time');
+  let hideTimer=null,currentSource=null,currentCard=null;
+
+  function update(){
+    const pct=video.duration?(video.currentTime/video.duration)*100:0;
+    progress.value=pct||0;
+    progress.style.background=`linear-gradient(to right,#fff 0%,#fff ${pct||0}%,rgba(255,255,255,.24) ${pct||0}%,rgba(255,255,255,.24) 100%)`;
+    timeEl.textContent=`${fmt(video.currentTime)} / ${fmt(video.duration)}`;
+    playBtn.textContent=video.paused?'▶':'❚❚';
+    muteBtn.textContent=(video.muted||video.volume===0)?'🔇':'🔊';
+    player.classList.toggle('paused',video.paused);
   }
-  const api=buildModal();
-  document.querySelectorAll('.custom-player video').forEach(v=>{v.removeAttribute('controls');v.controls=false;v.setAttribute('playsinline','');v.setAttribute('webkit-playsinline','');});
-  document.addEventListener('click',function(e){
-    const pl=e.target.closest && e.target.closest('.custom-player');
-    if(!pl)return;
+  function setShape(force){
+    const frame=currentCard?.querySelector('.video-frame');
+    const src=currentSource||'';
+    const byFrame=frame?.classList.contains('portrait');
+    const byName=/short|shorform|reel|portrait/i.test(src);
+    const byMeta=video.videoWidth&&video.videoHeight&&(video.videoHeight>video.videoWidth*1.08);
+    const squareish=video.videoWidth&&video.videoHeight&&Math.abs(video.videoWidth-video.videoHeight)<Math.max(video.videoWidth,video.videoHeight)*0.18;
+    const portrait=force==='portrait'||byFrame||byName||byMeta;
+    player.classList.remove('landscape','portrait','squareish');
+    if(squareish&&!portrait) player.classList.add('squareish');
+    else player.classList.add(portrait?'portrait':'landscape');
+    // Flexbox centers the player; these lines force a reflow after shape changes.
+    modal.style.alignItems='center';modal.style.justifyContent='center';
+  }
+  function showUI(){
+    player.classList.remove('hide-ui');clearTimeout(hideTimer);
+    if(!video.paused) hideTimer=setTimeout(()=>player.classList.add('hide-ui'),2400);
+  }
+  function close(){
+    if(!modal.classList.contains('open')) return;
+    clearTimeout(hideTimer);
+    if(document.fullscreenElement===player) document.exitFullscreen().catch(()=>{});
+    modal.classList.remove('open'); modal.classList.add('closing'); document.body.classList.remove('locked-player-open');
+    setTimeout(()=>{video.pause();video.removeAttribute('src');video.removeAttribute('poster');video.load();modal.classList.remove('closing');player.className='locked-video-player landscape hide-ui';},280);
+  }
+  function openFrom(card){
+    const source=card.querySelector('.custom-player video');
+    if(!source) return;
+    currentCard=card; currentSource=source.getAttribute('src')||source.currentSrc||'';
+    if(!currentSource) return;
+    document.querySelectorAll('.custom-player').forEach(pl=>{pl.classList.remove('hover-preview','playing','paused');const v=pl.querySelector('video');if(v){v.pause();try{v.currentTime=0}catch(_){}}});
+    video.pause(); video.removeAttribute('src'); video.removeAttribute('poster'); video.load();
+    video.src=currentSource; video.muted=false; video.volume=1; vol.value=1;
+    const poster=source.dataset.forcePoster||source.getAttribute('poster')||card.querySelector('.forced-video-poster')?.getAttribute('src')||'';
+    if(poster) video.setAttribute('poster',poster);
+    setShape(); update();
+    modal.classList.remove('closing'); modal.classList.add('open'); document.body.classList.add('locked-player-open'); showUI();
+    video.load();
+    const start=()=>{setShape(); try{video.currentTime=0}catch(_){ } video.play().catch(()=>{}); showUI(); update(); setTimeout(setShape,60);};
+    if(video.readyState>=1) start(); else video.addEventListener('loadedmetadata',start,{once:true});
+  }
+
+  closeBtn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();close();});
+  modal.addEventListener('click',e=>{if(e.target===modal) close();});
+  player.addEventListener('click',e=>e.stopPropagation());
+  video.addEventListener('click',()=>{video.paused?video.play().catch(()=>{}):video.pause();showUI();});
+  playBtn.addEventListener('click',e=>{e.stopPropagation();video.paused?video.play().catch(()=>{}):video.pause();showUI();});
+  muteBtn.addEventListener('click',e=>{e.stopPropagation();video.muted=!video.muted;update();showUI();});
+  vol.addEventListener('input',()=>{video.volume=+vol.value;video.muted=video.volume===0;update();showUI();});
+  progress.addEventListener('input',()=>{if(video.duration) video.currentTime=(+progress.value/100)*video.duration;update();showUI();});
+  fsBtn.addEventListener('click',e=>{e.stopPropagation();showUI();if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});else player.requestFullscreen?.().catch(()=>{});});
+  player.addEventListener('mousemove',showUI);player.addEventListener('mouseenter',showUI);
+  ['loadedmetadata','loadeddata','canplay','resize'].forEach(ev=>video.addEventListener(ev,()=>{setShape();update();}));
+  ['timeupdate','volumechange','play','pause'].forEach(ev=>video.addEventListener(ev,update));
+  window.addEventListener('resize',()=>{if(modal.classList.contains('open'))setShape();});
+  window.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+
+  // Disable all native/card controls and replace with hover preview + centered modal.
+  document.querySelectorAll('.custom-player').forEach(pl=>{
     const v=pl.querySelector('video'); if(!v)return;
-    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-    document.querySelectorAll('.custom-player video').forEach(ov=>{if(ov!==v){ov.pause();try{ov.currentTime=0;}catch(_){}}});
-    pl.classList.remove('hover-preview','playing');
-    v.pause();try{v.currentTime=0;}catch(_){ }
-    api.open(v,pl.closest('.video-card'));
+    v.removeAttribute('controls'); v.controls=false; v.setAttribute('playsinline',''); v.setAttribute('webkit-playsinline',''); v.preload='auto';
+    const poster=v.dataset.forcePoster||v.getAttribute('poster')||pl.querySelector('.forced-video-poster')?.getAttribute('src')||'';
+    if(!poster){ v.addEventListener('loadedmetadata',()=>{try{ if(v.currentTime<0.05)v.currentTime=Math.min(.12,(v.duration||1)-.05); }catch(_){}} ,{once:true}); }
+    async function preview(){
+      if(!fineHover||pl.classList.contains('hover-preview'))return;
+      document.querySelectorAll('.custom-player').forEach(o=>{if(o!==pl){o.classList.remove('hover-preview','playing','paused');const ov=o.querySelector('video');if(ov){ov.pause();try{ov.currentTime=0}catch(_){}}}});
+      pl.classList.add('hover-preview'); v.muted=true; try{v.currentTime=0}catch(_){ } try{await v.play()}catch(_){ }
+    }
+    function stopPreview(){
+      if(!pl.classList.contains('hover-preview'))return;
+      pl.classList.remove('hover-preview'); v.pause(); try{v.currentTime=0}catch(_){ } v.muted=false;
+    }
+    pl.addEventListener('mouseenter',preview);
+    pl.addEventListener('mouseleave',stopPreview);
+  });
+  document.addEventListener('click',function(e){
+    const card=e.target.closest&&e.target.closest('.video-card');
+    if(!card||!card.querySelector('.custom-player video')) return;
+    e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+    openFrom(card);
   },true);
 })();
 </script>
