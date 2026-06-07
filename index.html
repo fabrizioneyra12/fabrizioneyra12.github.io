@@ -33,8 +33,8 @@
     @keyframes headerSlide{from{transform:translateY(-110%);opacity:0}to{transform:translateY(0);opacity:1}}
     .nav{display:flex;align-items:center;justify-content:space-between;padding:15px 0;}
     .logo-image{display:inline-flex;align-items:center;height:54px;}
-    .logo-image img{height:44px;width:auto;display:block;object-fit:contain;filter:drop-shadow(0 0 7px rgba(255,211,77,.5)) drop-shadow(0 0 18px rgba(255,211,77,.3));transition:transform .3s ease,filter .3s ease;}
-    .logo-image:hover img{transform:scale(1.07) rotate(-1.5deg);filter:drop-shadow(0 0 14px rgba(255,211,77,.85)) drop-shadow(0 0 30px rgba(255,211,77,.52));}
+    .logo-image img{height:44px;width:auto;display:block;object-fit:contain;opacity:.78;filter:brightness(.82) saturate(.92) drop-shadow(0 0 4px rgba(255,211,77,.24)) drop-shadow(0 0 10px rgba(255,211,77,.14));transition:transform .3s ease,filter .3s ease,opacity .3s ease;}
+    .logo-image:hover img{transform:scale(1.05) rotate(-1.5deg);opacity:.9;filter:brightness(.9) saturate(.95) drop-shadow(0 0 7px rgba(255,211,77,.42)) drop-shadow(0 0 16px rgba(255,211,77,.24));}
     .nav-links{display:flex;gap:10px;flex-wrap:wrap;}
     .pill{display:inline-flex;align-items:center;justify-content:center;min-width:130px;padding:11px 20px;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#1a1200;font-weight:800;font-size:.9rem;box-shadow:0 0 22px rgba(255,211,77,.32);border:none;transition:transform .22s ease,box-shadow .22s ease;white-space:nowrap;cursor:pointer;position:relative;overflow:hidden;}
     .pill::before{content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-15deg);transition:left .5s ease;}
@@ -303,7 +303,41 @@
     }
     @media(max-width:640px){.player-controls{gap:5px}.player-time{min-width:54px;font-size:.78rem}.volume{width:46px;min-width:36px}.player-btn{width:32px;height:32px;font-size:.78rem}.pill{min-width:110px;padding:10px 16px;font-size:.86rem}}
 
-  </style>
+  
+
+    /* ── CUT & HIRE STYLE HOVER PREVIEW PATCH ── */
+    @media (hover:hover) and (pointer:fine){
+      .custom-player .play-center{
+        opacity:0;
+        pointer-events:none;
+        transition:opacity .22s ease,transform .28s cubic-bezier(.22,.8,.36,1);
+      }
+      .video-card:hover .custom-player .play-center,
+      .custom-player.hover-previewing .play-center{
+        opacity:1!important;
+        pointer-events:auto!important;
+      }
+      .custom-player.hover-previewing .play-center{
+        transform:translateY(-4px) scale(1);
+      }
+      .custom-player.hover-previewing .player-overlay,
+      .custom-player.hover-previewing:hover .player-overlay{
+        opacity:0!important;
+        pointer-events:none!important;
+      }
+      .custom-player.hover-previewing video{
+        filter:brightness(.72) saturate(1.05);
+        transform:scale(1.015);
+        transition:filter .25s ease,transform .45s cubic-bezier(.22,.8,.36,1);
+      }
+      .custom-player.hover-previewing .forced-video-poster{
+        display:none!important;
+      }
+      .video-card:hover .play-center .yt-play{
+        transform:scale(1.05);
+      }
+    }
+</style>
 </head>
 <body>
   <canvas id="galaxy-canvas"></canvas>
@@ -958,5 +992,91 @@ setTimeout(() => {
   })();
 
   </script>
+
+
+<script>
+/* Cut & Hire style portfolio hover preview:
+   - desktop hover starts a muted background preview
+   - the large red play button appears only on hover
+   - clicking the play button/video promotes preview into real playback
+*/
+(function(){
+  const canHover = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  if(!canHover) return;
+
+  const allPlayers = Array.from(document.querySelectorAll('.custom-player'));
+
+  allPlayers.forEach(function(player){
+    const video = player.querySelector('video');
+    const centerPlay = player.querySelector('.play-center');
+    if(!video) return;
+
+    const card = player.closest('.video-card') || player;
+    let previewStartedHere = false;
+    let oldMuted = video.muted;
+    let oldVolume = video.volume || 1;
+    let oldLoop = video.loop;
+
+    function stopOtherHoverPreviews(){
+      allPlayers.forEach(function(other){
+        if(other === player) return;
+        const ov = other.querySelector('video');
+        if(ov && other.classList.contains('hover-previewing')){
+          other.classList.remove('hover-previewing');
+          ov.pause();
+          try{ ov.currentTime = parseFloat(ov.dataset.thumbTime || '0') || 0; }catch(e){}
+        }
+      });
+    }
+
+    async function startHoverPreview(){
+      if(!video.paused || document.fullscreenElement) return;
+      stopOtherHoverPreviews();
+      previewStartedHere = true;
+      oldMuted = video.muted;
+      oldVolume = video.volume || 1;
+      oldLoop = video.loop;
+      player.classList.add('hover-previewing');
+      video.muted = true;
+      video.volume = 0;
+      video.loop = true;
+      try{
+        await video.play();
+      }catch(e){
+        player.classList.remove('hover-previewing');
+      }
+    }
+
+    function stopHoverPreview(){
+      if(!previewStartedHere || !player.classList.contains('hover-previewing')) return;
+      previewStartedHere = false;
+      player.classList.remove('hover-previewing');
+      video.pause();
+      video.loop = oldLoop;
+      video.muted = oldMuted;
+      video.volume = oldVolume;
+      try{ video.currentTime = parseFloat(video.dataset.thumbTime || '0') || 0; }catch(e){}
+    }
+
+    function promotePreview(e){
+      if(!player.classList.contains('hover-previewing')) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      previewStartedHere = false;
+      player.classList.remove('hover-previewing');
+      video.loop = false;
+      video.muted = false;
+      video.volume = oldVolume || 1;
+      video.play().catch(function(){});
+    }
+
+    card.addEventListener('mouseenter', startHoverPreview);
+    card.addEventListener('mouseleave', stopHoverPreview);
+    if(centerPlay) centerPlay.addEventListener('click', promotePreview, true);
+    video.addEventListener('click', promotePreview, true);
+  });
+})();
+</script>
+
 </body>
 </html>
