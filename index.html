@@ -308,6 +308,39 @@
     }
     @media(max-width:640px){.player-controls{gap:5px}.player-time{min-width:54px;font-size:.78rem}.volume{width:46px;min-width:36px}.player-btn{width:32px;height:32px;font-size:.78rem}.pill{min-width:110px;padding:10px 16px;font-size:.86rem}}
 
+
+    /* ── FIX: KEEP ADS HEADER VISIBLE ABOVE THE SINGLE AD VIDEO ── */
+    #shortform .ad-category{
+      max-width:760px;
+      margin:46px auto 0;
+    }
+    #shortform .ad-category .ads-category-title{
+      display:inline-block!important;
+      visibility:visible!important;
+      opacity:1!important;
+      color:var(--text)!important;
+      font-size:1.7rem!important;
+      font-weight:900!important;
+      margin:0 0 18px 0!important;
+      letter-spacing:-.02em;
+      position:relative;
+      z-index:5;
+    }
+    #shortform .ad-category .ads-category-title::after{
+      content:"";
+      display:block;
+      width:100%!important;
+      height:3px;
+      margin-top:7px;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--accent),var(--accent-3),var(--accent-2));
+      box-shadow:0 0 18px rgba(255,211,77,.5);
+    }
+    #shortform .ad-category .video-grid.single{
+      max-width:760px;
+      margin:0 auto;
+    }
+
   </style>
 </head>
 <body>
@@ -393,7 +426,8 @@
 
           </div>
         </div>
-        <div class="short-category reveal">
+        <div class="short-category reveal ad-category">
+          <h3 class="short-category-title ads-category-title">Ads</h3>
           <div class="video-grid single">
             <article class="video-card reveal"><div class="video-frame landscape"><div class="custom-player"><video src="ad1.mp4" playsinline webkit-playsinline preload="metadata"></video><div class="play-center"><span class="yt-play"></span></div><div class="player-overlay"><div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div><div class="player-controls"><div class="player-left"><button class="player-btn play-toggle" type="button">▶</button><button class="player-btn mute-toggle" type="button">🔇</button><span class="player-time">0:00 / 0:00</span></div><div class="player-right"><input class="volume" type="range" min="0" max="1" step="0.05" value="1"><button class="player-btn fullscreen-toggle" type="button">⛶</button></div></div></div></div></div></article>
           </div>
