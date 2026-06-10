@@ -9,6 +9,12 @@
   <title>Fabri Video Editor</title>
   <script>document.documentElement.classList.add('js');</script>
   <link rel="icon" type="image/png" href="logo.png">
+  <link rel="preload" as="image" href="photo1.png" fetchpriority="high">
+  <link rel="preload" as="image" href="photo2.png" fetchpriority="high">
+  <link rel="preload" as="image" href="shorform37.png" fetchpriority="high">
+  <link rel="preload" as="metadata" href="longform1.mp4">
+  <link rel="preload" as="metadata" href="Longform683.mp4">
+  <link rel="preload" as="metadata" href="longform3.mp4">
   <style>
     @font-face{font-family:'Bojack';src:url('BojackHorseman.ttf') format('truetype');}
     :root{
@@ -149,6 +155,9 @@
     .custom-player video{width:100%;height:100%;display:block;background:#000;object-fit:contain;cursor:pointer;}
     .forced-video-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:4;pointer-events:none;background:#000;display:block;}
     .custom-player.playing .forced-video-poster{display:none;}
+    .forced-video-poster{transition:opacity .18s ease,visibility .18s ease;will-change:opacity;}
+    .custom-player.video-warming::after{content:"";position:absolute;right:12px;bottom:12px;width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.34);border-top-color:#fff;z-index:7;animation:spinMini .75s linear infinite;pointer-events:none;}
+    @keyframes spinMini{to{transform:rotate(360deg)}}
 
     .custom-player:fullscreen,.custom-player:-webkit-full-screen{width:100vw;height:100vh;background:#000;display:flex;align-items:center;justify-content:center;}
     .custom-player:fullscreen video,.custom-player:-webkit-full-screen video{width:100%;height:100%;object-fit:contain;background:#000;}
@@ -402,9 +411,9 @@
           <p><span data-i18n="longDesc1">I edit YouTube videos and horizontal content with</span> <span class="accent-text" data-i18n="longAccent1">strong rhythm</span>, <span data-i18n="longDesc2">sharp pacing, and visuals designed to hold attention. I can also turn streams or raw recordings into polished long-form content with</span> <span class="accent-text" data-i18n="longAccent2">best moments highlighted</span>.</p>
         </div>
         <div class="video-grid two">
-          <article class="video-card reveal"><div class="video-frame landscape"><div class="custom-player"><video src="longform1.mp4" poster="photo1.png" data-force-poster="photo1.png" playsinline webkit-playsinline preload="metadata"></video><img class="forced-video-poster" src="photo1.png" alt="Longform 1 thumbnail"><div class="play-center"><span class="yt-play"></span></div><div class="player-overlay"><div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div><div class="player-controls"><div class="player-left"><button class="player-btn play-toggle" type="button">▶</button><button class="player-btn mute-toggle" type="button">🔇</button><span class="player-time">0:00 / 0:00</span></div><div class="player-right"><input class="volume" type="range" min="0" max="1" step="0.05" value="1"><button class="player-btn fullscreen-toggle" type="button">⛶</button></div></div></div></div></div></article>
+          <article class="video-card reveal"><div class="video-frame landscape"><div class="custom-player"><video src="longform1.mp4" poster="photo1.png" data-force-poster="photo1.png" playsinline webkit-playsinline preload="metadata"></video><img class="forced-video-poster" src="photo1.png" alt="Longform 1 thumbnail" loading="eager" decoding="async" fetchpriority="high"><div class="play-center"><span class="yt-play"></span></div><div class="player-overlay"><div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div><div class="player-controls"><div class="player-left"><button class="player-btn play-toggle" type="button">▶</button><button class="player-btn mute-toggle" type="button">🔇</button><span class="player-time">0:00 / 0:00</span></div><div class="player-right"><input class="volume" type="range" min="0" max="1" step="0.05" value="1"><button class="player-btn fullscreen-toggle" type="button">⛶</button></div></div></div></div></div></article>
           <article class="video-card reveal"><div class="video-frame landscape"><div class="custom-player"><video src="Longform683.mp4" data-thumb-time="0.15" playsinline webkit-playsinline preload="metadata"></video><div class="play-center"><span class="yt-play"></span></div><div class="player-overlay"><div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div><div class="player-controls"><div class="player-left"><button class="player-btn play-toggle" type="button">▶</button><button class="player-btn mute-toggle" type="button">🔇</button><span class="player-time">0:00 / 0:00</span></div><div class="player-right"><input class="volume" type="range" min="0" max="1" step="0.05" value="1"><button class="player-btn fullscreen-toggle" type="button">⛶</button></div></div></div></div></div></article>
-          <article class="video-card reveal"><div class="video-frame landscape"><div class="custom-player"><video src="longform3.mp4" poster="photo2.png" data-force-poster="photo2.png" playsinline webkit-playsinline preload="metadata"></video><img class="forced-video-poster" src="photo2.png" alt="Longform 3 thumbnail"><div class="play-center"><span class="yt-play"></span></div><div class="player-overlay"><div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div><div class="player-controls"><div class="player-left"><button class="player-btn play-toggle" type="button">▶</button><button class="player-btn mute-toggle" type="button">🔇</button><span class="player-time">0:00 / 0:00</span></div><div class="player-right"><input class="volume" type="range" min="0" max="1" step="0.05" value="1"><button class="player-btn fullscreen-toggle" type="button">⛶</button></div></div></div></div></div></article>
+          <article class="video-card reveal"><div class="video-frame landscape"><div class="custom-player"><video src="longform3.mp4" poster="photo2.png" data-force-poster="photo2.png" playsinline webkit-playsinline preload="metadata"></video><img class="forced-video-poster" src="photo2.png" alt="Longform 3 thumbnail" loading="eager" decoding="async" fetchpriority="high"><div class="play-center"><span class="yt-play"></span></div><div class="player-overlay"><div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div><div class="player-controls"><div class="player-left"><button class="player-btn play-toggle" type="button">▶</button><button class="player-btn mute-toggle" type="button">🔇</button><span class="player-time">0:00 / 0:00</span></div><div class="player-right"><input class="volume" type="range" min="0" max="1" step="0.05" value="1"><button class="player-btn fullscreen-toggle" type="button">⛶</button></div></div></div></div></div></article>
           <!-- Long-form slot 04: blank for now. Replace this placeholder with the uploaded 4th video later. -->
           <article class="video-card reveal"><div class="upload-placeholder" aria-hidden="true"></div></article>
         </div>
@@ -420,7 +429,7 @@
         <div class="short-category reveal">
           <h3 class="short-category-title" data-i18n="shortsCategory">Shorts</h3>
           <div class="video-grid four">
-            <article class="video-card reveal"><div class="video-frame portrait"><div class="custom-player"><video src="shorform37.mp4" poster="shorform37.png" data-force-poster="shorform37.png" playsinline webkit-playsinline preload="metadata"></video><img class="forced-video-poster" src="shorform37.png" alt="Shorts Clip 01 thumbnail"><div class="play-center"><span class="yt-play"></span></div><div class="player-overlay"><div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div><div class="player-controls"><div class="player-left"><button class="player-btn play-toggle" type="button">▶</button><button class="player-btn mute-toggle" type="button">🔇</button><span class="player-time">0:00 / 0:00</span></div><div class="player-right"><input class="volume" type="range" min="0" max="1" step="0.05" value="1"><button class="player-btn fullscreen-toggle" type="button">⛶</button></div></div></div></div></div></article>
+            <article class="video-card reveal"><div class="video-frame portrait"><div class="custom-player"><video src="shorform37.mp4" poster="shorform37.png" data-force-poster="shorform37.png" playsinline webkit-playsinline preload="metadata"></video><img class="forced-video-poster" src="shorform37.png" alt="Shorts Clip 01 thumbnail" loading="eager" decoding="async" fetchpriority="high"><div class="play-center"><span class="yt-play"></span></div><div class="player-overlay"><div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div><div class="player-controls"><div class="player-left"><button class="player-btn play-toggle" type="button">▶</button><button class="player-btn mute-toggle" type="button">🔇</button><span class="player-time">0:00 / 0:00</span></div><div class="player-right"><input class="volume" type="range" min="0" max="1" step="0.05" value="1"><button class="player-btn fullscreen-toggle" type="button">⛶</button></div></div></div></div></div></article>
             <article class="video-card reveal"><div class="video-frame portrait"><div class="custom-player"><video src="short2.mp4" playsinline webkit-playsinline preload="metadata"></video><div class="play-center"><span class="yt-play"></span></div><div class="player-overlay"><div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div><div class="player-controls"><div class="player-left"><button class="player-btn play-toggle" type="button">▶</button><button class="player-btn mute-toggle" type="button">🔇</button><span class="player-time">0:00 / 0:00</span></div><div class="player-right"><input class="volume" type="range" min="0" max="1" step="0.05" value="1"><button class="player-btn fullscreen-toggle" type="button">⛶</button></div></div></div></div></div></article>
             <article class="video-card reveal"><div class="video-frame portrait"><div class="custom-player"><video src="short1.mp4" playsinline webkit-playsinline preload="metadata"></video><div class="play-center"><span class="yt-play"></span></div><div class="player-overlay"><div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div><div class="player-controls"><div class="player-left"><button class="player-btn play-toggle" type="button">▶</button><button class="player-btn mute-toggle" type="button">🔇</button><span class="player-time">0:00 / 0:00</span></div><div class="player-right"><input class="volume" type="range" min="0" max="1" step="0.05" value="1"><button class="player-btn fullscreen-toggle" type="button">⛶</button></div></div></div></div></div></article>
 
@@ -1138,14 +1147,28 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
     if(!currentSource) return;
     document.querySelectorAll('.custom-player').forEach(pl=>{pl.classList.remove('hover-preview','playing','paused');const v=pl.querySelector('video');if(v){v.pause();try{v.currentTime=0}catch(_){}}});
     video.pause(); video.removeAttribute('src'); video.removeAttribute('poster'); video.load();
-    video.src=currentSource; video.muted=false; video.volume=1; vol.value=1;
     const poster=source.dataset.forcePoster||source.getAttribute('poster')||card.querySelector('.forced-video-poster')?.getAttribute('src')||'';
     if(poster) video.setAttribute('poster',poster);
+    video.preload='auto';
+    video.src=currentSource;
+    video.muted=false; video.volume=1; vol.value=1;
     setShape(); update();
     modal.classList.remove('closing'); modal.classList.add('open'); document.body.classList.add('locked-player-open'); showUI();
+
+    // Start loading and playing inside the user click gesture. This makes the modal feel instant.
+    const start=()=>{
+      setShape();
+      try{video.currentTime=0}catch(_){}
+      const playPromise=video.play();
+      if(playPromise&&playPromise.catch) playPromise.catch(()=>{player.classList.add('paused');showUI();});
+      showUI(); update(); setTimeout(setShape,60);
+    };
     video.load();
-    const start=()=>{setShape(); try{video.currentTime=0}catch(_){ } video.play().catch(()=>{}); showUI(); update(); setTimeout(setShape,60);};
-    if(video.readyState>=1) start(); else video.addEventListener('loadedmetadata',start,{once:true});
+    if(video.readyState>=2) start();
+    else {
+      video.addEventListener('canplay',start,{once:true});
+      video.addEventListener('loadedmetadata',()=>{setShape();update();},{once:true});
+    }
   }
 
   closeBtn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();close();});
@@ -1163,24 +1186,98 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
   window.addEventListener('resize',()=>{if(modal.classList.contains('open'))setShape();});
   window.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
 
-  // Disable all native/card controls and replace with hover preview + centered modal.
-  document.querySelectorAll('.custom-player').forEach(pl=>{
+  // Disable all native/card controls and replace with optimized hover preview + centered modal.
+  const players=[...document.querySelectorAll('.custom-player')];
+
+  function warmVideo(v, pl){
+    if(!v || v.dataset.warmed==='1') return;
+    v.dataset.warmed='1';
+    pl?.classList.add('video-warming');
+    v.preload='auto';
+    try{ v.load(); }catch(_){}
+    const done=()=>pl?.classList.remove('video-warming');
+    v.addEventListener('canplay',done,{once:true});
+    v.addEventListener('loadeddata',done,{once:true});
+    v.addEventListener('error',done,{once:true});
+    setTimeout(done,2600);
+  }
+
+  players.forEach(pl=>{
     const v=pl.querySelector('video'); if(!v)return;
-    v.removeAttribute('controls'); v.controls=false; v.setAttribute('playsinline',''); v.setAttribute('webkit-playsinline',''); v.preload='auto';
+    v.removeAttribute('controls'); v.controls=false;
+    v.setAttribute('playsinline',''); v.setAttribute('webkit-playsinline','');
+    v.preload='metadata';
+    v.setAttribute('preload','metadata');
+
     const poster=v.dataset.forcePoster||v.getAttribute('poster')||pl.querySelector('.forced-video-poster')?.getAttribute('src')||'';
-    if(!poster){ v.addEventListener('loadedmetadata',()=>{try{ if(v.currentTime<0.05)v.currentTime=Math.min(.12,(v.duration||1)-.05); }catch(_){}} ,{once:true}); }
+    const posterImg=pl.querySelector('.forced-video-poster');
+    if(poster && posterImg){
+      posterImg.loading='eager';
+      posterImg.decoding='async';
+      v.setAttribute('poster',poster);
+    }
+    if(!poster){
+      v.addEventListener('loadedmetadata',()=>{try{ if(v.currentTime<0.05)v.currentTime=Math.min(.16,(v.duration||1)-.05); }catch(_){}} ,{once:true});
+    }
+
     async function preview(){
       if(!fineHover||pl.classList.contains('hover-preview'))return;
-      document.querySelectorAll('.custom-player').forEach(o=>{if(o!==pl){o.classList.remove('hover-preview','playing','paused');const ov=o.querySelector('video');if(ov){ov.pause();try{ov.currentTime=0}catch(_){}}}});
-      pl.classList.add('hover-preview'); v.muted=true; try{v.currentTime=0}catch(_){ } try{await v.play()}catch(_){ }
+      document.querySelectorAll('.custom-player').forEach(o=>{
+        if(o!==pl){
+          o.classList.remove('hover-preview','playing','paused','video-warming');
+          const ov=o.querySelector('video');
+          if(ov){ov.pause();try{ov.currentTime=0}catch(_){}}
+        }
+      });
+      warmVideo(v,pl);
+      pl.classList.add('hover-preview');
+      v.muted=true;
+      try{v.currentTime=0}catch(_){}
+      try{
+        await v.play();
+        pl.classList.remove('video-warming');
+      }catch(_){
+        // If autoplay preview is blocked, the click modal still works.
+        pl.classList.remove('video-warming');
+      }
     }
     function stopPreview(){
       if(!pl.classList.contains('hover-preview'))return;
-      pl.classList.remove('hover-preview'); v.pause(); try{v.currentTime=0}catch(_){ } v.muted=false;
+      pl.classList.remove('hover-preview');
+      v.pause();
+      try{v.currentTime=0}catch(_){}
+      v.muted=false;
     }
+
+    pl.addEventListener('pointerenter',()=>warmVideo(v,pl),{passive:true});
     pl.addEventListener('mouseenter',preview);
     pl.addEventListener('mouseleave',stopPreview);
+    pl.addEventListener('touchstart',()=>warmVideo(v,pl),{passive:true});
   });
+
+  // Preload videos only when close to the viewport, so the page opens fast but clicks feel faster.
+  if('IntersectionObserver' in window){
+    const io=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          const pl=entry.target;
+          const v=pl.querySelector('video');
+          warmVideo(v,pl);
+          io.unobserve(pl);
+        }
+      });
+    },{rootMargin:'650px 0px',threshold:.01});
+    players.forEach(pl=>io.observe(pl));
+  }else{
+    setTimeout(()=>players.slice(0,4).forEach(pl=>warmVideo(pl.querySelector('video'),pl)),900);
+  }
+
+  // Decode poster images early so thumbnails show instantly.
+  window.addEventListener('load',()=>{
+    document.querySelectorAll('.forced-video-poster').forEach(img=>{
+      if(img.decode) img.decode().catch(()=>{});
+    });
+  },{once:true});
   document.addEventListener('click',function(e){
     const card=e.target.closest&&e.target.closest('.video-card');
     if(!card||!card.querySelector('.custom-player video')) return;
