@@ -1071,7 +1071,13 @@ setTimeout(() => {
 .video-card .custom-player video::-webkit-media-controls{display:none!important;}
 .video-card .custom-player .player-overlay{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
 .video-card .custom-player .play-center{opacity:0!important;pointer-events:none!important;transform:translateY(-4px) scale(.86)!important;transition:opacity .22s ease,transform .32s cubic-bezier(.34,1.56,.64,1)!important;}
-.video-card .custom-player:hover .play-center,.video-card .custom-player.hover-preview .play-center{opacity:1!important;pointer-events:auto!important;transform:translateY(-4px) scale(1)!important;}
+.video-card .custom-player:hover .play-center,.video-card .custom-player.hover-preview .play-center{opacity:1!important;pointer-events:none!important;transform:translateY(-4px) scale(1)!important;}
+/* Hover preview must never steal clicks: the card/player receives the click and opens the modal. */
+.video-card .custom-player > video,
+.video-card .custom-player .forced-video-poster,
+.video-card .custom-player .card-hover-preview,
+.video-card .custom-player .play-center,
+.video-card .custom-player .yt-play{pointer-events:none!important;}
 .video-card .custom-player .yt-play{background:rgba(255,0,0,.64)!important;box-shadow:0 8px 22px rgba(0,0,0,.34),0 0 20px rgba(255,0,0,.20)!important;}
 .video-card .custom-player .yt-play:hover{background:rgba(255,0,0,.74)!important;box-shadow:0 10px 28px rgba(0,0,0,.38),0 0 22px rgba(255,0,0,.25)!important;}
 .video-card .custom-player.hover-preview .forced-video-poster,
@@ -1164,7 +1170,7 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
   const vol=modal.querySelector('.locked-volume');
   const fsBtn=modal.querySelector('.locked-full');
   const timeEl=modal.querySelector('.locked-time');
-  let hideTimer=null,currentSource=null,currentCard=null;
+  let hideTimer=null,currentSource=null,currentCard=null,lastOpenTs=0;
 
   function update(){
     const pct=video.duration?(video.currentTime/video.duration)*100:0;
@@ -1205,6 +1211,9 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
     if(!source) return;
     currentCard=card; currentSource=source.getAttribute('src')||source.currentSrc||'';
     if(!currentSource) return;
+    const now=performance.now();
+    if(now-lastOpenTs<360) return;
+    lastOpenTs=now;
     document.querySelectorAll('.custom-player').forEach(pl=>{pl.classList.remove('hover-preview','playing','paused');const v=pl.querySelector('video');if(v){v.pause();try{v.currentTime=0}catch(_){}}});
     video.pause(); video.removeAttribute('src'); video.removeAttribute('poster'); video.load();
     const poster=getFreshPoster(source,card);
@@ -1412,6 +1421,18 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
     if(activeHoverPreview===pl) activeHoverPreview=null;
   }
 
+  function launchCardFromEvent(e, pl){
+    if(!pl || document.body.classList.contains('locked-player-open')) return;
+    if(e.type==='pointerup' && e.pointerType==='mouse' && e.button!==0) return;
+    const card=pl.closest('.video-card');
+    if(!card) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+    stopHoverPreview(pl,true);
+    openFrom(card);
+  }
+
   players.forEach(pl=>{
     const v=getCardVideo(pl); if(!v)return;
     v.removeAttribute('controls'); v.controls=false;
@@ -1444,6 +1465,15 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
         warmPreview(preview,v.getAttribute('src')||v.currentSrc||'');
       }else warmVideo(v,pl);
     },{passive:true});
+
+    // Important: preview is only visual. Click/tap must always open the separate centered player.
+    pl.addEventListener('click',e=>launchCardFromEvent(e,pl),true);
+    pl.addEventListener('pointerup',e=>launchCardFromEvent(e,pl),true);
+    const card=pl.closest('.video-card');
+    if(card){
+      card.addEventListener('click',e=>launchCardFromEvent(e,pl),true);
+      card.addEventListener('pointerup',e=>launchCardFromEvent(e,pl),true);
+    }
   });
 
   document.addEventListener('visibilitychange',()=>{
@@ -1476,7 +1506,9 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
   document.addEventListener('click',function(e){
     const card=e.target.closest&&e.target.closest('.video-card');
     if(!card||!card.querySelector('.custom-player > video:not(.card-hover-preview), .custom-player video:not(.card-hover-preview)')) return;
+    const pl=card.querySelector('.custom-player');
     e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+    if(pl) stopHoverPreview(pl,true);
     openFrom(card);
   },true);
 })();
