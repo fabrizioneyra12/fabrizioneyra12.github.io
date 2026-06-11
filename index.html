@@ -1074,8 +1074,18 @@ setTimeout(() => {
 .video-card .custom-player:hover .play-center,.video-card .custom-player.hover-preview .play-center{opacity:1!important;pointer-events:auto!important;transform:translateY(-4px) scale(1)!important;}
 .video-card .custom-player .yt-play{background:rgba(255,0,0,.64)!important;box-shadow:0 8px 22px rgba(0,0,0,.34),0 0 20px rgba(255,0,0,.20)!important;}
 .video-card .custom-player .yt-play:hover{background:rgba(255,0,0,.74)!important;box-shadow:0 10px 28px rgba(0,0,0,.38),0 0 22px rgba(255,0,0,.25)!important;}
-.video-card .custom-player.hover-preview .forced-video-poster{opacity:0!important;visibility:hidden!important;}
+.video-card .custom-player.hover-preview.preview-ready .forced-video-poster{opacity:0!important;visibility:hidden!important;}
+.video-card .custom-player.hover-preview:not(.preview-ready) .forced-video-poster{opacity:1!important;visibility:visible!important;}
 .video-frame.portrait .custom-player video{object-fit:cover!important;}
+
+/* FIX: instant hover lift, no reveal-delay lag, and no blocky first-frame flash */
+.video-card{transition:transform .16s cubic-bezier(.16,1,.3,1),border-color .16s ease,box-shadow .16s ease!important;transition-delay:0s!important;will-change:transform!important;content-visibility:visible!important;contain-intrinsic-size:auto!important;}
+.video-card:hover{transform:translateY(-18px) scale(1.026)!important;transition-delay:0s!important;border-color:rgba(255,211,77,.82)!important;box-shadow:0 34px 70px rgba(0,0,0,.52),0 0 52px rgba(255,211,77,.30)!important;}
+.video-card::before{transition:background-position .30s ease!important;transition-delay:0s!important;}
+.video-card::after{transition:box-shadow .16s ease!important;transition-delay:0s!important;}
+.video-card .custom-player.hover-preview:not(.preview-ready) video{opacity:0!important;}
+.video-card .custom-player.hover-preview.preview-ready video{opacity:1!important;}
+.video-card .custom-player.preview-ended .forced-video-poster{opacity:1!important;visibility:visible!important;}
 body.locked-player-open{overflow:hidden!important;}
 body.locked-player-open .site-header,
 body.locked-player-open main,
@@ -1161,6 +1171,8 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
   const fsBtn=modal.querySelector('.locked-full');
   const timeEl=modal.querySelector('.locked-time');
   let hideTimer=null,currentSource=null,currentCard=null;
+  const PREVIEW_SECONDS=5;
+  const PREVIEW_MS=PREVIEW_SECONDS*1000;
 
   function update(){
     const pct=video.duration?(video.currentTime/video.duration)*100:0;
@@ -1201,7 +1213,7 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
     if(!source) return;
     currentCard=card; currentSource=source.getAttribute('src')||source.currentSrc||'';
     if(!currentSource) return;
-    document.querySelectorAll('.custom-player').forEach(pl=>{pl.classList.remove('hover-preview','playing','paused');const v=pl.querySelector('video');if(v){v.pause();try{v.currentTime=0}catch(_){}}});
+    document.querySelectorAll('.custom-player').forEach(pl=>{pl.classList.remove('hover-preview','preview-ready','preview-ended','playing','paused');const v=pl.querySelector('video');if(v){v.pause();try{v.currentTime=0}catch(_){}}});
     video.pause(); video.removeAttribute('src'); video.removeAttribute('poster'); video.load();
     const poster=getFreshPoster(source,card);
     if(poster) video.setAttribute('poster',poster);
@@ -1279,33 +1291,71 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
       v.addEventListener('loadedmetadata',()=>{try{ if(v.currentTime<0.05)v.currentTime=Math.min(.16,(v.duration||1)-.05); }catch(_){}} ,{once:true});
     }
 
+    let previewTimer=null;
+    let previewToken=0;
+
+    function resetPreviewState(resetTime=true){
+      clearTimeout(previewTimer);
+      previewTimer=null;
+      pl.classList.remove('hover-preview','preview-ready','preview-ended','playing','paused','video-warming');
+      v.pause();
+      if(resetTime){try{v.currentTime=0}catch(_){}}
+      v.muted=false;
+      const poster=pl.querySelector('.forced-video-poster');
+      if(poster){
+        poster.style.display='block';
+        poster.style.opacity='1';
+        poster.style.visibility='visible';
+      }
+    }
+
     async function preview(){
       if(!fineHover||pl.classList.contains('hover-preview'))return;
+      const myToken=++previewToken;
       document.querySelectorAll('.custom-player').forEach(o=>{
         if(o!==pl){
-          o.classList.remove('hover-preview','playing','paused','video-warming');
+          o.classList.remove('hover-preview','preview-ready','preview-ended','playing','paused','video-warming');
           const ov=o.querySelector('video');
-          if(ov){ov.pause();try{ov.currentTime=0}catch(_){}}
+          if(ov){ov.pause();try{ov.currentTime=0}catch(_){} ov.muted=false;}
         }
       });
+
+      clearTimeout(previewTimer);
+      pl.classList.remove('preview-ready','preview-ended');
       warmVideo(v,pl);
       pl.classList.add('hover-preview');
       v.muted=true;
+      v.setAttribute('muted','');
       try{v.currentTime=0}catch(_){}
+
+      const markReady=()=>{
+        if(myToken!==previewToken||!pl.classList.contains('hover-preview'))return;
+        pl.classList.add('preview-ready');
+        pl.classList.remove('video-warming','preview-ended');
+      };
+
+      v.addEventListener('loadeddata',markReady,{once:true});
+      v.addEventListener('canplay',markReady,{once:true});
+      v.addEventListener('playing',markReady,{once:true});
+
       try{
-        await v.play();
-        pl.classList.remove('video-warming');
+        const playPromise=v.play();
+        if(playPromise&&playPromise.then) await playPromise;
+        markReady();
+        previewTimer=setTimeout(()=>{
+          if(myToken!==previewToken)return;
+          pl.classList.add('preview-ended');
+          resetPreviewState(true);
+        },PREVIEW_MS);
       }catch(_){
-        // If autoplay preview is blocked, the click modal still works.
-        pl.classList.remove('video-warming');
+        // If autoplay preview is blocked, keep the clean thumbnail and click modal still works.
+        resetPreviewState(false);
       }
     }
     function stopPreview(){
-      if(!pl.classList.contains('hover-preview'))return;
-      pl.classList.remove('hover-preview');
-      v.pause();
-      try{v.currentTime=0}catch(_){}
-      v.muted=false;
+      previewToken++;
+      if(!pl.classList.contains('hover-preview')&&!pl.classList.contains('preview-ready'))return;
+      resetPreviewState(true);
     }
 
     pl.addEventListener('pointerenter',()=>warmVideo(v,pl),{passive:true});
