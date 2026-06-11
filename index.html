@@ -13,6 +13,7 @@
   <link rel="preload" as="image" href="photo2.png" fetchpriority="high">
   <link rel="preload" as="image" href="gaming videoo.png" fetchpriority="high">
   <link rel="preload" as="image" href="short1.png" fetchpriority="high">
+  <link rel="preload" as="image" href="short2.png" fetchpriority="high">
   <link rel="preload" as="metadata" href="gaming videoo.mp4">
   <link rel="preload" as="image" href="shorform37.png" fetchpriority="high">
   <link rel="preload" as="metadata" href="longform1.mp4">
@@ -432,7 +433,7 @@
           <h3 class="short-category-title" data-i18n="shortsCategory">Shorts</h3>
           <div class="video-grid four">
             <article class="video-card reveal"><div class="video-frame portrait"><div class="custom-player"><video src="shorform37.mp4" poster="shorform37.png" data-force-poster="shorform37.png" playsinline webkit-playsinline preload="metadata"></video><img class="forced-video-poster" src="shorform37.png" alt="Shorts Clip 01 thumbnail" loading="eager" decoding="async" fetchpriority="high"><div class="play-center"><span class="yt-play"></span></div><div class="player-overlay"><div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div><div class="player-controls"><div class="player-left"><button class="player-btn play-toggle" type="button">▶</button><button class="player-btn mute-toggle" type="button">🔇</button><span class="player-time">0:00 / 0:00</span></div><div class="player-right"><input class="volume" type="range" min="0" max="1" step="0.05" value="1"><button class="player-btn fullscreen-toggle" type="button">⛶</button></div></div></div></div></div></article>
-            <article class="video-card reveal"><div class="video-frame portrait"><div class="custom-player"><video src="short2.mp4" playsinline webkit-playsinline preload="metadata"></video><div class="play-center"><span class="yt-play"></span></div><div class="player-overlay"><div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div><div class="player-controls"><div class="player-left"><button class="player-btn play-toggle" type="button">▶</button><button class="player-btn mute-toggle" type="button">🔇</button><span class="player-time">0:00 / 0:00</span></div><div class="player-right"><input class="volume" type="range" min="0" max="1" step="0.05" value="1"><button class="player-btn fullscreen-toggle" type="button">⛶</button></div></div></div></div></div></article>
+            <article class="video-card reveal"><div class="video-frame portrait"><div class="custom-player"><video src="short2.mp4" poster="short2.png" data-force-poster="short2.png" playsinline webkit-playsinline preload="metadata"></video><img class="forced-video-poster" src="short2.png" alt="Short 2 thumbnail" loading="eager" decoding="async" fetchpriority="high"><div class="play-center"><span class="yt-play"></span></div><div class="player-overlay"><div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div><div class="player-controls"><div class="player-left"><button class="player-btn play-toggle" type="button">▶</button><button class="player-btn mute-toggle" type="button">🔇</button><span class="player-time">0:00 / 0:00</span></div><div class="player-right"><input class="volume" type="range" min="0" max="1" step="0.05" value="1"><button class="player-btn fullscreen-toggle" type="button">⛶</button></div></div></div></div></div></article>
             <article class="video-card reveal"><div class="video-frame portrait"><div class="custom-player"><video src="short1.mp4" poster="short1.png" data-force-poster="short1.png" playsinline webkit-playsinline preload="metadata"></video><img class="forced-video-poster" src="short1.png" alt="Short 1 thumbnail" loading="eager" decoding="async" fetchpriority="high"><div class="play-center"><span class="yt-play"></span></div><div class="player-overlay"><div class="progress-wrap"><input class="progress" type="range" min="0" max="100" value="0"></div><div class="player-controls"><div class="player-left"><button class="player-btn play-toggle" type="button">▶</button><button class="player-btn mute-toggle" type="button">🔇</button><span class="player-time">0:00 / 0:00</span></div><div class="player-right"><input class="volume" type="range" min="0" max="1" step="0.05" value="1"><button class="player-btn fullscreen-toggle" type="button">⛶</button></div></div></div></div></div></article>
 
           </div>
@@ -525,42 +526,95 @@
 
 
 
-  /* ══ FORCE FIRST SHORT THUMBNAIL ══ */
+  /* ══ FORCE ALL NEW THUMBNAILS — ALWAYS USE FRESH PNGS ══ */
+  const THUMB_CACHE_VERSION = Date.now().toString(36);
+
+  function freshThumbSrc(src){
+    if(!src) return '';
+    const raw = String(src).trim();
+    if(!raw || /^(data:|blob:)/i.test(raw)) return raw;
+    try{
+      const url = new URL(raw, window.location.href);
+      url.searchParams.set('thumbv', THUMB_CACHE_VERSION);
+      return url.href;
+    }catch(_){
+      const hashSplit = raw.split('#');
+      const beforeHash = hashSplit.shift();
+      const hash = hashSplit.length ? '#' + hashSplit.join('#') : '';
+      const q = beforeHash.includes('?') ? '&' : '?';
+      return beforeHash + q + 'thumbv=' + encodeURIComponent(THUMB_CACHE_VERSION) + hash;
+    }
+  }
+
+  function getFreshPoster(video, scope){
+    const img = scope?.querySelector?.('.forced-video-poster');
+    const raw = video?.dataset?.forcePoster || img?.dataset?.originalSrc || video?.getAttribute?.('poster') || img?.getAttribute?.('src') || '';
+    return freshThumbSrc(raw);
+  }
+
   (function(){
-    const forcedPosterVideo = document.querySelector('video[data-force-poster]');
-    if(!forcedPosterVideo) return;
+    const forcedPosterVideos = [...document.querySelectorAll('video[data-force-poster]')];
+    if(!forcedPosterVideos.length) return;
 
-    const player = forcedPosterVideo.closest('.custom-player');
-    const posterImg = player ? player.querySelector('.forced-video-poster') : null;
-    const poster = forcedPosterVideo.getAttribute('data-force-poster');
+    const forcedThumbs = new Set(forcedPosterVideos.map(v => v.getAttribute('data-force-poster')).filter(Boolean));
 
-    forcedPosterVideo.setAttribute('poster', poster);
-
-    const showPoster = () => {
-      forcedPosterVideo.setAttribute('poster', poster);
-      if(posterImg) posterImg.style.display = 'block';
-    };
-
-    const hidePoster = () => {
-      if(posterImg) posterImg.style.display = 'none';
-    };
-
-    showPoster();
-
-    forcedPosterVideo.addEventListener('play', hidePoster);
-    forcedPosterVideo.addEventListener('playing', hidePoster);
-
-    forcedPosterVideo.addEventListener('pause', () => {
-      if(forcedPosterVideo.currentTime <= 0.05) showPoster();
+    // Also refresh thumbnail preloads, so the browser does not keep an older cached PNG.
+    document.querySelectorAll('link[rel="preload"][as="image"]').forEach(link => {
+      const href = link.getAttribute('href') || '';
+      if(forcedThumbs.has(href)) link.setAttribute('href', freshThumbSrc(href));
     });
 
-    forcedPosterVideo.addEventListener('ended', () => {
-      forcedPosterVideo.currentTime = 0;
+    forcedPosterVideos.forEach(forcedPosterVideo => {
+      const player = forcedPosterVideo.closest('.custom-player');
+      const posterImg = player ? player.querySelector('.forced-video-poster') : null;
+      const poster = forcedPosterVideo.getAttribute('data-force-poster');
+      const freshPoster = freshThumbSrc(poster);
+
+      forcedPosterVideo.dataset.freshPoster = freshPoster;
+      forcedPosterVideo.setAttribute('poster', freshPoster);
+
+      if(posterImg){
+        posterImg.dataset.originalSrc = poster;
+        posterImg.src = freshPoster;
+        posterImg.loading = 'eager';
+        posterImg.decoding = 'async';
+        posterImg.style.display = 'block';
+        posterImg.style.opacity = '1';
+        posterImg.style.visibility = 'visible';
+      }
+
+      const showPoster = () => {
+        const latestPoster = forcedPosterVideo.dataset.freshPoster || freshThumbSrc(poster);
+        forcedPosterVideo.setAttribute('poster', latestPoster);
+        if(posterImg){
+          posterImg.src = latestPoster;
+          posterImg.style.display = 'block';
+          posterImg.style.opacity = '1';
+          posterImg.style.visibility = 'visible';
+        }
+      };
+
+      const hidePoster = () => {
+        if(posterImg) posterImg.style.display = 'none';
+      };
+
       showPoster();
-    });
 
-    forcedPosterVideo.addEventListener('loadedmetadata', () => {
-      if(!forcedPosterVideo.currentTime || forcedPosterVideo.currentTime <= 0.05) showPoster();
+      forcedPosterVideo.addEventListener('play', hidePoster);
+      forcedPosterVideo.addEventListener('playing', hidePoster);
+
+      forcedPosterVideo.addEventListener('pause', () => {
+        if(forcedPosterVideo.currentTime <= 0.05) showPoster();
+      });
+
+      forcedPosterVideo.addEventListener('ended', () => {
+        forcedPosterVideo.currentTime = 0;
+        showPoster();
+      });
+
+      forcedPosterVideo.addEventListener('loadedmetadata', () => {
+        if(!forcedPosterVideo.currentTime || forcedPosterVideo.currentTime <= 0.05) showPoster();
+      });
     });
   })();
 
@@ -1149,7 +1203,7 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
     if(!currentSource) return;
     document.querySelectorAll('.custom-player').forEach(pl=>{pl.classList.remove('hover-preview','playing','paused');const v=pl.querySelector('video');if(v){v.pause();try{v.currentTime=0}catch(_){}}});
     video.pause(); video.removeAttribute('src'); video.removeAttribute('poster'); video.load();
-    const poster=source.dataset.forcePoster||source.getAttribute('poster')||card.querySelector('.forced-video-poster')?.getAttribute('src')||'';
+    const poster=getFreshPoster(source,card);
     if(poster) video.setAttribute('poster',poster);
     video.preload='auto';
     video.src=currentSource;
@@ -1211,11 +1265,14 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
     v.preload='metadata';
     v.setAttribute('preload','metadata');
 
-    const poster=v.dataset.forcePoster||v.getAttribute('poster')||pl.querySelector('.forced-video-poster')?.getAttribute('src')||'';
+    const poster=getFreshPoster(v,pl);
     const posterImg=pl.querySelector('.forced-video-poster');
     if(poster && posterImg){
       posterImg.loading='eager';
       posterImg.decoding='async';
+      posterImg.src=poster;
+      posterImg.style.display='block';
+      v.dataset.freshPoster=poster;
       v.setAttribute('poster',poster);
     }
     if(!poster){
