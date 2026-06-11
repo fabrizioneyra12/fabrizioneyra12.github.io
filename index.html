@@ -1069,29 +1069,13 @@ setTimeout(() => {
 .video-card .custom-player{position:relative!important;overflow:hidden!important;background:#000!important;cursor:pointer!important;}
 .video-card .custom-player video{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;display:block!important;background:#000!important;opacity:1!important;}
 .video-card .custom-player video::-webkit-media-controls{display:none!important;}
-/* RESTORED: keep the real custom player buttons available on hover/click */
-.video-card .custom-player .player-overlay{display:flex!important;opacity:0!important;visibility:visible!important;pointer-events:auto!important;z-index:12!important;}
-.video-card .custom-player:hover .player-overlay,
-.video-card .custom-player:focus-within .player-overlay,
-.video-card .custom-player.controls-open .player-overlay,
-.video-card .custom-player.playing .player-overlay,
-.video-card .custom-player.paused .player-overlay{opacity:1!important;}
+.video-card .custom-player .player-overlay{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
 .video-card .custom-player .play-center{opacity:0!important;pointer-events:none!important;transform:translateY(-4px) scale(.86)!important;transition:opacity .22s ease,transform .32s cubic-bezier(.34,1.56,.64,1)!important;}
 .video-card .custom-player:hover .play-center,.video-card .custom-player.hover-preview .play-center{opacity:1!important;pointer-events:auto!important;transform:translateY(-4px) scale(1)!important;}
 .video-card .custom-player .yt-play{background:rgba(255,0,0,.64)!important;box-shadow:0 8px 22px rgba(0,0,0,.34),0 0 20px rgba(255,0,0,.20)!important;}
 .video-card .custom-player .yt-play:hover{background:rgba(255,0,0,.74)!important;box-shadow:0 10px 28px rgba(0,0,0,.38),0 0 22px rgba(255,0,0,.25)!important;}
-.video-card .custom-player.hover-preview.preview-ready .forced-video-poster{opacity:0!important;visibility:hidden!important;}
-.video-card .custom-player.hover-preview:not(.preview-ready) .forced-video-poster{opacity:1!important;visibility:visible!important;}
+.video-card .custom-player.hover-preview .forced-video-poster{opacity:0!important;visibility:hidden!important;}
 .video-frame.portrait .custom-player video{object-fit:cover!important;}
-
-/* FIX: instant hover lift, no reveal-delay lag, and no blocky first-frame flash */
-.video-card{transition:transform .16s cubic-bezier(.16,1,.3,1),border-color .16s ease,box-shadow .16s ease!important;transition-delay:0s!important;will-change:transform!important;content-visibility:visible!important;contain-intrinsic-size:auto!important;}
-.video-card:hover{transform:translateY(-18px) scale(1.026)!important;transition-delay:0s!important;border-color:rgba(255,211,77,.82)!important;box-shadow:0 34px 70px rgba(0,0,0,.52),0 0 52px rgba(255,211,77,.30)!important;}
-.video-card::before{transition:background-position .30s ease!important;transition-delay:0s!important;}
-.video-card::after{transition:box-shadow .16s ease!important;transition-delay:0s!important;}
-.video-card .custom-player.hover-preview:not(.preview-ready) video{opacity:0!important;}
-.video-card .custom-player.hover-preview.preview-ready video{opacity:1!important;}
-.video-card .custom-player.preview-ended .forced-video-poster{opacity:1!important;visibility:visible!important;}
 body.locked-player-open{overflow:hidden!important;}
 body.locked-player-open .site-header,
 body.locked-player-open main,
@@ -1118,11 +1102,10 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
 .locked-video-player.landscape{width:min(920px,72vw)!important;aspect-ratio:16/9!important;max-width:92vw!important;max-height:76vh!important;}
 .locked-video-player.portrait{height:min(78vh,760px)!important;aspect-ratio:9/16!important;max-width:88vw!important;max-height:78vh!important;}
 .locked-video-player.squareish{height:min(76vh,760px)!important;aspect-ratio:1/1!important;max-width:88vw!important;max-height:76vh!important;}
-.locked-video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important;background:#000!important;display:block!important;z-index:1!important;}
+.locked-video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important;background:#000!important;display:block!important;}
 .locked-video::-webkit-media-controls{display:none!important;}
-.locked-video-controls{position:absolute!important;left:0!important;right:0!important;bottom:0!important;z-index:30!important;padding:56px 14px 12px!important;background:linear-gradient(to top,rgba(0,0,0,.94),rgba(0,0,0,.48),transparent)!important;display:flex!important;flex-direction:column!important;gap:8px!important;opacity:1!important;transform:translateY(0)!important;transition:opacity .18s ease,transform .18s ease!important;pointer-events:auto!important;}
-/* RESTORED: modal controls stay visible/clickable, no missing volume/progress buttons */
-.locked-video-player.hide-ui .locked-video-controls{opacity:1!important;transform:translateY(0)!important;pointer-events:auto!important;}
+.locked-video-controls{position:absolute!important;left:0!important;right:0!important;bottom:0!important;z-index:4!important;padding:56px 14px 12px!important;background:linear-gradient(to top,rgba(0,0,0,.94),rgba(0,0,0,.48),transparent)!important;display:flex!important;flex-direction:column!important;gap:8px!important;opacity:1!important;transform:translateY(0)!important;transition:opacity .18s ease,transform .18s ease!important;pointer-events:auto!important;}
+.locked-video-player.hide-ui .locked-video-controls{opacity:0!important;transform:translateY(12px)!important;pointer-events:none!important;}
 .locked-progress{width:100%!important;height:5px!important;border-radius:999px!important;-webkit-appearance:none!important;appearance:none!important;background:rgba(255,255,255,.24)!important;outline:none!important;cursor:pointer!important;display:block!important;}
 .locked-progress::-webkit-slider-thumb{-webkit-appearance:none!important;width:13px!important;height:13px!important;border-radius:50%!important;background:#fff!important;box-shadow:0 0 0 3px rgba(255,255,255,.16)!important;}
 .locked-progress::-moz-range-thumb{width:13px!important;height:13px!important;border:0!important;border-radius:50%!important;background:#fff!important;}
@@ -1152,7 +1135,7 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
   modal.className='locked-video-modal';
   modal.innerHTML=`
     <button class="locked-video-close" type="button" aria-label="Close video">×</button>
-    <div class="locked-video-player landscape">
+    <div class="locked-video-player landscape hide-ui">
       <video class="locked-video" playsinline webkit-playsinline preload="auto"></video>
       <div class="locked-bigplay" aria-hidden="true"><span></span></div>
       <div class="locked-video-controls">
@@ -1178,8 +1161,6 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
   const fsBtn=modal.querySelector('.locked-full');
   const timeEl=modal.querySelector('.locked-time');
   let hideTimer=null,currentSource=null,currentCard=null;
-  const PREVIEW_SECONDS=5;
-  const PREVIEW_MS=PREVIEW_SECONDS*1000;
 
   function update(){
     const pct=video.duration?(video.currentTime/video.duration)*100:0;
@@ -1205,22 +1186,22 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
     modal.style.alignItems='center';modal.style.justifyContent='center';
   }
   function showUI(){
-    player.classList.remove('hide-ui');
-    clearTimeout(hideTimer);
+    player.classList.remove('hide-ui');clearTimeout(hideTimer);
+    if(!video.paused) hideTimer=setTimeout(()=>player.classList.add('hide-ui'),2400);
   }
   function close(){
     if(!modal.classList.contains('open')) return;
     clearTimeout(hideTimer);
     if(document.fullscreenElement===player) document.exitFullscreen().catch(()=>{});
     modal.classList.remove('open'); modal.classList.add('closing'); document.body.classList.remove('locked-player-open');
-    setTimeout(()=>{video.pause();video.removeAttribute('src');video.removeAttribute('poster');video.load();modal.classList.remove('closing');player.className='locked-video-player landscape';},280);
+    setTimeout(()=>{video.pause();video.removeAttribute('src');video.removeAttribute('poster');video.load();modal.classList.remove('closing');player.className='locked-video-player landscape hide-ui';},280);
   }
   function openFrom(card){
     const source=card.querySelector('.custom-player video');
     if(!source) return;
     currentCard=card; currentSource=source.getAttribute('src')||source.currentSrc||'';
     if(!currentSource) return;
-    document.querySelectorAll('.custom-player').forEach(pl=>{pl.classList.remove('hover-preview','preview-ready','preview-ended','playing','paused');const v=pl.querySelector('video');if(v){v.pause();try{v.currentTime=0}catch(_){}}});
+    document.querySelectorAll('.custom-player').forEach(pl=>{pl.classList.remove('hover-preview','playing','paused');const v=pl.querySelector('video');if(v){v.pause();try{v.currentTime=0}catch(_){}}});
     video.pause(); video.removeAttribute('src'); video.removeAttribute('poster'); video.load();
     const poster=getFreshPoster(source,card);
     if(poster) video.setAttribute('poster',poster);
@@ -1248,7 +1229,7 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
 
   closeBtn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();close();});
   modal.addEventListener('click',e=>{if(e.target===modal) close();});
-  player.addEventListener('click',e=>{e.stopPropagation();showUI();});
+  player.addEventListener('click',e=>e.stopPropagation());
   video.addEventListener('click',()=>{video.paused?video.play().catch(()=>{}):video.pause();showUI();});
   playBtn.addEventListener('click',e=>{e.stopPropagation();video.paused?video.play().catch(()=>{}):video.pause();showUI();});
   muteBtn.addEventListener('click',e=>{e.stopPropagation();video.muted=!video.muted;update();showUI();});
@@ -1261,7 +1242,7 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
   window.addEventListener('resize',()=>{if(modal.classList.contains('open'))setShape();});
   window.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
 
-  // Keep custom card controls, optimized hover preview, and centered modal together.
+  // Disable all native/card controls and replace with optimized hover preview + centered modal.
   const players=[...document.querySelectorAll('.custom-player')];
 
   function warmVideo(v, pl){
@@ -1284,16 +1265,6 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
     v.preload='metadata';
     v.setAttribute('preload','metadata');
 
-    let controlsTimer=null;
-    const showCardControls=()=>{
-      pl.classList.add('controls-open');
-      clearTimeout(controlsTimer);
-      controlsTimer=setTimeout(()=>pl.classList.remove('controls-open'),2600);
-    };
-    pl.addEventListener('mousemove',showCardControls,{passive:true});
-    pl.addEventListener('pointerdown',showCardControls,{passive:true});
-    pl.addEventListener('mouseleave',()=>{clearTimeout(controlsTimer);pl.classList.remove('controls-open');},{passive:true});
-
     const poster=getFreshPoster(v,pl);
     const posterImg=pl.querySelector('.forced-video-poster');
     if(poster && posterImg){
@@ -1308,71 +1279,33 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
       v.addEventListener('loadedmetadata',()=>{try{ if(v.currentTime<0.05)v.currentTime=Math.min(.16,(v.duration||1)-.05); }catch(_){}} ,{once:true});
     }
 
-    let previewTimer=null;
-    let previewToken=0;
-
-    function resetPreviewState(resetTime=true){
-      clearTimeout(previewTimer);
-      previewTimer=null;
-      pl.classList.remove('hover-preview','preview-ready','preview-ended','playing','paused','video-warming');
-      v.pause();
-      if(resetTime){try{v.currentTime=0}catch(_){}}
-      v.muted=false;
-      const poster=pl.querySelector('.forced-video-poster');
-      if(poster){
-        poster.style.display='block';
-        poster.style.opacity='1';
-        poster.style.visibility='visible';
-      }
-    }
-
     async function preview(){
       if(!fineHover||pl.classList.contains('hover-preview'))return;
-      const myToken=++previewToken;
       document.querySelectorAll('.custom-player').forEach(o=>{
         if(o!==pl){
-          o.classList.remove('hover-preview','preview-ready','preview-ended','playing','paused','video-warming');
+          o.classList.remove('hover-preview','playing','paused','video-warming');
           const ov=o.querySelector('video');
-          if(ov){ov.pause();try{ov.currentTime=0}catch(_){} ov.muted=false;}
+          if(ov){ov.pause();try{ov.currentTime=0}catch(_){}}
         }
       });
-
-      clearTimeout(previewTimer);
-      pl.classList.remove('preview-ready','preview-ended');
       warmVideo(v,pl);
       pl.classList.add('hover-preview');
       v.muted=true;
-      v.setAttribute('muted','');
       try{v.currentTime=0}catch(_){}
-
-      const markReady=()=>{
-        if(myToken!==previewToken||!pl.classList.contains('hover-preview'))return;
-        pl.classList.add('preview-ready');
-        pl.classList.remove('video-warming','preview-ended');
-      };
-
-      v.addEventListener('loadeddata',markReady,{once:true});
-      v.addEventListener('canplay',markReady,{once:true});
-      v.addEventListener('playing',markReady,{once:true});
-
       try{
-        const playPromise=v.play();
-        if(playPromise&&playPromise.then) await playPromise;
-        markReady();
-        previewTimer=setTimeout(()=>{
-          if(myToken!==previewToken)return;
-          pl.classList.add('preview-ended');
-          resetPreviewState(true);
-        },PREVIEW_MS);
+        await v.play();
+        pl.classList.remove('video-warming');
       }catch(_){
-        // If autoplay preview is blocked, keep the clean thumbnail and click modal still works.
-        resetPreviewState(false);
+        // If autoplay preview is blocked, the click modal still works.
+        pl.classList.remove('video-warming');
       }
     }
     function stopPreview(){
-      previewToken++;
-      if(!pl.classList.contains('hover-preview')&&!pl.classList.contains('preview-ready'))return;
-      resetPreviewState(true);
+      if(!pl.classList.contains('hover-preview'))return;
+      pl.classList.remove('hover-preview');
+      v.pause();
+      try{v.currentTime=0}catch(_){}
+      v.muted=false;
     }
 
     pl.addEventListener('pointerenter',()=>warmVideo(v,pl),{passive:true});
@@ -1407,24 +1340,11 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
   document.addEventListener('click',function(e){
     const card=e.target.closest&&e.target.closest('.video-card');
     if(!card||!card.querySelector('.custom-player video')) return;
-    // Do not steal clicks from the restored card buttons, volume, progress, or fullscreen controls.
-    if(e.target.closest&&e.target.closest('.player-overlay,.player-btn,.progress,.volume,input,button')) return;
     e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
     openFrom(card);
   },true);
 })();
 </script>
 
-
-<style id="restore-player-controls-final-override">
-/* Final safety override: controls must always exist after click/hover. */
-.video-card .player-overlay{display:flex!important;visibility:visible!important;pointer-events:auto!important;}
-.video-card .custom-player:hover .player-overlay,
-.video-card .custom-player.controls-open .player-overlay,
-.video-card .custom-player.playing .player-overlay,
-.video-card .custom-player.paused .player-overlay{opacity:1!important;}
-.locked-video-controls{display:flex!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;z-index:30!important;}
-.locked-video-player.hide-ui .locked-video-controls{opacity:1!important;transform:translateY(0)!important;pointer-events:auto!important;}
-</style>
 </body>
 </html>
