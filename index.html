@@ -1138,8 +1138,35 @@ body.locked-player-open #scanlines{filter:blur(2px) brightness(.82)!important;tr
 </style>
 <script id="locked-centered-player-script">
 (function(){
-  const fineHover=matchMedia('(hover:hover) and (pointer:fine)').matches;
+  // FINAL FIX: this script runs outside the earlier type="module" script,
+  // so it must have its OWN poster helpers. Without this, getFreshPoster was not global
+  // and the whole hover/click patch stopped before attaching events.
+  const PREVIEW_CACHE_VERSION = Date.now().toString(36);
+  const fineHover = true;
   const fmt=t=>Number.isFinite(t)?`${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}`:'0:00';
+
+  function freshThumbSrc(src){
+    if(!src) return '';
+    const raw=String(src).trim();
+    if(!raw || /^(data:|blob:)/i.test(raw)) return raw;
+    try{
+      const url=new URL(raw, window.location.href);
+      url.searchParams.set('thumbv', PREVIEW_CACHE_VERSION);
+      return url.href;
+    }catch(_){
+      const parts=raw.split('#');
+      const beforeHash=parts.shift();
+      const hash=parts.length?'#'+parts.join('#'):'';
+      const joiner=beforeHash.includes('?')?'&':'?';
+      return beforeHash+joiner+'thumbv='+encodeURIComponent(PREVIEW_CACHE_VERSION)+hash;
+    }
+  }
+
+  function getFreshPoster(video, scope){
+    const img=scope?.querySelector?.('.forced-video-poster');
+    const raw=video?.dataset?.forcePoster || img?.dataset?.originalSrc || video?.getAttribute?.('poster') || img?.getAttribute?.('src') || '';
+    return freshThumbSrc(raw);
+  }
 
   const modal=document.createElement('div');
   modal.className='locked-video-modal';
