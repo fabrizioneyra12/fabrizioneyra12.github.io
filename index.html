@@ -207,21 +207,6 @@
     .short-category-title::after{content:"";display:block;width:0;height:3px;margin-top:7px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent-3),var(--accent-2));box-shadow:0 0 18px rgba(255,211,77,.5);transition:width .88s cubic-bezier(.22,.8,.36,1);}
     .show .short-category-title::after{width:100%;}
 
-    /* ── OLD CHANNELS ── */
-    #old-channels-section{padding:60px 0 40px;}
-    .old-channels-inner{text-align:center;}
-    .old-channels-title{text-align:center;font-size:22px;font-weight:600;margin-top:22px;margin-bottom:16px;letter-spacing:1px;background:linear-gradient(90deg,#ffd34d,#9f4dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;opacity:0;transform:translateY(18px);animation:fadeUp .8s ease forwards;}
-    .channels{margin-top:38px;display:flex;justify-content:center;gap:30px;flex-wrap:wrap;}
-    .channel-card{width:155px;height:155px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);box-shadow:0 0 22px rgba(255,211,77,.09);transition:transform .38s cubic-bezier(.22,.8,.36,1),box-shadow .38s ease,border-color .38s ease;text-decoration:none;cursor:pointer;}
-    .channel-card img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;}
-    .channel-card:hover{transform:translateY(-14px) scale(1.09);box-shadow:0 0 50px rgba(255,211,77,.52);border-color:rgba(255,211,77,.62);}
-
-    .stats-strip{margin-top:32px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap;}
-    .stat-box{min-width:185px;padding:16px 22px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);box-shadow:0 0 16px rgba(255,211,77,.08);display:flex;flex-direction:column;align-items:center;transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease;cursor:default;}
-    .stat-box:hover{transform:translateY(-7px);border-color:rgba(255,211,77,.38);box-shadow:0 0 32px rgba(255,211,77,.22);}
-    .stat-number{font-size:2rem;font-weight:900;color:var(--accent);}
-    .stat-label{margin-top:4px;font-size:.92rem;font-weight:700;}
-
     /* ── CLIENTS ── */
     .clients-heading{margin-bottom:40px;}
     .clients-kicker{display:inline-block;margin-bottom:12px;color:var(--accent);font-size:.85rem;font-weight:900;letter-spacing:.55em;}
@@ -237,17 +222,20 @@
     .client-link:hover{transform:translateY(-10px);}
 
     /* ── PRICING ── */
-    .pricing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;}
+    .pricing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:stretch;}
     .pricing-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:24px;box-shadow:0 0 20px rgba(255,211,77,.06);transition:transform .36s cubic-bezier(.22,.8,.36,1),border-color .36s ease,box-shadow .36s ease;position:relative;overflow:hidden;}
     .pricing-card::before{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(135deg,rgba(255,211,77,.055) 0%,transparent 60%);opacity:0;transition:opacity .36s ease;}
     .pricing-card:hover{transform:translateY(-9px);border-color:rgba(255,211,77,.58);box-shadow:0 0 44px rgba(255,211,77,.22);}
     .pricing-card:hover::before{opacity:1;}
     .pricing-card>*{position:relative;z-index:1;}
+    .pricing-card.clipping-card{grid-column:1/-1;width:min(100%,760px);margin:0 auto 6px;background:linear-gradient(135deg,rgba(255,211,77,.075),rgba(159,77,255,.095),rgba(255,110,180,.055));border-color:rgba(255,211,77,.22);box-shadow:0 18px 46px rgba(0,0,0,.32),0 0 32px rgba(255,211,77,.10);}
+    .pricing-card.clipping-card::before{opacity:.55;background:radial-gradient(circle at 18% 0%,rgba(255,211,77,.16),transparent 42%),linear-gradient(135deg,rgba(255,211,77,.055) 0%,transparent 60%);}
     .pricing-tag{display:inline-block;margin-bottom:11px;padding:7px 12px;border-radius:999px;background:rgba(255,211,77,.1);border:1px solid rgba(255,211,77,.24);color:var(--accent);font-weight:800;font-size:.86rem;}
     .pricing-card h3{font-size:clamp(1.9rem,3.2vw,2.9rem);line-height:1;font-weight:900;margin-bottom:7px;color:var(--accent);}
     .pricing-subtext{color:#fff;font-weight:700;margin-bottom:11px;}
     .pricing-card p{color:var(--muted);line-height:1.65;font-size:.97rem;}
     .pricing-note{margin-top:15px;padding:10px 12px;border-radius:13px;background:rgba(159,77,255,.1);border:1px solid rgba(159,77,255,.18);color:#f3dcff;font-weight:800;text-align:center;}
+    .pricing-note.fixed-note{background:rgba(255,211,77,.12);border-color:rgba(255,211,77,.32);color:var(--accent);}
     .pricing-bottom{margin-top:16px;padding:15px 17px;border-radius:17px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);}
     .pricing-bottom p{color:var(--muted);line-height:1.7;font-size:.97rem;}
 
@@ -448,21 +436,6 @@
       </div>
     </section>
 
-    <section id="old-channels-section">
-      <div class="container old-channels-inner">
-        <h3 class="old-channels-title">My Old Channels</h3>
-        <div class="channels reveal">
-          <a class="channel-card reveal" href="https://www.youtube.com/@fabrirblx5780" target="_blank" rel="noopener"><img src="logo-rblx.png" alt="Fabri Rblx"></a>
-          <a class="channel-card reveal" href="https://www.youtube.com/@FabriYTCanal" target="_blank" rel="noopener"><img src="logo-yt.png" alt="FabriYT"></a>
-          <a class="channel-card reveal" href="https://www.youtube.com/@fabriminecraft8677" target="_blank" rel="noopener"><img src="logo-mc.png" alt="Fabri Minecraft"></a>
-        </div>
-        <div class="stats-strip reveal">
-          <div class="stat-box"><span class="stat-number" data-target="120" data-suffix="k+">0</span><span class="stat-label">Subscribers</span></div>
-          <div class="stat-box"><span class="stat-number" data-target="10" data-suffix="m+">0</span><span class="stat-label">Views</span></div>
-        </div>
-      </div>
-    </section>
-
     <section id="clients" style="position:relative;"><div class="section-live-border"></div>
       <div class="container">
         <div class="clients-heading reveal">
@@ -482,13 +455,14 @@
       <div class="container">
         <div class="section-heading reveal">
           <h2>Pricing</h2><div class="line"></div>
-          <p><span>Clear starting prices for each format.</span> <span class="accent-text">Prices are negotiable</span> <span>depending on complexity, editing style, amount of footage, and turnaround time.</span></p>
+          <p><span>Clear starting prices for each format.</span> <span class="accent-text">Weekly clipping is fixed at only $7.50 per clip.</span> <span>Other custom projects can still be negotiated depending on complexity, style, footage, and turnaround time.</span></p>
         </div>
         <div class="pricing-grid">
+          <article class="pricing-card clipping-card reveal"><span class="pricing-tag">Weekly Clipping</span><h3>$150/week</h3><p class="pricing-subtext">20 clips per week</p><p>Perfect for streamers who want consistent content across TikTok, Reels, and YouTube Shorts. Includes clip selection, vertical editing, captions, and fast-paced cuts.</p><div class="pricing-note fixed-note">Only $7.50 per clip.</div></article>
           <article class="pricing-card reveal"><span class="pricing-tag">Short-form</span><h3>$30</h3><p class="pricing-subtext">Starting price</p><p>Perfect for TikTok, Reels, YouTube Shorts, gaming clips, and fast-paced social media edits.</p><div class="pricing-note">Negotiable depending on the project.</div></article>
           <article class="pricing-card reveal"><span class="pricing-tag">Long-form</span><h3>$100</h3><p class="pricing-subtext">Starting price</p><p>Great for YouTube videos, commentary, gameplay videos, streams, and polished horizontal content.</p><div class="pricing-note">Negotiable depending on the project.</div></article>
         </div>
-        <div class="pricing-bottom reveal"><p><strong>Important:</strong> <span>These are base prices only —</span> <span class="accent-text">everything can be negotiated</span> <span>based on video length, style, effects, subtitles, and delivery speed.</span></p></div>
+        <div class="pricing-bottom reveal"><p><strong>Important:</strong> <span>Weekly Clipping is not negotiable.</span> <span class="accent-text">It stays at $150/week for 20 clips.</span> <span>Short-form and long-form custom edits can be negotiated based on video length, style, effects, subtitles, and delivery speed.</span></p></div>
       </div>
     </section>
 
@@ -785,11 +759,6 @@ setTimeout(() => {
     v.addEventListener('loadedmetadata',upProg);v.addEventListener('timeupdate',upProg);v.addEventListener('play',upPlay);v.addEventListener('pause',upPlay);v.addEventListener('volumechange',upMute);v.addEventListener('ended',upPlay);
     upPlay();upMute();upProg();
   });
-
-  /* ══ STAT COUNTERS ══ */
-  let statsGo=false;
-  const runStats=()=>{if(statsGo)return;const strip=document.querySelector('.stats-strip');if(!strip||strip.getBoundingClientRect().top>=window.innerHeight*.95)return;statsGo=true;document.querySelectorAll('.stat-number').forEach(el=>{const target=+el.dataset.target||0,suf=el.dataset.suffix||'',dur=1900,t0=performance.now();const step=now=>{const p=Math.min((now-t0)/dur,1),e=1-Math.pow(1-p,3),cur=target*e;el.textContent=suf==='k+'?`${0|cur}k+`:suf==='m+'?`${cur.toFixed(p<1?1:0)}m+`:`${0|cur}`;if(p<1)requestAnimationFrame(step);else el.textContent=`${target}${suf}`;};requestAnimationFrame(step);});};
-  window.addEventListener('load',runStats);window.addEventListener('scroll',runStats,{passive:true});
 
   /* ══ MAGNETIC BUTTONS — throttled ══ */
   if(!isTouch){
